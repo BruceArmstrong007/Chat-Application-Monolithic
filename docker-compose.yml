@@ -1,0 +1,39 @@
+version: "3.8"
+services:
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+      target: development
+    command: npm run start
+    volumes:
+      - ./client:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '4200:4200'
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+      target: development
+    command: npm run start:dev server
+    env_file:
+      - ./server/apps/server/.env
+    volumes:
+      - ./server:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '3000:3000'
+  mongodb-primary:
+    image: docker.io/bitnami/mongodb:5.0
+    restart: always
+    environment:
+      - MONGODB_ADVERTISED_HOSTNAME=mongodb-primary
+      - MONGODB_ROOT_PASSWORD=password123
+    volumes:
+      - 'mongodb_master_data:/bitnami/mongodb'
+    ports:
+      - '27017:27017'
+volumes:
+  mongodb_master_data:
+    driver: local
