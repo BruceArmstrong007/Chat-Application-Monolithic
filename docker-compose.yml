@@ -24,11 +24,11 @@ services:
       - /usr/src/app/node_modules
     ports:
       - '3000:3000'
-  mongodb-primary:
+  mongodb-chat:
     image: docker.io/bitnami/mongodb:5.0
     restart: always
     environment:
-      - MONGODB_ADVERTISED_HOSTNAME=mongodb-primary
+      - MONGODB_ADVERTISED_HOSTNAME=mongodb-chat
       - MONGODB_ROOT_PASSWORD=password123
     volumes:
       - 'mongodb_master_data:/bitnami/mongodb'
