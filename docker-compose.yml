@@ -16,24 +16,26 @@ services:
       context: ./server
       dockerfile: Dockerfile
       target: development
-    command: npm run start:dev server
+    command: npm run start:dev api
     env_file:
-      - ./server/apps/server/.env
+      - ./server/apps/api/.env
     volumes:
       - ./server:/usr/src/app
       - /usr/src/app/node_modules
     ports:
       - '3000:3000'
-  mongodb-chat:
+    depends_on:
+      - mongodb
+
+  mongodb:
     image: docker.io/bitnami/mongodb:5.0
-    restart: always
+    # restart: always
     environment:
-      - MONGODB_ADVERTISED_HOSTNAME=mongodb-chat
+      - MONGODB_ADVERTISED_HOSTNAME=mongodb
       - MONGODB_ROOT_PASSWORD=password123
     volumes:
-      - 'mongodb_master_data:/bitnami/mongodb'
+      - 'mongo_db:/data/db'
     ports:
       - '27017:27017'
 volumes:
-  mongodb_master_data:
-    driver: local
+  mongo_db:
