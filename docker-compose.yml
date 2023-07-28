@@ -16,7 +16,7 @@ services:
       context: ./server
       dockerfile: Dockerfile
       target: development
-    command: npm run start:dev server
+    command: npm run start:dev api
     env_file:
       - ./server/apps/server/.env
     volumes:
