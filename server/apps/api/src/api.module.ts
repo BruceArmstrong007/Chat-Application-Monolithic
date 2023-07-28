@@ -4,18 +4,22 @@ import { ConfigModule } from '@nestjs/config';
 import * as Joi from 'joi';
 import { DatabaseModule } from '@app/common';
 import { AuthModule } from './auth/auth.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: './apps/api/.env',
+      envFilePath: '.env',
       validationSchema: Joi.object({
         MONGODB_URI: Joi.string().required(),
+        JWT_SECRET: Joi.string().required(),
+        JWT_EXPIRATION: Joi.required(),
       }),
     }),
     DatabaseModule,
-    AuthModule
+    AuthModule,
+    UserModule
   ],
   controllers: [ApiController],
   providers: [],

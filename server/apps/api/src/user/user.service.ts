@@ -14,6 +14,8 @@ export class UserService {
         const user = await this.userRepository.create({
             ...request,
             password: await bcrypt.hash(request.password, 10),
+            name: '',
+            profileURL: ''
         });
         return user;
     }
@@ -34,12 +36,13 @@ export class UserService {
 
     async validateUser(username: string, password: string) {
         const user = await this.userRepository.findOne({ username });
-        const passwordIsValid = await bcrypt.compare(password, user.password);
-        if (!passwordIsValid) {
-            throw new UnauthorizedException('Credentials are not valid.');
-        }
-        return user;
+        if (user && (await bcrypt.compare(password, user.password))) {
+            const { password, ...result } = user;
+            return result;
+          }
+          return null;
     }
+
 
     async getUser(getUserArgs: Partial<User>) {
         return this.userRepository.findOne(getUserArgs);
