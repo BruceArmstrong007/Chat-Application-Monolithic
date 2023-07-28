@@ -9,7 +9,7 @@ import { DatabaseModule } from '@app/common';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: './apps/auth/.env',
+      envFilePath: './apps/api/.env',
       validationSchema: Joi.object({
         MONGODB_URI: Joi.string().required(),
       }),
