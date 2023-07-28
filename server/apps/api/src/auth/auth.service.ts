@@ -29,15 +29,15 @@ export class AuthService {
           expires.getSeconds() + this.configService.get('JWT_EXPIRATION'),
         );
     
-        const accessToken = this.jwtService.sign(payload,{secret: this.configService.get<string>('JWT_SECRET'),expiresIn: this.configService.get('JWT_EXPIRATION')+'s'});
-        const refreshToken = this.jwtService.sign(payload,{secret: this.configService.get<string>('JWT_SECRET'),expiresIn:'7d'});
+        const accessToken = await this.jwtService.sign(payload,{secret: this.configService.get<string>('JWT_SECRET'),expiresIn: this.configService.get('JWT_EXPIRATION')+'s'});
+        const refreshToken = await this.jwtService.sign(payload,{secret: this.configService.get<string>('JWT_SECRET'),expiresIn:'7d'});
 
         response.cookie('Authentication', accessToken, {
           httpOnly: true,
           expires,
         });
 
-        response.send({...user,refreshToken: refreshToken});
+        await response.send({...user,refreshToken: refreshToken});
       }
 
       async refreshToken(user: User, response: Response) {
@@ -53,26 +53,26 @@ export class AuthService {
           expires.getSeconds() + this.configService.get('JWT_EXPIRATION'),
         );
     
-        const accessToken = this.jwtService.sign(payload,{secret: this.configService.get<string>('JWT_SECRET'),expiresIn: this.configService.get('JWT_EXPIRATION')+'s'});
-        const refreshToken = this.jwtService.sign(payload,{secret: this.configService.get<string>('JWT_SECRET'),expiresIn:'7d'});
+        const accessToken = await this.jwtService.sign(payload,{secret: this.configService.get<string>('JWT_SECRET'),expiresIn: this.configService.get('JWT_EXPIRATION')+'s'});
+        const refreshToken = await this.jwtService.sign(payload,{secret: this.configService.get<string>('JWT_SECRET'),expiresIn:'7d'});
 
         response.cookie('Authentication', accessToken, {
           httpOnly: true,
           expires,
         });
 
-        response.send({...user,refreshToken: refreshToken});
+        await response.send({...user,refreshToken: refreshToken});
       }
 
     
 
-      logout(response: Response) {
+     async logout(response: Response) {
         response.cookie('Authentication', '', {
           httpOnly: true,
           expires: new Date(),
         });
 
-        response.send({
+        await response.send({
           "message": "Logout successful"
         });
       }

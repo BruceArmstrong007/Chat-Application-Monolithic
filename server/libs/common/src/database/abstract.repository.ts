@@ -43,9 +43,9 @@ export abstract class AbstractRepository<TDocument extends AbstractDocument> {
 
   async findOneAndUpdate(
     filterQuery: FilterQuery<TDocument>,
-    update: UpdateQuery<TDocument>,
+    update: UpdateQuery<TDocument>
   ) {
-    const document = await this.model.findOneAndUpdate(filterQuery, update, {
+    const document = await this.model.findOneAndUpdate(filterQuery, update ,{
       lean: true,
       new: true,
     });
@@ -69,8 +69,8 @@ export abstract class AbstractRepository<TDocument extends AbstractDocument> {
     });
   }
 
-  async find(filterQuery: FilterQuery<TDocument>) {
-    return this.model.find(filterQuery, {}, { lean: true });
+  async find(filterQuery: FilterQuery<TDocument> , condition : string) {
+    return this.model.find(filterQuery, condition, { lean: true });
   }
 
   async startTransaction() {

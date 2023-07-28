@@ -4,6 +4,8 @@ import { CreateUserRequest } from './dto/request/create-user.request';
 import { User } from './database/model/user.model';
 import * as bcrypt from 'bcrypt';
 import { UserRepository } from './database/repository/user.repository';
+import { SearchUserRequest } from './dto/request/search-user.request';
+import { UpdateUserRequest } from './dto/request/update-user.request';
 
 @Injectable()
 export class UserService {
@@ -11,11 +13,15 @@ export class UserService {
     
     async createUser(request: CreateUserRequest) {
         await this.validateCreateUserRequest(request);
-        const user = await this.userRepository.create({
+        const { password, ...user} = await this.userRepository.create({
             ...request,
             password: await bcrypt.hash(request.password, 10),
             name: '',
-            profileURL: ''
+            profileURL: '',
+            contacts: [],
+            sentRequests: [],
+            receivedRequests: [],
+            bio: ''
         });
         return user;
     }
@@ -44,8 +50,14 @@ export class UserService {
     }
 
 
-    async getUser(getUserArgs: Partial<User>) {
-        return this.userRepository.findOne(getUserArgs);
+    async getUsers(searchTerm: string) {
+    const regexPattern = new RegExp(searchTerm, 'i');
+        return await this.userRepository.find({ username: regexPattern },'username name profileURL bio');
+    }
+
+    async updateUser(username: string,fields : UpdateUserRequest){
+        const {password,...user} = await this.userRepository.findOneAndUpdate({ username : username},fields);
+        return user;
     }
 
 }

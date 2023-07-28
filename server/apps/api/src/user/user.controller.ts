@@ -1,14 +1,31 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserRequest } from './dto/request/create-user.request';
+import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
+import { SearchUserRequest } from './dto/request/search-user.request';
+import { UpdateUserRequest } from './dto/request/update-user.request';
+import { User } from './database/model/user.model';
+import { CurrentUser } from '@app/common';
 
-@Controller('api/user')
+@UseGuards(JwtAuthGuard)
+@Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}
 
   @Post()
-  async create(@Body() request: CreateUserRequest) {
-    return this.userService.createUser(request);
+  async create() {
+    return 'asdsa';
   }
 
+  @Post('search')
+  async findUsers(@Body() request: SearchUserRequest) {
+    return this.userService.getUsers(request?.search);
+  }
+
+  @Post('update')
+  async updateUser(
+    @CurrentUser() user: User,
+    @Body() request: UpdateUserRequest,
+  ) {
+    return this.userService.updateUser(user?.username, request);
+  }
 }
