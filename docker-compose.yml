@@ -18,7 +18,7 @@ services:
       target: development
     command: npm run start:dev api
     env_file:
-      - ./server/apps/server/.env
+      - ./server/apps/api/.env
     volumes:
       - ./server:/usr/src/app
       - /usr/src/app/node_modules
