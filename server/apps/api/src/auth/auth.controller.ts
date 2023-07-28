@@ -7,6 +7,7 @@ import { Response } from 'express';
 import { CreateUserRequest } from '../user/dto/request/create-user.request';
 import { UserService } from '../user/user.service';
 import { JwtAuthGuard } from './guard/jwt-auth.guard';
+import { RefreshJwtGuard } from './guard/refresh-jwt.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -25,9 +26,17 @@ export class AuthController {
       return await this.userService.createUser(request);
     }
 
+    @UseGuards(RefreshJwtGuard)
+    @Post('refresh')
+    async refreshUser(@CurrentUser() user: User,
+      @Res({ passthrough: true }) response: Response){
+      return await this.authService.refreshToken(user, response);
+    }
+
     @UseGuards(JwtAuthGuard)
     @Get('logout')
-    async logoutUser(@Res({ passthrough: true }) response: Response) {
+    async logoutUser(
+      @CurrentUser() user: User,@Res({ passthrough: true }) response: Response) {
       return this.authService.logout(response);
     }
 }
