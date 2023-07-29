@@ -15,7 +15,8 @@ export class UserService {
     async createUser(request: CreateUserRequest) {
         await this.validateCreateUserRequest(request);
         const user = await this.userRepository.createUser(request?.username,await bcrypt.hash(request.password, 10));
-        return user;
+        const { password , ...result } = user.toJSON();
+        return result;
     }
 
 
@@ -33,7 +34,8 @@ export class UserService {
     async validateUser(username: string, password: string) {
         const user = await this.userRepository.findByUsername(username);
         if (user && (await bcrypt.compare(password, user.password))) {
-            return user;
+            const { password, ...result } = user.toJSON();
+            return result;
           }
           return null;
     }
@@ -45,7 +47,9 @@ export class UserService {
     }
 
     async updateUser(username: string,fields : UpdateUserRequest){
-        return await this.userRepository.updateUser(username,fields);
+        const user = await this.userRepository.updateUser(username,fields);
+        const { password, ...result } = user.toJSON();
+        return result;
     }
 
 }

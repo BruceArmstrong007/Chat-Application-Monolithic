@@ -37,7 +37,8 @@ export class AuthService {
           expires,
         });
 
-        await response.send({refreshToken,...user.toJSON()});
+
+        await response.send({refreshToken,...user});
       }
 
       async refreshToken(user: User, response: Response) {
