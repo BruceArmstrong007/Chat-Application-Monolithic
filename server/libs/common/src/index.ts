@@ -1,4 +1,3 @@
-export * from './database/abstract.repository';
-export * from './database/abstract.schema';
-export * from './database/database.module';
+export * from './database/index';
+export * from './custom-validation/password-match.validator';
 export * from './guard/current-user.decorator';

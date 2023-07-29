@@ -22,6 +22,12 @@ import { RefreshJwtStrategy } from './strategy/refresh-jwt.strategy';
       inject: [ConfigService],
     }),
   ],
-  providers: [AuthService, JwtService, JwtAuthStrategy, RefreshJwtStrategy, LocalAuthStrategy]
+  providers: [
+    AuthService,
+    JwtService,
+    JwtAuthStrategy,
+    RefreshJwtStrategy,
+    LocalAuthStrategy,
+  ],
 })
 export class AuthModule {}

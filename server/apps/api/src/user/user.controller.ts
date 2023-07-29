@@ -1,8 +1,8 @@
 import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
-import { SearchUserRequest } from './dto/request/search-user.request';
-import { UpdateUserRequest } from './dto/request/update-user.request';
+import { SearchUserRequest } from './dto/request/user.request';
+import { UpdateUserRequest } from './dto/request/user.request';
 import { User } from './database/model/user.model';
 import { CurrentUser } from '@app/common';
 
@@ -11,13 +11,9 @@ import { CurrentUser } from '@app/common';
 export class UserController {
   constructor(private userService: UserService) {}
 
-  @Post()
-  async create() {
-    return 'asdsa';
-  }
 
   @Post('search')
-  async findUsers(@Body() request: SearchUserRequest) {
+  async searchUser(@Body() request: SearchUserRequest) {
     return this.userService.getUsers(request?.search);
   }
 

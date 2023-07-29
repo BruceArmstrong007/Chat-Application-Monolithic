@@ -4,14 +4,17 @@ import { CurrentUser } from '@app/common';
 import { User } from '../user/database/model/user.model';
 import { LocalAuthGuard } from './guard/local-auth.guard';
 import { Response } from 'express';
-import { CreateUserRequest } from '../user/dto/request/create-user.request';
+import { CreateUserRequest } from '../user/dto/request/user.request';
 import { UserService } from '../user/user.service';
 import { JwtAuthGuard } from './guard/jwt-auth.guard';
 import { RefreshJwtGuard } from './guard/refresh-jwt.guard';
 
 @Controller('auth')
 export class AuthController {
-    constructor(private readonly authService: AuthService,private readonly userService: UserService){}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly userService: UserService,
+  ) {}
 
     @UseGuards(LocalAuthGuard)
     @Post('login')
@@ -35,8 +38,7 @@ export class AuthController {
 
     @UseGuards(JwtAuthGuard)
     @Get('logout')
-    async logoutUser(
-      @CurrentUser() user: User,@Res({ passthrough: true }) response: Response) {
+    async logoutUser(@Res({ passthrough: true }) response: Response) {
       return this.authService.logout(response);
     }
 }

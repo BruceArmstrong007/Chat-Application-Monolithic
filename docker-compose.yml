@@ -37,5 +37,7 @@ services:
       - 'mongo_db:/data/db'
     ports:
       - '27017:27017'
+      
 volumes:
   mongo_db:
+    driver: local
