@@ -20,8 +20,12 @@ export class UserRepository {
   }
 
   async searchUsers(keyword: string, select?:string): Promise<User[]> {
-    const regex = new RegExp(keyword, 'i'); // 'i' flag for case-insensitive search
-    return await this.userModel.find({ username: regex }).select(select ? select : '*').exec();
+    const regex = new RegExp(keyword, 'i'); 
+    const query = this.userModel.find({ username: regex })
+    if (select) {
+      query.select(select);
+    }
+    return await query.exec(); 
   }
 
   async createUser(username: string, password: string): Promise<User> {
