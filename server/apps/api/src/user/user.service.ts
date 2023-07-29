@@ -14,9 +14,10 @@ export class UserService {
     
     async createUser(request: CreateUserRequest) {
         await this.validateCreateUserRequest(request);
-        const user = await this.userRepository.createUser(request?.username,await bcrypt.hash(request.password, 10));
-        const { password , ...result } = user.toJSON();
-        return result;
+        await this.userRepository.createUser(request?.username,await bcrypt.hash(request.password, 10));
+        return {
+            message : 'User Created'
+        };
     }
 
 
@@ -47,9 +48,10 @@ export class UserService {
     }
 
     async updateUser(username: string,fields : UpdateUserRequest){
-        const user = await this.userRepository.updateUser(username,fields);
-        const { password, ...result } = user.toJSON();
-        return result;
+        await this.userRepository.updateUser(username,fields);
+        return {
+            message: 'User Details Updated.'
+        };
     }
 
 }
