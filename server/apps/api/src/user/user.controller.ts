@@ -11,10 +11,15 @@ import { CurrentUser } from '@app/common';
 export class UserController {
   constructor(private userService: UserService) {}
 
+  @Post('profile')
+  async profile(@CurrentUser() user: User) {
+    return await this.userService.profile(user?.username);
+  }
+
 
   @Post('search')
   async searchUser(@Body() request: SearchUserRequest) {
-    return this.userService.getUsers(request?.search);
+    return await this.userService.getUsers(request?.search);
   }
 
   @Post('update')
@@ -22,6 +27,6 @@ export class UserController {
     @CurrentUser() user: User,
     @Body() request: UpdateUserRequest,
   ) {
-    return this.userService.updateUser(user?.username, request);
+    return await this.userService.updateUser(user?.username, request);
   }
 }

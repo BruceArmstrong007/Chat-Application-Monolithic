@@ -49,7 +49,6 @@ export class UpdateUserRequest {
 export class SearchUserRequest {
   @IsString()
   @IsNotEmpty()
-  @MinLength(1)
   @MaxLength(25)
   search: string;
 

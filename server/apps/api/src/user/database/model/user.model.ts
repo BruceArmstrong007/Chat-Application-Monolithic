@@ -35,22 +35,23 @@ export class User extends Document {
 
   @Prop({ type: [{ type: Types.ObjectId, ref: 'User' }],
     validate: [
-      (sentRequests) => sentRequests.length <= 50,
+      (sentInvites) => sentInvites.length <= 50,
       'Limit Exceeded',
     ],
   })
-  sentRequests: Types.ObjectId[];
+  sentInvites: Types.ObjectId[];
 
   @Prop({ type: [{ type: Types.ObjectId, ref: 'User' }],
   validate: [
-    (receivedRequests) => receivedRequests.length <= 50,
+    (receivedInvites) => receivedInvites.length <= 50,
     'Limit Exceeded',
   ],
  })
-  receivedRequests: Types.ObjectId[];
+  receivedInvites: Types.ObjectId[];
 
 
 }
 
 
 export const UserSchema = SchemaFactory.createForClass(User);
+

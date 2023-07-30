@@ -41,6 +41,11 @@ export class UserService {
           return null;
     }
 
+    async profile(username: string) {
+        const user = await this.userRepository.userProfile(username);
+        const { password, ...result } = user.toJSON();
+        return result;
+    }
 
     async getUsers(searchTerm: string) {
         const user = await this.userRepository.searchUsers(searchTerm,'username name profileURL bio');

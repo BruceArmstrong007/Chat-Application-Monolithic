@@ -8,15 +8,16 @@ export class UserRepository {
   protected readonly logger = new Logger(UserRepository.name);
 
   constructor(
-    @InjectModel(User.name) private readonly userModel: Model<User>,
+    @InjectModel(User.name) public readonly userModel: Model<User>,
   ) {}
 
-  async findById(id: string): Promise<User | null> {
-    return this.userModel.findById(id).exec();
-  }
 
   async findByUsername(username: string): Promise<User | null> {
-    return this.userModel.findOne({ username }).exec();
+    return await this.userModel.findOne({ username }).exec();
+  }
+
+  async userProfile(username: string): Promise<User | null> {
+    return await this.userModel.findOne({ username }).populate('contacts').populate('sentInvites').populate('receivedInvites').exec();
   }
 
   async searchUsers(keyword: string, select?:string): Promise<User[]> {
