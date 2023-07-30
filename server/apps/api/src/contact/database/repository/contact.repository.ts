@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from '../../../user/database/model/user.model';
@@ -6,6 +6,7 @@ import { Fields, UpdateArray } from '../../contact.service';
 
 @Injectable()
 export class ContactRepository {
+  protected readonly logger = new Logger(ContactRepository.name);
 
     constructor(@InjectModel(User.name) private readonly userModel : Model<User & Document>){}
 
