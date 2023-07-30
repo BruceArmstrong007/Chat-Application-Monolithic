@@ -18,21 +18,26 @@ export enum Fields{
 export class ContactService {
     constructor(private readonly contactRepository : ContactRepository){}
 
-    async sentInvite(username1: string,username2: string,option : UpdateArray){
+// this funciton is for user that sends invite, they can either Send invite or Cancel the sent invite
+    async sentInvite(senderUserName: string,receiverUserName: string,option : UpdateArray){
 
-       const user1 = await this.contactRepository.findAndPopulate(username1,[Fields.SENTINVITES]);
-       const user2 = await this.contactRepository.findAndPopulate(username2,[Fields.RECEIVEDINVITES]);
+        // Fetch sender's and receiver's records
+       const sender = await this.contactRepository.findAndPopulate(senderUserName,[Fields.SENTINVITES]);
+       const receiver = await this.contactRepository.findAndPopulate(receiverUserName,[Fields.RECEIVEDINVITES]);
 
-       await this.contactRepository.updateUserArray(user1,user2?.id, option, Fields.SENTINVITES);
-       await this.contactRepository.updateUserArray(user2,user1?.id, option, Fields.RECEIVEDINVITES);
+       // Add/Remove receiver's id in senders sentInvites array
+       await this.contactRepository.updateUserArray(sender,receiver?.id, option, Fields.SENTINVITES);
+       
+       // Add/Remove senders's id in receiver's receivedInvites array
+       await this.contactRepository.updateUserArray(receiver,sender?.id, option, Fields.RECEIVEDINVITES);
         
         return {
             message: 'Operation Successful.'
         }
     }
     
-    
-    async receivedInvite(username1: string,username2: string,option : UpdateArray){
+// this funciton is for user that recieved a invite , they can either Accept invite or Decline the received invite   
+    async receivedInvite(senderUserName: string,receiverUserName: string,option : UpdateArray){
 
         let sent : Fields[] = [Fields.SENTINVITES];
         let received = [Fields.RECEIVEDINVITES]
@@ -41,15 +46,21 @@ export class ContactService {
             received.push(Fields.CONTACTS);
         }
         
-       const user1 = await this.contactRepository.findAndPopulate(username1,received);
-       const user2 = await this.contactRepository.findAndPopulate(username2,sent);
+        // Fetch sender's and receiver's records
+       const sender = await this.contactRepository.findAndPopulate(senderUserName,received);
+       const receiver = await this.contactRepository.findAndPopulate(receiverUserName,sent);
 
-        await this.contactRepository.updateUserArray(user1,user2?.id, UpdateArray.PULL, Fields.RECEIVEDINVITES);
-        await this.contactRepository.updateUserArray(user2,user1?.id, UpdateArray.PULL, Fields.SENTINVITES);
+       
+       // Remove receiver's id in senders receivedInvites array
+        await this.contactRepository.updateUserArray(sender,receiver?.id, UpdateArray.PULL, Fields.RECEIVEDINVITES);
+
+       // Remove sender's id in senders sentInvites array
+        await this.contactRepository.updateUserArray(receiver,sender?.id, UpdateArray.PULL, Fields.SENTINVITES);
          
+        // if accept request then additionally both have to add each other's id in contacts array 
         if(option === UpdateArray.PUSH){
-            await this.contactRepository.updateUserArray(user1,user2?.id, option, Fields.CONTACTS);
-            await this.contactRepository.updateUserArray(user2,user1?.id, option, Fields.CONTACTS);
+            await this.contactRepository.updateUserArray(sender,receiver?.id, option, Fields.CONTACTS);
+            await this.contactRepository.updateUserArray(receiver,sender?.id, option, Fields.CONTACTS);
         }
 
         return {
@@ -57,12 +68,16 @@ export class ContactService {
         }
     }
 
-    async removeContact(username1: string,username2: string){
-        const user1 = await this.contactRepository.findAndPopulate(username1,[Fields.CONTACTS]);
-        const user2 = await this.contactRepository.findAndPopulate(username2,[Fields.CONTACTS]);
+// this funciton is for removing Contact
+    async removeContact(senderUserName: string,receiverUserName: string){
+        
+        // Fetch sender's and receiver's records
+        const sender = await this.contactRepository.findAndPopulate(senderUserName,[Fields.CONTACTS]);
+        const receiver = await this.contactRepository.findAndPopulate(receiverUserName,[Fields.CONTACTS]);
 
-        await this.contactRepository.updateUserArray(user1,user2?.id, UpdateArray.PULL, Fields.CONTACTS);
-        await this.contactRepository.updateUserArray(user2,user1?.id, UpdateArray.PULL, Fields.CONTACTS);
+        //  both have to remove each other's id in contacts array 
+        await this.contactRepository.updateUserArray(sender,receiver?.id, UpdateArray.PULL, Fields.CONTACTS);
+        await this.contactRepository.updateUserArray(receiver,sender?.id, UpdateArray.PULL, Fields.CONTACTS);
  
         return {
             message: 'Operation Successful.'
