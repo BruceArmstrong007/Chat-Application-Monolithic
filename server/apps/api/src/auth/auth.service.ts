@@ -40,7 +40,7 @@ export class AuthService {
 
         await response.send({refreshToken});
       }
-
+      
       async refreshToken(user: User, response: Response) {
         const payload = {
           username: user.username,
@@ -64,8 +64,6 @@ export class AuthService {
         
         await response.send({refreshToken});
       }
-
-    
 
      async logout(response: Response) {
         response.cookie('Authentication', '', {

@@ -1,4 +1,4 @@
-import { Module, ClassSerializerInterceptor } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { ApiController } from './api.controller';
 import { ConfigModule } from '@nestjs/config';
 import * as Joi from 'joi';
@@ -6,7 +6,7 @@ import { DatabaseModule } from '@app/common';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { ContactModule } from './contact/contact.module';
-import { APP_INTERCEPTOR } from '@nestjs/core';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
   imports: [
@@ -23,14 +23,10 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
     DatabaseModule,
     AuthModule,
     UserModule,
-    ContactModule
+    ContactModule,
+    ChatModule
   ],
   controllers: [ApiController],
-  providers: [
-    // {
-    //   provide: APP_INTERCEPTOR,
-    //   useClass: ClassSerializerInterceptor
-    // }
-  ],
+  providers: [],
 })
 export class ApiModule { }

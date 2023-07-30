@@ -14,11 +14,20 @@ export class UserService {
     
     async createUser(request: CreateUserRequest) {
         await this.validateCreateUserRequest(request);
-        await this.userRepository.createUser(request?.username,await bcrypt.hash(request.password, 10));
+        await this.userRepository.createUser(request?.username,await bcrypt.hash(request?.password, 10));
         return {
-            message : 'User Created'
+            message : 'User Created.'
         };
     }
+    
+
+    async resetPassword(username: string,request: CreateUserRequest){
+        await this.userRepository.updateUser(username,{password: await bcrypt.hash(request?.password, 10)});
+        return {
+            message : 'Password Updated.'
+        }
+    }
+
 
 
     private async validateCreateUserRequest(request: CreateUserRequest) {
