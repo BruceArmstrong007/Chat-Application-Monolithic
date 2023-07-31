@@ -14,10 +14,10 @@ export const socketIOAuthMiddleware =
     const token =
       socket.handshake.auth.token || socket.handshake.headers['token'];
 
-
-    logger.debug(`Validating auth token before connection: ${token}`);
+    // logger.debug(`Validating auth token before connection: ${token}`);
+    
     try {
-      const payload = jwtService.verify(token,{secret: config.get<string>('JWT_SECRET')});
+      jwtService.verify(token,{secret: config.get<string>('JWT_SECRET')});
       next();
     } catch (error){
       next(error);
