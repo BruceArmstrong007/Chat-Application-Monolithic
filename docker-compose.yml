@@ -50,7 +50,13 @@ services:
       - ./redis/data:/data
     command: /bin/sh -c "redis-server --requirepass $$REDIS_PASS"
 
-
+  redis-insight:
+    image: redislabs/redisinsight
+    container_name: redis-insight
+    ports:
+      - "8001:8001"
+    depends_on:
+      - redis
       
 volumes:
   mongo_db:

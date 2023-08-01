@@ -39,6 +39,7 @@ export class SocketIOAdapter extends IoAdapter {
 
     server.use(socketIOAuthMiddleware(jwtService, this.logger, config));
 
+    server.adapter();
     return server;
   }
 }

@@ -1,75 +1,35 @@
-import { ConnectedSocket, SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
-import {Socket} from 'socket.io';
+import { PubSubService, RedisProvider } from '@app/common';
+import {
+  WebSocketGateway,
+  SubscribeMessage,
+  MessageBody,
+} from '@nestjs/websockets';
+import { Server } from 'socket.io';
 
 @WebSocketGateway()
 export class ChatGateway {
-  @SubscribeMessage('message')
-  handleMessage(client: any, payload: any): string {
-    return 'Hello world!';
-  }
-  @SubscribeMessage('sendNotification')
-  sendNotification(@ConnectedSocket() client: Socket, payload: { userId: string, message: string }) {
-    const { userId, message } = payload;
-    const socketId = this.getSocketIdByUserId(userId);
-    if (socketId) {
-      this.server.to(socketId).emit('notification', message);
-    }
-  }
 
-  
-To send real-time notifications to users using Socket.IO in NestJS, you can follow these steps:
-
-Set up the Socket.IO Gateway: If you haven't already, create a Socket.IO gateway using the following command:
-bash
-Copy code
-$ nest g gateway socket
-Handle Connections: In your Socket.IO gateway (e.g., socket.gateway.ts), implement the handleConnection and handleDisconnect methods to handle client connections and disconnections, just like in the previous example.
-
-Implement Notification Event: Define a custom event for sending notifications to users. For example, you can create a sendNotification event that clients can listen to in order to receive notifications.
-
-Here's an example of how to do this:
-
-typescript
-Copy code
-import { SubscribeMessage, WebSocketGateway, OnGatewayConnection, OnGatewayDisconnect, WebSocketServer, ConnectedSocket } from '@nestjs/websockets';
-import { Socket, Server } from 'socket.io';
-
-@WebSocketGateway()
-export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
-  private connectedUsers = new Map<string, string>();
-
-  @WebSocketServer() server: Server;
-
-  handleConnection(@ConnectedSocket() client: Socket) {
-    const userId = client.handshake.query.userId;
-    if (userId) {
-      this.connectedUsers.set(client.id, userId);
-    }
+  constructor(
+    private readonly redisProvider: RedisProvider,
+    private readonly pubSubService: PubSubService,) {
+       this.redisProvider.publisher.set('key', 'value');
+      const cachedValue =  this.redisProvider.publisher.get('key');
+      console.log(cachedValue);
+      const channel = 'test-channel';
+      this.pubSubService.subscribe(channel, (message) => {
+        console.log('Received message:', message);
+      });
   }
 
-  handleDisconnect(@ConnectedSocket() client: Socket) {
-    this.connectedUsers.delete(client.id);
+  async handleConnection(client: Server) {
+    const channel = 'test-channel';
+    await this.pubSubService.publish(channel, 'Hello, world!');
   }
 
-  
-  // Custom event for sending notifications to users
-  @SubscribeMessage('sendNotification')
-  sendNotification(@ConnectedSocket() client: Socket, payload: { userId: string, message: string }) {
-    const { userId, message } = payload;
-    const socketId = this.getSocketIdByUserId(userId);
-    if (socketId) {
-      this.server.to(socketId).emit('notification', message);
-    }
+  async handleDisconnect(client: Server) {
   }
 
-  // Helper function to retrieve socket ID based on user ID
-  private getSocketIdByUserId(userId: string): string | undefined {
-    for (const [socketId, connectedUserId] of this.connectedUsers.entries()) {
-      if (connectedUserId === userId) {
-        return socketId;
-      }
-    }
-    return undefined;
+  @SubscribeMessage('chatMessage')
+  async handleChatMessage(@MessageBody() data: { sender: string; message: string }) {
   }
-
 }
