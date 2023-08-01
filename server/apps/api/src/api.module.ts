@@ -15,9 +15,10 @@ import { ChatModule } from './chat/chat.module';
       envFilePath: '.env',
       validationSchema: Joi.object({
         MONGODB_URI: Joi.string().required(),
+        REDIS_URI: Joi.string().required(),
         JWT_SECRET: Joi.string().required(),
         DATABASE_NAME: Joi.string().required(),
-        JWT_EXPIRATION: Joi.required(),
+        JWT_EXPIRATION: Joi.required()
       }),
     }),
     DatabaseModule,

@@ -11,6 +11,7 @@ services:
       - /usr/src/app/node_modules
     ports:
       - '4200:4200'
+
   server:
     build:
       context: ./server
@@ -38,6 +39,22 @@ services:
     ports:
       - '27017:27017'
       
+  redis:
+    image: redis
+    container_name: redis_chat
+    ports:
+      - "6379:6379"
+    env_file:
+      - ./server/.env
+    volumes:
+      - ./redis/data:/data
+    command: /bin/sh -c "redis-server --requirepass $$REDIS_PASS"
+
+
+      
 volumes:
   mongo_db:
+    driver: local
+
+  redis_data:
     driver: local
