@@ -12,7 +12,10 @@ async function bootstrap() {
     }));
   const configService = app.get(ConfigService);
 
+
+
   app.useWebSocketAdapter(new SocketIOAdapter(app, configService))
   await app.listen(configService.get('PORT'));
+
 }
 bootstrap();
