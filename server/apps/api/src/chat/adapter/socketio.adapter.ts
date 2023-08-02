@@ -39,6 +39,9 @@ export class SocketIOAdapter extends IoAdapter {
     const userRepo = this.app.get(UserRepository)
     const server: Server = super.createIOServer(port, optionsWithCORS);
 
+    server.of('user').use(socketIOAuthMiddleware(jwtService, userRepo, this.logger, config));
+    server.of('message').use(socketIOAuthMiddleware(jwtService, userRepo, this.logger, config));
+    server.of('event').use(socketIOAuthMiddleware(jwtService, userRepo, this.logger, config));
     server.use(socketIOAuthMiddleware(jwtService, userRepo, this.logger, config));
 
     server.adapter();

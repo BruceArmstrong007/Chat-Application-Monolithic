@@ -2,13 +2,13 @@ import { Logger, UnauthorizedException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import {Socket} from 'socket.io';
-import { UserRepository } from '../../../user/database/repository/user.repository';
+import { UserRepository } from "../../user/database/repository/user.repository";
 
 export type AuthPayload = {
   userID: string;
 }
 
-export type SocketWithAuth = Socket & AuthPayload;
+export type SocketWithAuth = Socket & AuthPayload ;
 
 export type SocketIOAuthMiddleware = {
     (client: SocketWithAuth,next:(err ?: Error) => void);
@@ -30,6 +30,7 @@ export const socketIOAuthMiddleware =
       if(!objectID){
         throw new UnauthorizedException();
       }
+      console.log(payload)
       socket.userID =  objectID.toString();
       next();
     } catch (error){
