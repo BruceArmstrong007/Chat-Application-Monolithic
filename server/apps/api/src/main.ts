@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { ApiModule } from './api.module';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { SocketIOAdapter } from './chat/gateway/adapter/socketio.adapter';
+import { SocketIOAdapter } from './chat/adapter/socketio.adapter';
 
 async function bootstrap() {
   const app = await NestFactory.create(ApiModule);

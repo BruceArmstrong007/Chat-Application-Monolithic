@@ -1,23 +1,18 @@
 import { Module } from '@nestjs/common';
 import { ChatController } from './chat.controller';
 import { ChatService } from './chat.service';
-import { ChatGateway } from './gateway/chat.gateway';
-import { ChatRepository } from './database/repository/chat.repository';
-import { Chat, ChatSchema } from './database/model/chat.model';
+import { RedisProvider } from '@app/common';
+import { User, UserSchema } from '../user/database/model/user.model';
 import { MongooseModule } from '@nestjs/mongoose';
-import { RedisProvider, PubSubService } from '@app/common';
 
 @Module({
   controllers: [ChatController],
   providers: [
     ChatService,
-    ChatGateway,
-    ChatRepository,
     RedisProvider,
-    PubSubService
   ],
   imports: [
-    MongooseModule.forFeature([{ name: Chat.name, schema: ChatSchema }])
-  ]
+    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }])
+   ]
 })
 export class ChatModule {}
