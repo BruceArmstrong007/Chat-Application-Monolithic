@@ -5,24 +5,24 @@ import {
   MessageBody,
 } from '@nestjs/websockets';
 import { Server } from 'socket.io';
-import { ChatService } from '../../chat.service';
+import { ChatRepository } from '../../database/repository/chat.repository';
 
 @WebSocketGateway({namespace:'message'})
 export class MessageGateway {
 
   constructor(
     private readonly redisProvider: RedisProvider,
-    private readonly chatService: ChatService,
+    private readonly chatRepository: ChatRepository,
   ) {
       const channel = 'test-channel';
-      this.chatService.subscribe(channel, (message) => {
+      this.chatRepository.subscribe(channel, (message) => {
         console.log('Received message:', message);
       });
   }
 
   async handleConnection(client: Server) {
     const channel = 'test-channel';
-    await this.chatService.publish(channel, 'Hello, world!');
+    await this.chatRepository.publish(channel, 'Hello, world!');
   }
 
   async handleDisconnect(client: Server) {

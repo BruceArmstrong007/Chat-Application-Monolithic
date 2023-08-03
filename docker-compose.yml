@@ -35,19 +35,21 @@ services:
       - MONGODB_ADVERTISED_HOSTNAME=mongodb
       - MONGODB_ROOT_PASSWORD=password123
     volumes:
-      - redis_data:/data
+      - mongo_db:/data
     ports:
       - '27017:27017'
       
   redis:
     image: redis
-    container_name: redis_chat
+    container_name: redis_db
     ports:
       - "6379:6379"
     env_file:
       - ./server/.env
-    command: /bin/sh -c "redis-server --supervised systemd --requirepass $$REDIS_PASS"
-
+    command: /bin/sh -c "redis-server --requirepass $$REDIS_PASS --save 60 1 --appendonly yes"
+    volumes:
+      - redis_data:/data
+  
   redis-insight:
     image: redislabs/redisinsight
     container_name: redis-insight

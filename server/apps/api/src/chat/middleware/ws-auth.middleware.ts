@@ -30,7 +30,6 @@ export const socketIOAuthMiddleware =
       if(!objectID){
         throw new UnauthorizedException();
       }
-      console.log(payload)
       socket.userID =  objectID.toString();
       next();
     } catch (error){

@@ -1,12 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import Redis from 'ioredis';
+import { Redis } from 'ioredis';
 
+export interface RedisJson {
+  json : any
+}
 
 @Injectable()
 export class RedisProvider {
-  public publisher: Redis;
-  public subscriber: Redis;
+  public publisher: Redis & RedisJson;
+  public subscriber: Redis& RedisJson;
 
   constructor(config : ConfigService) {
     try{

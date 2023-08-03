@@ -7,6 +7,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { MessageGateway } from './gateway/message/message.gateway';
 import { UserGateway } from './gateway/user/user.gateway';
 import { EventGateway } from './gateway/event/event.gateway';
+import { ChatRepository } from './database/repository/chat.repository';
 
 @Module({
   controllers: [ChatController],
@@ -15,7 +16,8 @@ import { EventGateway } from './gateway/event/event.gateway';
     RedisProvider,
     MessageGateway,
     UserGateway,
-    EventGateway
+    EventGateway,
+    ChatRepository
   ],
   imports: [
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }])
