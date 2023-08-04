@@ -1,8 +1,8 @@
 import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
-import { CurrentUser } from '@app/common';
+import { CurrentUser, UpdateArray } from '@app/common';
 import { User } from '../user/database/model/user.model';
-import { ContactService, UpdateArray } from './contact.service';
+import { ContactService } from './contact.service';
 import { ContactRequest } from './dto/request/contact.request';
 
 @UseGuards(JwtAuthGuard)

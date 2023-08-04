@@ -14,7 +14,7 @@ export class UserGateway implements OnGatewayConnection, OnGatewayDisconnect {
   ) {}
 
   // Initial Fetching of active online friends from redis periodically
-  @SubscribeMessage('onlineFriends')
+  @SubscribeMessage('online-friends')
   async returnActiveUsers(client: SocketWithAuth): Promise<any> {
     return this.chatService.activeUsers(client?.userID);
   }
@@ -22,7 +22,6 @@ export class UserGateway implements OnGatewayConnection, OnGatewayDisconnect {
   // When user is connected, adds user online to redis db with time to live of 1 minute
   handleConnection(client: SocketWithAuth){
     this.chatService.addUserOnline(client.userID, client?.id);
-
     this.chatService.connectUserChannels(client.userID, client);
   }
 

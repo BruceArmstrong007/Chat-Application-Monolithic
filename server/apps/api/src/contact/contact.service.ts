@@ -1,17 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ContactRepository } from './database/repository/contact.repository';
-
-export enum UpdateArray{
-    PUSH = 'push',
-    PULL = 'pull' 
-}
-
-export enum Fields{
-    CONTACTS = 'contacts',
-    SENTINVITES = 'sentInvites',
-    RECEIVEDINVITES = 'receivedInvites'
-
-}
+import { Fields, UpdateArray } from '@app/common';
 
 
 @Injectable()
