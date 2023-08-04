@@ -36,13 +36,14 @@ export class ChatRepository {
     return this.redisProvider.publisher.publish(channel, message);
   }
 
-  async set(key: string, value: any) {
-   await this.redisProvider.publisher.set(key, value);
+  async set(key: string, value: any, ttl?: number) {
+    if (!ttl) ttl = 0;
+    await this.redisProvider.publisher.set(key, value, 'EX', ttl);
   }
 
 
-  async get(key: string){
-    await this.redisProvider.publisher.get(key);
+  async get(key: string): Promise<string> {
+    return await this.redisProvider.publisher.get(key);
   }
 
   async del(key: string){

@@ -7,7 +7,7 @@ import {
 import { Server } from 'socket.io';
 import { ChatRepository } from '../../database/repository/chat.repository';
 
-@WebSocketGateway({namespace:'message'})
+@WebSocketGateway({ namespace: 'message' })
 export class MessageGateway {
 
   constructor(
