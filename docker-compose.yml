@@ -6,9 +6,6 @@ services:
       dockerfile: Dockerfile
       target: development
     command: npm run start
-    volumes:
-      - ./client:/usr/src/app
-      - /usr/src/app/node_modules
     ports:
       - '4200:4200'
   server:
