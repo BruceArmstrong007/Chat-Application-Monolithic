@@ -68,4 +68,11 @@ export class UserService {
         };
     }
 
+    async deleteUser(username: string){
+        await this.userRepository.deleteUser(username);
+        return {
+            message: 'User Deleted.'
+        };
+    }
+
 }

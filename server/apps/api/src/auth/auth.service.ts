@@ -4,10 +4,6 @@ import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
 import { User } from '../user/database/model/user.model';
 
-export interface TokenPayload {
-    userId: string;
-  }
-  
 
 @Injectable()
 export class AuthService {
@@ -36,7 +32,6 @@ export class AuthService {
           httpOnly: true,
           expires,
         });
-
 
         await response.send({refreshToken});
       }

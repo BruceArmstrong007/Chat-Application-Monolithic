@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post, Put, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 import { SearchUserRequest } from './dto/request/user.request';
@@ -22,11 +22,17 @@ export class UserController {
     return await this.userService.getUsers(request?.search);
   }
 
-  @Post('update')
+  @Put('update')
   async updateUser(
     @CurrentUser() user: User,
     @Body() request: UpdateUserRequest,
   ) {
     return await this.userService.updateUser(user?.username, request);
   }
+
+  @Post('delete')
+  async deleteUser(@CurrentUser() user: User) {
+    return await this.userService.deleteUser(user?.username);
+  }
+
 }
