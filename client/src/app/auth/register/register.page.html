@@ -17,8 +17,13 @@
         <ion-input type="password"></ion-input>
       </ion-item>
       <ion-button expand="full" color="primary" class="login-button">
-        Log In
+        Send
       </ion-button>
+      <ion-item>
+        <ion-label>
+          <p>Already registered? click here to <a  [routerLink]="['../login']">login</a></p>
+        </ion-label>
+      </ion-item>
     </ion-card-content>
   </ion-card>
 </ion-content>
