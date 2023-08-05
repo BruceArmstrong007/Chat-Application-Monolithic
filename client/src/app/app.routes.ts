@@ -17,7 +17,7 @@ export const routes: Routes = [
       },
       {
         path: '',
-        redirectTo: '/user/chat',
+        redirectTo: '/user/chats',
         pathMatch: 'full'
       },
     ]
