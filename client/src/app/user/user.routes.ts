@@ -22,7 +22,7 @@ export const routes: Routes = [
           import('./search/search.page').then((m) => m.SearchPage),
       },
       {
-        path: '',
+        path: '**',
         redirectTo: '/user/chats',
         pathMatch: 'full',
       },

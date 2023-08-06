@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { AppComponent } from './app.component';
+import { AuthGuard } from 'src/shared/guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -12,11 +13,11 @@ export const routes: Routes = [
       },
       {
         path: 'user',
-        canActivate:[],
+        canActivate:[AuthGuard],
         loadChildren: () => import('./user/user.routes').then((m) => m.routes)
       },
       {
-        path: '',
+        path: '**',
         redirectTo: '/user/chats',
         pathMatch: 'full'
       },

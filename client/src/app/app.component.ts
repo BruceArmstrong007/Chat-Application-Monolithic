@@ -6,6 +6,7 @@ import { IonicModule } from '@ionic/angular';
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss'],
   standalone: true,
+  providers: [],
   imports: [IonicModule],
 })
 export class AppComponent {

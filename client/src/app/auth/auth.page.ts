@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
-
 @Component({
   selector: 'app-auth',
   templateUrl: './auth.page.html',

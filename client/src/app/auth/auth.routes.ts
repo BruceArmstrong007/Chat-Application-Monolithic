@@ -9,20 +9,20 @@ export const routes: Routes = [
       {
         path: 'login',
         loadComponent: () =>
-          import('./login/login.page').then((m) => m.LoginPage),
+          import('./components/login/login.page').then((m) => m.LoginPage),
       },
       {
         path: 'register',
         loadComponent: () =>
-          import('./register/register.page').then((m) => m.RegisterPage),
+          import('./components/register/register.page').then((m) => m.RegisterPage),
       },
       {
         path: 'reset-password',
         loadComponent: () =>
-          import('./reset-password/reset-password.page').then((m) => m.ResetPasswordPage),
+          import('./components/reset-password/reset-password.page').then((m) => m.ResetPasswordPage),
       },
       {
-        path: '',
+        path: '**',
         redirectTo: '/auth/login',
         pathMatch: 'full',
       },
