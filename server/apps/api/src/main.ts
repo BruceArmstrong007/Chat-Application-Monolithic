@@ -6,14 +6,12 @@ import { SocketIOAdapter } from './chat/adapter/socketio.adapter';
 
 async function bootstrap() {
   const app = await NestFactory.create(ApiModule);
+  app.enableCors();
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true
     }));
   const configService = app.get(ConfigService);
-
-
-
   app.useWebSocketAdapter(new SocketIOAdapter(app, configService))
   await app.listen(configService.get('PORT'));
 

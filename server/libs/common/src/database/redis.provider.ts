@@ -6,10 +6,14 @@ export interface RedisJson {
   json : any
 }
 
+//@ts-ignore
+export type RedisType = Redis.Redis & RedisJson;
+
 @Injectable()
 export class RedisProvider {
-  public publisher: Redis & RedisJson;
-  public subscriber: Redis& RedisJson;
+  public publisher: RedisType;
+  public subscriber: RedisType;
+  
 
   constructor(config : ConfigService) {
     try{

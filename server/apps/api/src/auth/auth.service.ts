@@ -12,31 +12,22 @@ export class AuthService {
         private readonly jwtService: JwtService,
       ) {}
     
-      async login(user: User, response: Response) {
+      async login(user: User) {
         const payload = {
           username: user.username,
           sub: {
             name: user.name,
           },
         };
-    
-        const expires = new Date();
-        expires.setSeconds(
-          expires.getSeconds() + this.configService.get('JWT_EXPIRATION'),
-        );
+
     
         const accessToken = await this.jwtService.sign(payload,{secret: this.configService.get<string>('JWT_SECRET'),expiresIn: this.configService.get('JWT_EXPIRATION')+'s'});
         const refreshToken = await this.jwtService.sign(payload,{secret: this.configService.get<string>('JWT_SECRET'),expiresIn:'7d'});
 
-        response.cookie('Authentication', accessToken, {
-          httpOnly: true,
-          expires,
-        });
-
-        await response.send({refreshToken});
+        await response.send({refreshToken,accessToken});
       }
       
-      async refreshToken(user: User, response: Response) {
+      async refreshToken(user: User) {
         const payload = {
           username: user.username,
           sub: {
@@ -44,20 +35,10 @@ export class AuthService {
           },
         };
     
-        const expires = new Date();
-        expires.setSeconds(
-          expires.getSeconds() + this.configService.get('JWT_EXPIRATION'),
-        );
-    
         const accessToken = await this.jwtService.sign(payload,{secret: this.configService.get<string>('JWT_SECRET'),expiresIn: this.configService.get('JWT_EXPIRATION')+'s'});
-        const refreshToken = await this.jwtService.sign(payload,{secret: this.configService.get<string>('JWT_SECRET'),expiresIn:'7d'});
-
-        response.cookie('Authentication', accessToken, {
-          httpOnly: true,
-          expires,
-        });
+        // const refreshToken = await this.jwtService.sign(payload,{secret: this.configService.get<string>('JWT_SECRET'),expiresIn:'7d'});
         
-        await response.send({refreshToken});
+        await response.send({accessToken});
       }
 
      async logout(response: Response) {
