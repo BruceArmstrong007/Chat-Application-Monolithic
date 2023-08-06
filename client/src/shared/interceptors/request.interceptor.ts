@@ -11,7 +11,7 @@ import { AuthService } from '../../app/auth/auth.service';
 import { TokenService } from 'src/shared/services/token.service';
 
 @Injectable()
-export class RefreshTokenInterceptor implements HttpInterceptor {
+export class RequestInterceptor implements HttpInterceptor {
   private readonly authService = inject(AuthService);
   private readonly tokenService = inject(TokenService);
 
