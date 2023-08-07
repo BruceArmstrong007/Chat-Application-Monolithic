@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Put, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 import { SearchUserRequest } from './dto/request/user.request';
@@ -11,7 +11,7 @@ import { CurrentUser } from '@app/common';
 export class UserController {
   constructor(private userService: UserService) {}
 
-  @Post('profile')
+  @Get('profile')
   async profile(@CurrentUser() user: User) {
     return await this.userService.profile(user?.username);
   }
