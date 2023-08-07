@@ -20,8 +20,8 @@ export class ResetPasswordPage implements OnInit {
   constructor() {
     this.resetPasswordForm = this.fb.group({
       username: ['',Validators.compose([Validators.required,Validators.maxLength(25)])],
-      password: ['',Validators.compose([Validators.required])],
-      confirmPassword: ['',Validators.compose([Validators.required])]
+      password: ['',Validators.compose([Validators.required, Validators.minLength(8)])],
+      confirmPassword: ['',Validators.compose([Validators.required, Validators.minLength(8)])]
     },{
       validators : (control: FormControl<any>) => this.passwordValidator.MatchValidator(control,"password",'confirmPassword')
     })

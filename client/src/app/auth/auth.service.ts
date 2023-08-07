@@ -33,7 +33,6 @@ export class AuthService{
 
   resetPassword(data: User): Observable<any>{
     return this.http.post(this.env.apiUrl+'/auth/reset-password',data).pipe(
-      map((res) => this.router.navigateByUrl('auth')),
       catchError(this.handleError))
   }
 
@@ -50,7 +49,7 @@ export class AuthService{
   refreshToken(data: unknown): Observable<any>{
     return this.http.post(this.env.apiUrl+'/auth/refresh',data).pipe(
       map((res: any) => {
-        this.tokenService.setToken = res?.refreshToken;
+        this.tokenService.setToken = res?.accessToken;
         return res;
       }),
       catchError(this.handleError))
@@ -60,8 +59,6 @@ export class AuthService{
 
 
   private handleError(Response: HttpErrorResponse){
-    console.log(Response);
-
     switch(Response?.error.statusCode){
       case 401:
         console.log('Invalid Username / Password.');

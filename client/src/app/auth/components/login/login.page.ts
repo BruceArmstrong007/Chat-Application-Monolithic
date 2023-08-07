@@ -20,7 +20,7 @@ export class LoginPage implements OnInit {
   constructor() {
     this.loginForm = this.fb.group({
       username: ['',Validators.compose([Validators.required, Validators.maxLength(25)])],
-      password: ['',Validators.compose([Validators.required])]
+      password: ['',Validators.compose([Validators.required, Validators.minLength(8)])]
     })
    }
 
