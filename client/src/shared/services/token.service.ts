@@ -6,7 +6,7 @@ export type tokenType = string | null;
   providedIn: 'root'
 })
 export class TokenService {
-  private readonly token : WritableSignal<tokenType> = signal(null);
+  private token : WritableSignal<tokenType> = signal(null);
 
   get getToken(){
     return this.token();

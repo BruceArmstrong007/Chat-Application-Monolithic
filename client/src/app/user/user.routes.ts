@@ -9,17 +9,17 @@ export const routes: Routes = [
       {
         path: 'chats',
         loadComponent: () =>
-          import('./chats/chats.page').then((m) => m.ChatsPage),
+          import('./components/chats/chats.page').then((m) => m.ChatsPage),
       },
       {
         path: 'friends',
         loadComponent: () =>
-          import('./friends/friends.page').then((m) => m.FriendsPage),
+          import('./components/friends/friends.page').then((m) => m.FriendsPage),
       },
       {
         path: 'search',
         loadComponent: () =>
-          import('./search/search.page').then((m) => m.SearchPage),
+          import('./components/search/search.page').then((m) => m.SearchPage),
       },
       {
         path: '**',
