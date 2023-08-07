@@ -1,12 +1,12 @@
 import { Injectable, WritableSignal, signal } from '@angular/core';
 
-export type tokenType = string | null;
+export type tokenType = string;
 
 @Injectable({
   providedIn: 'root'
 })
 export class TokenService {
-  private token : WritableSignal<tokenType> = signal(null);
+  private token : WritableSignal<tokenType> = signal('');
 
   get getToken(){
     return this.token();
@@ -15,5 +15,6 @@ export class TokenService {
   set setToken(value : tokenType){
     this.token.set(value);
   }
+
 
 }

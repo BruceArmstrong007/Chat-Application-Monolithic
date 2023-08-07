@@ -40,7 +40,7 @@ export class AuthService{
     return this.http.get(this.env.apiUrl+'/auth/logout').pipe(
       map(() => {
         localStorage.removeItem('token');
-        this.tokenService.setToken = null;
+        this.tokenService.setToken = '';
         this.router.navigateByUrl('auth');
       }),
       catchError(this.handleError))

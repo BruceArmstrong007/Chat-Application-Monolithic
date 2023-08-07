@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
+import { UserSocketService } from './sockets/user-socket.service';
 
 @Component({
   selector: 'app-user',
@@ -9,9 +10,10 @@ import { IonicModule } from '@ionic/angular';
   imports: [IonicModule]
 })
 export class UserPage implements OnInit {
-tor() { }
+  private readonly userSocket = inject(UserSocketService);
 
   ngOnInit() {
+    this.userSocket.establishConnection();
   }
 
 }
