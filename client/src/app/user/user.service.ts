@@ -6,9 +6,12 @@ import { environment } from "src/environments/environment";
 export interface UserProfile {
     _id: string,
     username: string,
-    contacts: UserProfile[],
-    sentInvites: UserProfile[],
-    receivedInvites: UserProfile[],
+    name: string,
+    bio: string,
+    profileURL: string,
+    contacts: Partial<UserProfile>[],
+    sentInvites: Partial<UserProfile>[],
+    receivedInvites: Partial<UserProfile>[],
     createdAt: string,
     updatedAt: string
 }

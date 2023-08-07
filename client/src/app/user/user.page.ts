@@ -1,4 +1,4 @@
-import { Component, EnvironmentInjector, OnInit, inject } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 
 @Component({
@@ -9,9 +9,7 @@ import { IonicModule } from '@ionic/angular';
   imports: [IonicModule]
 })
 export class UserPage implements OnInit {
-  public environmentInjector = inject(EnvironmentInjector);
-
-  constructor() { }
+tor() { }
 
   ngOnInit() {
   }
