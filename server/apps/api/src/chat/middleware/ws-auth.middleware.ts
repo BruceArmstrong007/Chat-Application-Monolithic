@@ -18,9 +18,8 @@ export const socketIOAuthMiddleware =
    (jwtService: JwtService, userRepo: UserRepository, logger: Logger, config: ConfigService) : SocketIOAuthMiddleware =>
   (socket: SocketWithAuth, next) => {
    const handleSocketConnection = async (socket: SocketWithAuth,next) =>{
-    
-    const token =
-      socket.handshake.auth.token || socket.handshake.headers['token'];
+      const token = socket.handshake.query.token as string;
+      // socket.handshake.auth.token || socket.handshake.headers['token'];
 
     // logger.debug(`Validating auth token before connection: ${token}`);
     
