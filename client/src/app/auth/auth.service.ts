@@ -6,7 +6,9 @@ import { Observable, catchError, throwError, map } from 'rxjs';
 import { TokenService } from 'src/shared/services/token.service';
 import { Router } from '@angular/router';
 
-@Injectable()
+@Injectable({
+  providedIn:'root'
+})
 export class AuthService{
   private readonly http: HttpClient = inject(HttpClient);
   private readonly router = inject(Router);
@@ -25,6 +27,13 @@ export class AuthService{
 
   register(data: User): Observable<any>{
     return this.http.post(this.env.apiUrl+'/auth/register',data).pipe(
+      map((res) => this.router.navigateByUrl('auth')),
+      catchError(this.handleError))
+  }
+
+  resetPassword(data: User): Observable<any>{
+    return this.http.post(this.env.apiUrl+'/auth/reset-password',data).pipe(
+      map((res) => this.router.navigateByUrl('auth')),
       catchError(this.handleError))
   }
 
@@ -51,6 +60,8 @@ export class AuthService{
 
 
   private handleError(Response: HttpErrorResponse){
+    console.log(Response);
+
     switch(Response?.error.statusCode){
       case 401:
         console.log('Invalid Username / Password.');

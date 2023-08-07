@@ -3,6 +3,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { ValidationService } from 'src/shared/services/validation.service';
+import { AuthService } from '../../auth.service';
 
 @Component({
   selector: 'app-reset-password',
@@ -13,6 +14,7 @@ import { ValidationService } from 'src/shared/services/validation.service';
 })
 export class ResetPasswordPage implements OnInit {
   private readonly passwordValidator = inject(ValidationService);
+  private readonly authService = inject(AuthService);
   private readonly fb : FormBuilder = inject(FormBuilder);
   resetPasswordForm: FormGroup;
   constructor() {
@@ -32,7 +34,8 @@ export class ResetPasswordPage implements OnInit {
     if(this.resetPasswordForm.invalid){
       return;
     }
-    console.log(this.resetPasswordForm.value);
+    this.authService.resetPassword(this.resetPasswordForm.value).subscribe((res)=> {
+    })
   }
 
   get f(){

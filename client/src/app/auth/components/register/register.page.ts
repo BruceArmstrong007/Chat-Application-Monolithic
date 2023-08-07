@@ -39,7 +39,6 @@ export class RegisterPage implements OnInit {
       return;
     }
     this.authService.register(this.registerForm.value).subscribe((res)=> {
-      this.router.navigateByUrl('auth');
     })
 
   }

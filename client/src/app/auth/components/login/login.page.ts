@@ -10,9 +10,8 @@ import { HttpClientModule } from '@angular/common/http';
   selector: 'app-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
-  providers: [AuthService],
   standalone: true,
-  imports: [IonicModule, RouterLink, FormsModule, ReactiveFormsModule, HttpClientModule, NgIf]
+  imports: [IonicModule, RouterLink, FormsModule, ReactiveFormsModule, NgIf]
 })
 export class LoginPage implements OnInit {
   private readonly fb : FormBuilder = inject(FormBuilder);
