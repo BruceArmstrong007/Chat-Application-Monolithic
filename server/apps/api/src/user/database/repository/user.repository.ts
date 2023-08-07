@@ -17,7 +17,11 @@ export class UserRepository {
   }
 
   async userProfile(username: string): Promise<User | null> {
-    return await this.userModel.findOne({ username }).populate('contacts').populate('sentInvites').populate('receivedInvites').exec();
+    return await this.userModel
+      .findOne({ username })
+      .select('-password')
+      .populate('contacts sentInvites receivedInvites', '-password')
+      .exec();
   }
 
   async searchUsers(keyword: string, select?:string): Promise<User[]> {
