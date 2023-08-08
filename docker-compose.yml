@@ -24,6 +24,7 @@ services:
       - '3000:3000'
     depends_on:
       - mongodb
+      - redis
 
   mongodb:
     image: docker.io/bitnami/mongodb:5.0

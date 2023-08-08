@@ -29,6 +29,5 @@ import { ChatModule } from './chat/chat.module';
     ChatModule
   ],
   controllers: [ApiController],
-  providers: [],
 })
 export class ApiModule { }
