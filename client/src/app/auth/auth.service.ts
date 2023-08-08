@@ -37,12 +37,10 @@ export class AuthService{
   }
 
   logout(): Observable<any>{
+    localStorage.removeItem('token');
+    this.tokenService.setToken = '';
+    this.router.navigateByUrl('auth');
     return this.http.get(this.env.apiUrl+'/auth/logout').pipe(
-      map(() => {
-        localStorage.removeItem('token');
-        this.tokenService.setToken = '';
-        this.router.navigateByUrl('auth');
-      }),
       catchError(this.handleError))
   }
 
