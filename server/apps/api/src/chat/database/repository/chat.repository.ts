@@ -64,17 +64,13 @@ export class ChatRepository {
     return await this.redisProvider.publisher.lrange(key, start, end);
   }
 
-  async generateRoomIDs(id1: any, id2: any): Promise<string>{
+  generateRoomIDs(id1: any, id2: any): string{
     return [id1, id2].sort().join('-');
   }
 
 
-
-
-
-
-
   async setAddElts(key: string, value: string[]){
+    // await this.redisProvider.publisher.json.arrappend(key, '$', value);
     await this.redisProvider.publisher.sadd(key, ...value);
   }
 

@@ -35,7 +35,7 @@ export class MessageGateway {
   // Send all the user messages in response
   @SubscribeMessage('get-messages')
   async getMessages(client: SocketWithAuth): Promise<any> {
-    return await this.chatService.activeUsers(client?.userID);
+    return await this.chatService.getUserMessages(client?.userID);
   }
 
   // Send messages to all the friend rooms user is connected

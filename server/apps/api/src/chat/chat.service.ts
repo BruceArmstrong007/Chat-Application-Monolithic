@@ -1,11 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import { ChatRepository } from './database/repository/chat.repository';
-import { Types } from 'mongoose';
 import { SocketWithAuth } from './middleware/ws-auth.middleware';
 import { v4 as uuidv4 } from 'uuid';
-import { Message } from './gateway/message/message.interface';
 import { Options } from '@app/common';
 import { Server } from 'socket.io';
+
+export interface Message {
+  messageID: string;
+  senderID: string;
+  receiverID: string;
+  timestamp: string;
+  content: string;
+  status: string;
+  actions: string;
+  type: string;
+}
 
 @Injectable()
 export class ChatService {
@@ -25,15 +34,18 @@ export class ChatService {
 
   async activeUsers(userID: string): Promise<any> {
     const contactIDs = await this.getContacts(userID);
-    return contactIDs.map(async (_id: Types.ObjectId) => {
-      const id = _id.toString();
+    const contacts = [];
+    for (let i = 0; i < contactIDs.length; i++) {
+      const id = contactIDs[i].toString();
       const socketID = await this.chatRepository.get(id);
-      return {
+      const res = {
         id,
         socketID: socketID,
         isOnline: socketID ? true : false,
       };
-    });
+      contacts.push(res);
+    }
+    return contacts;
   }
 
   async connectUserChannels(userID: string, client: SocketWithAuth) {
@@ -43,12 +55,17 @@ export class ChatService {
 
   async getUserMessages(userID: string): Promise<any[]> {
     const roomIDs = await this.getRoomIDs(userID);
-    const messages = await roomIDs.map(async (roomID) => {
-      return {
-        roomID: roomID,
-        messages: await this.chatRepository.jsonGet(`rooms:${roomID}`, 0, -1),
-      };
-    });
+    const messages = [];
+    for (let i = 0; i < roomIDs.length; i++) {
+      messages.push({
+        roomID: roomIDs[i],
+        messages: await this.chatRepository.jsonGet(
+          `rooms:${roomIDs[i]}`,
+          0,
+          -1,
+        ),
+      })
+    }
     return messages;
   }
 
@@ -67,9 +84,10 @@ export class ChatService {
       message?.senderID,
       message?.receiverID,
     );
-    this.chatRepository.set(`rooms:${roomID}`, JSON.stringify(message));
+    const chat = JSON.stringify(message);
+    this.chatRepository.setAddElts(`rooms:${roomID}`, [chat]);
     console.log(roomID, message)
-    server.to(roomID).emit(JSON.stringify(message));
+    server.to(roomID).emit('receive-message', chat);
   }
 
   async typingMessage(server: Server, message: Partial<Message>){
@@ -87,8 +105,10 @@ export class ChatService {
 
   private async getRoomIDs(userID: string): Promise<any[]> {
     const contactIDs = await this.getContacts(userID);
-    return contactIDs.map(async (contactID: string) =>
-      this.chatRepository.generateRoomIDs(userID, contactID),
-    );
+    const contacts = [];
+    for (let i = 0; i < contactIDs.length; i++) {
+      contacts.push(this.chatRepository.generateRoomIDs(userID, contactIDs[i]));
+    }
+    return contacts;
   }
 }

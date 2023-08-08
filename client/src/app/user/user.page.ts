@@ -1,6 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { UserSocketService } from './sockets/user-socket.service';
+import { MessageSocketService } from './sockets/message-socket.service';
 
 @Component({
   selector: 'app-user',
@@ -11,9 +12,11 @@ import { UserSocketService } from './sockets/user-socket.service';
 })
 export class UserPage implements OnInit {
   private readonly userSocket = inject(UserSocketService);
+  private readonly messageSocket = inject(MessageSocketService);
 
   ngOnInit() {
     this.userSocket.establishConnection();
+    this.messageSocket.getMessages();
   }
 
 }

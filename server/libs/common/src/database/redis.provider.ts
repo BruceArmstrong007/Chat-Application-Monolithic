@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { Redis } from 'ioredis';
 
 export interface RedisJson {
-  json : any
+  json: unknown;
 }
 
 //@ts-ignore

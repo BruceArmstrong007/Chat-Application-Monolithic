@@ -57,4 +57,8 @@ export class UserService {
     }
     return throwError(() => Response);
   }
+
+  generateRoomIDs(id1: any, id2: any): string{
+    return [id1, id2].sort().join('-');
+  }
 }
