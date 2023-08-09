@@ -3,15 +3,14 @@ import { io } from 'socket.io-client';
 import { environment } from 'src/environments/environment';
 import { TokenService } from 'src/shared/services/token.service';
 import { Socket } from 'socket.io-client';
-import { UserState, UserStateI } from '../state/user.state';
-import { MessageStateI } from '../state/message.state';
+import { MessageState, MessageStateI, MessageStateT } from '../state/message.state';
 @Injectable({
   providedIn: 'root'
 })
 export class MessageSocketService {
   private readonly env = environment;
+  private readonly messageState = inject(MessageState);
   private readonly tokenService = inject(TokenService);
-  private readonly userState = inject(UserState);
   private readonly socket: Socket;
 
   constructor(){
@@ -28,23 +27,22 @@ export class MessageSocketService {
         token:  this.tokenService.getToken
       }
     });
-    // this.socket.on('receive-message',(data:any)=>console.log(data));
-    this.connectWithFriends();
+    this.listenForMessages();
   }
 
-  connectWithFriends(){
-    const user = this.userState.getUser as UserStateI;
+  listenForMessages(){
     this.socket.on('receive-message',(data) => {
       console.log('room data',data)
-    })
-
+    });
   }
 
-  // Get all friend messages
+  // Get all friend messages and store in state
   getMessages(){
-    this.socket.emit('get-messages', (data:any) => {
-      console.log(data);
+    this.socket.emit('get-messages', (data: MessageStateT) => {
+      this.messageState.setMessageState = data;
     });
+
+   // Testing Code below
     setTimeout(()=>{
       console.log('sending');
 
