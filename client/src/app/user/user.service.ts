@@ -2,7 +2,7 @@ import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
 import { Observable, throwError, catchError, map } from 'rxjs';
 import { environment } from "src/environments/environment";
-import { ProfileType, UserState } from "./state/user.state";
+import { UserStateT, UserState } from "./state/user.state";
 
 
 @Injectable({
@@ -16,7 +16,7 @@ export class UserService {
 
   profile() : Observable<any>{
     return this.http.get(this.env.apiUrl+'/user/profile').pipe(
-      map((res : ProfileType) => {
+      map((res : UserStateT) => {
         this.userState.setUser = res;
         return res;
       }),
