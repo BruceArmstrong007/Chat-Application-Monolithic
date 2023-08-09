@@ -3,15 +3,15 @@ import { io } from 'socket.io-client';
 import { environment } from 'src/environments/environment';
 import { TokenService } from 'src/shared/services/token.service';
 import { Socket } from 'socket.io-client';
-import { Message } from 'src/shared/utils/interface';
-import { UserProfile, UserService } from '../user.service';
+import { UserState, UserStateI } from '../state/user.state';
+import { MessageStateI } from '../state/message.state';
 @Injectable({
   providedIn: 'root'
 })
 export class MessageSocketService {
   private readonly env = environment;
   private readonly tokenService = inject(TokenService);
-  private readonly userService = inject(UserService);
+  private readonly userState = inject(UserState);
   private readonly socket: Socket;
 
   constructor(){
@@ -33,7 +33,7 @@ export class MessageSocketService {
   }
 
   connectWithFriends(){
-    const user = this.userService.getUser as UserProfile;
+    const user = this.userState.getUser as UserStateI;
     this.socket.on('receive-message',(data) => {
       console.log('room data',data)
     })
@@ -73,7 +73,7 @@ export class MessageSocketService {
     }, 5 * 1000)
   }
 
-  sendMessages(message: Partial<Message>){
+  sendMessages(message: Partial<MessageStateI>){
     this.socket.emit('send-message',JSON.stringify(message));
   }
 

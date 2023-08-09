@@ -1,0 +1,34 @@
+import { Injectable, WritableSignal, signal } from "@angular/core";
+
+
+export interface UserStateI {
+  _id: string,
+  username: string,
+  name: string,
+  bio: string,
+  profileURL: string,
+  contacts: Partial<UserStateI>[],
+  sentInvites: Partial<UserStateI>[],
+  receivedInvites: Partial<UserStateI>[],
+  createdAt: string,
+  updatedAt: string
+}
+
+export type UserStateT = Partial<UserStateI> | null;
+
+
+@Injectable({
+  providedIn: 'root'
+})
+export class UserState {
+  private user : WritableSignal<UserStateT> = signal(null);
+
+
+  get getUser(){
+    return this.user();
+  }
+
+  set setUser(value : UserStateT){
+    this.user.set(value);
+  }
+}
