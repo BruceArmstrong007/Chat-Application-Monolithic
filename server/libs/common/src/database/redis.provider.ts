@@ -11,8 +11,8 @@ export type RedisType = Redis.Redis & RedisJson;
 
 @Injectable()
 export class RedisProvider {
-  public publisher: RedisType;
-  public subscriber: RedisType;
+  public publisher: Redis;
+  public subscriber: Redis;
   
 
   constructor(config : ConfigService) {

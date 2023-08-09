@@ -59,13 +59,9 @@ export class ChatService {
     for (let i = 0; i < roomIDs.length; i++) {
       messages.push({
         roomID: roomIDs[i],
-        messages: await this.chatRepository.jsonGet(
-          `rooms:${roomIDs[i]}`,
-          0,
-          -1,
-        ),
+        messages: await this.chatRepository.jsonGet(`rooms:${roomIDs[i]}`)
       })
-    }
+    }    
     return messages;
   }
 
@@ -84,10 +80,9 @@ export class ChatService {
       message?.senderID,
       message?.receiverID,
     );
-    const chat = JSON.stringify(message);
-    this.chatRepository.setAddElts(`rooms:${roomID}`, [chat]);
-    console.log(roomID, message)
-    server.to(roomID).emit('receive-message', chat);
+    const chat = JSON.stringify([message]);
+    this.chatRepository.jsonSet(`rooms:${roomID}`, chat);
+    server.to(roomID).emit('receive-message', message);
   }
 
   async typingMessage(server: Server, message: Partial<Message>){

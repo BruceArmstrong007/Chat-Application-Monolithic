@@ -53,14 +53,14 @@ export class ChatRepository {
     await this.redisProvider.publisher.del(key);
   }
 
-  async jsonSet(key: string, value: any){
+  async listAddElts(key: string, value: any){
     await this.redisProvider.publisher.rpush(
-      `room_messages:${key}`,
+      `room_messages:${key}`, 
       JSON.stringify(value),
     );
   }
 
-  async jsonGet(key: string, start: number, end: number): Promise<any>{
+  async listGetElts(key: string, start: number, end: number): Promise<any>{
     return await this.redisProvider.publisher.lrange(key, start, end);
   }
 
@@ -70,7 +70,6 @@ export class ChatRepository {
 
 
   async setAddElts(key: string, value: string[]){
-    // await this.redisProvider.publisher.json.arrappend(key, '$', value);
     await this.redisProvider.publisher.sadd(key, ...value);
   }
 
@@ -83,5 +82,13 @@ export class ChatRepository {
     return this.redisProvider.publisher.sismember(key, value);
   }
 
+  async jsonSet(key: string, value: any){
+    //@ts-ignore
+    await this.redisProvider.publisher.call('JSON.SET', key, '$', value);
+  }
+
+  async jsonGet(key: string){
+    return await this.redisProvider.publisher.call('JSON.GET', key, '$');
+  }
   
 }

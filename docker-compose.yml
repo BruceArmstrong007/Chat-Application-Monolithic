@@ -38,13 +38,13 @@ services:
       - '27017:27017'
       
   redis:
-    image: redis
+    image: redislabs/rejson
     container_name: redis_db
     ports:
       - "6379:6379"
     env_file:
       - ./server/.env
-    command: /bin/sh -c "redis-server --requirepass $$REDIS_PASS --save 60 1 --appendonly yes"
+    command: /bin/sh -c "redis-server --loadmodule "/usr/lib/redis/modules/rejson.so" --requirepass $$REDIS_PASS --save 60 1 --appendonly yes"
     volumes:
       - redis_data:/data
   
