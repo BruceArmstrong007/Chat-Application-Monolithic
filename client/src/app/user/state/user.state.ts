@@ -1,5 +1,8 @@
 import { Injectable, WritableSignal, signal } from "@angular/core";
 
+export type UserStateT = Partial<UserStateI> | null;
+
+export type UserRef = UserStateI[];
 
 export interface UserStateI {
   _id: string,
@@ -7,21 +10,20 @@ export interface UserStateI {
   name: string,
   bio: string,
   profileURL: string,
-  contacts: Partial<UserStateI>[],
-  sentInvites: Partial<UserStateI>[],
-  receivedInvites: Partial<UserStateI>[],
+  contacts: UserRef,
+  sentInvites: UserRef,
+  receivedInvites: UserRef,
   createdAt: string,
   updatedAt: string
 }
 
-export type UserStateT = Partial<UserStateI> | null;
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserState {
-  private user : WritableSignal<UserStateT> = signal(null);
+  readonly user : WritableSignal<UserStateT> = signal(null);
 
 
   get getUser(){
