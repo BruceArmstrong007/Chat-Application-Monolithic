@@ -22,7 +22,7 @@ export class UserGateway implements OnGatewayConnection, OnGatewayDisconnect {
   // When user is connected, adds user online to redis db with time to live of 1 minute
   handleConnection(client: SocketWithAuth){
     this.chatService.addUserOnline(client.userID, client?.id);
-    this.chatService.connectUserChannels(client.userID, client);
+    // this.chatService.connectUserChannels(client.userID, client);
   }
 
   // User will periodically adds them online to redis db with time to live of 1 minute

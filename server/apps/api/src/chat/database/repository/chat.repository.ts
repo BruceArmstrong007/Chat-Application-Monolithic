@@ -83,9 +83,22 @@ export class ChatRepository {
   }
 
   async jsonSet(key: string, value: any, condition?: string){
+    const isExist = await this.jsonGet(key);
     const option = !condition ? '$' : '$' + condition;
-    //@ts-ignore
-    await this.redisProvider.publisher.call('JSON.SET', key, option, value);
+    if(isExist) {
+      //@ts-ignore
+      const chat = JSON.stringify(value);
+      await this.redisProvider.publisher.call(
+        'JSON.ARRAPPEND',
+        key,
+        option,
+        chat,
+      );
+    }else{
+      const chat = JSON.stringify([value]);
+      //@ts-ignore
+      await this.redisProvider.publisher.call('JSON.SET', key, option, chat);
+    }
   }
 
   async jsonGet(key: string){

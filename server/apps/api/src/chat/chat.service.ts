@@ -18,11 +18,7 @@ export interface Message {
 
 @Injectable()
 export class ChatService {
-  constructor(private readonly chatRepository: ChatRepository) {
-
-
-
-  }
+  constructor(private readonly chatRepository: ChatRepository) { }
 
   async addUserOnline(userID: string, socketID: string) {
     this.chatRepository.set(userID, socketID, 60);
@@ -84,17 +80,17 @@ export class ChatService {
       message?.senderID,
       message?.receiverID,
     );
-    const chat = JSON.stringify([message]);
-    this.chatRepository.jsonSet(`rooms:${roomID}`, chat);
+    const room = `rooms:${roomID}`;
+    this.chatRepository.jsonSet(room, message);    
     server.to(roomID).emit('receive-message', message);
-  }
+  } 
 
   async typingMessage(server: Server, message: Partial<Message>){
     const roomID = await this.chatRepository.generateRoomIDs(
       message?.senderID,
       message?.receiverID,
     );
-    server.to(roomID).emit(JSON.stringify(message));
+    server.to(roomID).emit('receive-message', message);
   }
 
   private async getContacts(userID: string): Promise<any[]> {

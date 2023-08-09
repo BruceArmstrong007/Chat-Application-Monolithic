@@ -4,12 +4,14 @@ import { environment } from 'src/environments/environment';
 import { TokenService } from 'src/shared/services/token.service';
 import { Socket } from 'socket.io-client';
 import { Message } from 'src/shared/utils/interface';
+import { UserProfile, UserService } from '../user.service';
 @Injectable({
   providedIn: 'root'
 })
 export class MessageSocketService {
   private readonly env = environment;
   private readonly tokenService = inject(TokenService);
+  private readonly userService = inject(UserService);
   private readonly socket: Socket;
 
   constructor(){
@@ -26,7 +28,16 @@ export class MessageSocketService {
         token:  this.tokenService.getToken
       }
     });
-    this.socket.on('receive-message',(data:any)=>console.log(data));
+    // this.socket.on('receive-message',(data:any)=>console.log(data));
+    this.connectWithFriends();
+  }
+
+  connectWithFriends(){
+    const user = this.userService.getUser as UserProfile;
+    this.socket.on('receive-message',(data) => {
+      console.log('room data',data)
+    })
+
   }
 
   // Get all friend messages
@@ -34,14 +45,32 @@ export class MessageSocketService {
     this.socket.emit('get-messages', (data:any) => {
       console.log(data);
     });
-    this.sendMessages({
-      senderID: '64cf876893baba530cbb88c8',
-      receiverID: '64cf877493baba530cbb88cb',
-      timestamp: (new Date()).toISOString(),
-      content: 'hai , how are u ? ',
-      status: 'sent',
-      type: 'chat'
-    });
+    setTimeout(()=>{
+      console.log('sending');
+
+      this.sendMessages({
+        senderID: '64cf876893baba530cbb88c8',
+        receiverID: '64cf877493baba530cbb88cb',
+        timestamp: (new Date()).toISOString(),
+        content: 'hai , how are u ? ',
+        status: 'sent',
+        type: 'chat'
+      });
+    }, 8 * 1000)
+
+
+    setTimeout(()=>{
+      console.log('sending');
+
+      this.sendMessages({
+        senderID: '64cf876893baba530cbb88c8',
+        receiverID: '64cf877493baba530cbb88cb',
+        timestamp: (new Date()).toISOString(),
+        content: 'hai , how are u ? ',
+        status: 'sent',
+        type: 'typing'
+      });
+    }, 5 * 1000)
   }
 
   sendMessages(message: Partial<Message>){
