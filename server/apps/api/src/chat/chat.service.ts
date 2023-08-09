@@ -57,9 +57,13 @@ export class ChatService {
     const roomIDs = await this.getRoomIDs(userID);
     const messages = [];
     for (let i = 0; i < roomIDs.length; i++) {
+      const message = (await this.chatRepository.jsonGet(
+        `rooms:${roomIDs[i]}`,
+      )) as string;
       messages.push({
         roomID: roomIDs[i],
-        messages: await this.chatRepository.jsonGet(`rooms:${roomIDs[i]}`)
+        // to avoid getting room messages nested in a array
+        messages: message 
       })
     }    
     return messages;

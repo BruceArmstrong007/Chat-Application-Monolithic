@@ -82,13 +82,14 @@ export class ChatRepository {
     return this.redisProvider.publisher.sismember(key, value);
   }
 
-  async jsonSet(key: string, value: any){
+  async jsonSet(key: string, value: any, condition?: string){
+    const option = !condition ? '$' : '$' + condition;
     //@ts-ignore
-    await this.redisProvider.publisher.call('JSON.SET', key, '$', value);
+    await this.redisProvider.publisher.call('JSON.SET', key, option, value);
   }
 
   async jsonGet(key: string){
-    return await this.redisProvider.publisher.call('JSON.GET', key, '$');
+    return await this.redisProvider.publisher.call('JSON.GET', key, '$.[0]');
   }
   
 }
