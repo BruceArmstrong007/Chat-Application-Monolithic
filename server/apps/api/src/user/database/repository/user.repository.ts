@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { v4 as uuidv4 } from 'uuid';
 import { Model } from 'mongoose';
 import { User } from '../model/user.model';
 
@@ -34,7 +35,14 @@ export class UserRepository {
   }
 
   async createUser(username: string, password: string): Promise<User> {
-    const newUser = new this.userModel({ username, password });
+    const name = 'User-' + uuidv4();
+    const profileURL = 'https://picsum.photos/80/80?random=';
+    const newUser = new this.userModel({
+      username,
+      password,
+      name,
+      profileURL,
+    });
     return await newUser.save();
   }
 
