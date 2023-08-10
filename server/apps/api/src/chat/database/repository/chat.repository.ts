@@ -102,7 +102,7 @@ export class ChatRepository {
   }
 
   async jsonGet(key: string){
-    return await this.redisProvider.publisher.call('JSON.GET', key, '$.[0]');
+    return await this.redisProvider.publisher.call('JSON.GET', key, '$');
   }
   
 }
