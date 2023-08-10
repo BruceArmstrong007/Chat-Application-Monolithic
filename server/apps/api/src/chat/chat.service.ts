@@ -58,8 +58,7 @@ export class ChatService {
       )) as string;
       messages.push({
         roomID: roomIDs[i],
-        // to avoid getting room messages nested in a array
-        messages: message 
+        messages: message ? message : '[]' 
       })
     }    
     return messages;

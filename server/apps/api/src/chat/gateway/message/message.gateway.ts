@@ -27,7 +27,6 @@ export class MessageGateway implements OnGatewayConnection {
     // Subscribes to the Message event emitted by user through redisIO
     // And emits to specific room and store it in redis db as well
     this.chatRepository.subscribe('user-message', async (data: string) => {
-      console.log(data);
       this.chatService.receiveMessage(this.server, JSON.parse(data));
     });
 
@@ -46,7 +45,7 @@ export class MessageGateway implements OnGatewayConnection {
 
   // Send messages to all the friend rooms user is connected
   @SubscribeMessage('send-message')
-  async sendMessage(@MessageBody() data: string) {
-    await this.chatService.sendMessage(JSON.parse(data));
+  async sendMessage(@MessageBody() data: any) {
+    await this.chatService.sendMessage(data);
   }
 }
