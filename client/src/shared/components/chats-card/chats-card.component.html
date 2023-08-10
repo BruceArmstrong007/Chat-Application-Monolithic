@@ -1,0 +1,14 @@
+  <ion-item (click)="cardClick.emit({click:true, contact: contact})">
+  <ion-avatar slot="start">
+    <img [src]="contact.profileURL" alt="avatar"/>
+  </ion-avatar>
+  <ion-grid>
+    <ion-row>
+      <ion-label class="long-text">{{ contact.name }}</ion-label>
+    </ion-row>
+    <ion-row>
+      <ion-text color="medium" class="long-text">{{ contact.username }}</ion-text>
+    </ion-row>
+  </ion-grid>
+  </ion-item>
+

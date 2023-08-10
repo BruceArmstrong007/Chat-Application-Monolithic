@@ -1,8 +1,5 @@
 import { Injectable, WritableSignal, signal } from "@angular/core";
 
-
-export type MessageStateT = Partial<MessageStateI> | null;
-
 export interface MessageStateI {
   messageID: string;
   senderID: string;
@@ -14,11 +11,17 @@ export interface MessageStateI {
   type: string;
 }
 
+export interface MessageStateW {
+  messages: Partial<MessageStateI>[];
+  roomID: string;
+}
+
+export type MessageStateT = Partial<MessageStateW[]> | null;
 @Injectable({
   providedIn: 'root'
 })
 export class MessageState {
-  readonly messageState : WritableSignal<MessageStateT> = signal(null);
+  messageState: WritableSignal<MessageStateT> = signal(null);
 
 
   get getMessageState(){

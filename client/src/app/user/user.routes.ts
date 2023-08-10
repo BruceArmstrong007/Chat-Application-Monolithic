@@ -22,10 +22,20 @@ export const routes: Routes = [
           import('./components/search/search.page').then((m) => m.SearchPage),
       },
       {
+        path: 'settings',
+        loadComponent: () =>
+          import('./components/settings/settings.page').then((m) => m.SettingsPage),
+      },
+      {
         path: '**',
         redirectTo: '/user/chats',
         pathMatch: 'full',
       },
     ],
   },
+  {
+    path: 'settings',
+    loadComponent: () => import('./components/settings/settings.page').then( m => m.SettingsPage)
+  },
+
 ];

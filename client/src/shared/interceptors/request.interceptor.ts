@@ -30,13 +30,10 @@ export class RequestInterceptor implements HttpInterceptor {
     }
 
     if (this.tokenService.getToken) {
-      console.log(this.tokenService.getToken);
       return this.authService.refreshToken({
         refresh : localStorage.getItem('token')
       }).pipe(
         switchMap((response) => {
-          console.log(response);
-          console.log(this.tokenService.getToken);
           return next.handle(this.addAuthHeader(request));
         }),
         catchError((error) => {

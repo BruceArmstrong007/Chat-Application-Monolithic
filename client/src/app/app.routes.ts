@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
 import { AppComponent } from './app.component';
 import { AuthGuard } from 'src/shared/guards/auth.guard';
-import { UserResolver } from 'src/shared/resolver/user.resolver';
-import { PersistResolver } from 'src/shared/resolver/persist.resolver';
+import { UserResolver } from 'src/shared/resolvers/user.resolver';
+import { PersistResolver } from 'src/shared/resolvers/persist.resolver';
 
 export const routes: Routes = [
   {

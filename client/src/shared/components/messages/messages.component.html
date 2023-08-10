@@ -1,0 +1,40 @@
+<ion-header collapse="condense">
+  <ion-toolbar>
+    <ion-button color="transparant" slot="start" (click)="cancel()">
+      <ion-icon name="arrow-back">
+      </ion-icon>
+    </ion-button>
+    <ion-avatar slot="start">
+      <img [src]="contact.profileURL" alt="avatar"/>
+    </ion-avatar>
+    <ion-grid class="ion-padding">
+      <ion-row>
+        <ion-label class="long-text">{{ contact.name }}</ion-label>
+      </ion-row>
+      <ion-row>
+        <ion-text color="medium" class="long-text">{{ contact.username }}</ion-text>
+      </ion-row>
+    </ion-grid>
+  </ion-toolbar>
+</ion-header>
+<ion-content #content>
+  <ion-list class="bg">
+    <app-message-card [chatData]="{
+      user: user,
+      contact: contact,
+      message,
+      isSender: message.senderID === user._id}"
+      *ngFor="let message of roomData()?.messages"></app-message-card>
+  </ion-list>
+</ion-content>
+<ion-footer collapse="condense">
+  <ion-toolbar>
+    <ion-item color="transparant">
+
+      <ion-textarea [(ngModel)]="message" placeholder="Type your message..."></ion-textarea>
+      <ion-button color="transparant" (click)="send()">
+        <ion-icon name="send" />
+      </ion-button>
+    </ion-item>
+    </ion-toolbar>
+</ion-footer>

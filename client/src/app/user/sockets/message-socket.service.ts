@@ -3,7 +3,8 @@ import { io } from 'socket.io-client';
 import { environment } from 'src/environments/environment';
 import { TokenService } from 'src/shared/services/token.service';
 import { Socket } from 'socket.io-client';
-import { MessageState, MessageStateI, MessageStateT } from '../state/message.state';
+import { MessageState, MessageStateI, MessageStateT, MessageStateW } from '../state/message.state';
+import { UserService } from '../user.service';
 @Injectable({
   providedIn: 'root'
 })
@@ -11,6 +12,7 @@ export class MessageSocketService {
   private readonly env = environment;
   private readonly messageState = inject(MessageState);
   private readonly tokenService = inject(TokenService);
+  private readonly UserService = inject(UserService);
   private readonly socket: Socket;
 
   constructor(){
@@ -32,47 +34,44 @@ export class MessageSocketService {
 
   listenForMessages(){
     this.socket.on('receive-message',(data) => {
-      console.log('room data',data)
+      this.messageState.messageState.update((state:any) => {
+        return state?.map((room:any) => {
+          if(room?.roomID === this.UserService.generateRoomIDs(data?.senderID,data?.receiverID)){
+            let messages =  room?.messages ? room?.messages : []
+            messages.push(data);
+            return {
+              ...room,
+              messages: messages
+            }
+          }
+          return room;
+        })
+      })
     });
   }
 
   // Get all friend messages and store in state
-  getMessages(){
-    this.socket.emit('get-messages', (data: MessageStateT) => {
-      this.messageState.setMessageState = data;
+   getMessages(){
+    this.socket.emit('get-messages',async (data: any) => {
+      const rooms =  data?.map((room: any): MessageStateW=>{
+        const message = JSON.parse(room?.messages)
+        return {
+         roomID: room.roomID,
+         messages: message[0] ? message[0] : []
+        }
+      });
+      this.messageState.setMessageState = rooms;
     });
 
-   // Testing Code below
-    setTimeout(()=>{
-      console.log('sending');
-
-      this.sendMessages({
-        senderID: '64cf876893baba530cbb88c8',
-        receiverID: '64cf877493baba530cbb88cb',
-        timestamp: (new Date()).toISOString(),
-        content: 'hai , how are u ? ',
-        status: 'sent',
-        type: 'chat'
-      });
-    }, 8 * 1000)
-
-
-    setTimeout(()=>{
-      console.log('sending');
-
-      this.sendMessages({
-        senderID: '64cf876893baba530cbb88c8',
-        receiverID: '64cf877493baba530cbb88cb',
-        timestamp: (new Date()).toISOString(),
-        content: 'hai , how are u ? ',
-        status: 'sent',
-        type: 'typing'
-      });
-    }, 5 * 1000)
   }
 
+  messageTransform(){
+
+  }
+
+
   sendMessages(message: Partial<MessageStateI>){
-    this.socket.emit('send-message',JSON.stringify(message));
+    this.socket.emit('send-message',message);
   }
 
 }
