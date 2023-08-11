@@ -12,8 +12,6 @@
 /* Core CSS required for Ionic components to work properly */
 @import "@ionic/angular/css/core.css";
 
-// Emoji Mart
-@import '@ctrl/ngx-emoji-mart/picker';
 
 /* Basic CSS for apps built with Ionic */
 @import "@ionic/angular/css/normalize.css";
@@ -32,5 +30,5 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 150px; /* Adjust this value as needed */
+  max-width: 150px;
 }
