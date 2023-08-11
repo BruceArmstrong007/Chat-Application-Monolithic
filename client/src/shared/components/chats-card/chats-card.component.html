@@ -16,6 +16,12 @@
       </ion-badge>
     </ion-col>
   </ion-row>
+  <ion-row>
+    <span class="long-text" *ngFor="let user of isTyping()">
+      {{(user?.senderID === contact._id && user.status === 'started' ? contact.username : '') + ' typing...'}}
+    </span>
+    <ion-label *ngIf="isTyping()?.length === 0" class="long-text">{{lastMessage()}}</ion-label>
+  </ion-row>
   </ion-grid>
   </ion-item>
 

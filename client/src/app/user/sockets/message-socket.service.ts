@@ -3,7 +3,7 @@ import { io } from 'socket.io-client';
 import { environment } from 'src/environments/environment';
 import { TokenService } from 'src/shared/services/token.service';
 import { Socket } from 'socket.io-client';
-import { MessageState, MessageStateI, MessageStateT, MessageStateW } from '../state/message.state';
+import { MessageState, MessageStateI, MessageStateW } from '../state/message.state';
 import { UserService } from '../user.service';
 @Injectable({
   providedIn: 'root'
@@ -30,6 +30,7 @@ export class MessageSocketService {
       }
     });
     this.listenForMessages();
+    this.listenForTyping()
   }
 
   listenForMessages(){
@@ -37,11 +38,36 @@ export class MessageSocketService {
       this.messageState.messageState.update((state:any) => {
         return state?.map((room:any) => {
           if(room?.roomID === this.UserService.generateRoomIDs(data?.senderID,data?.receiverID)){
-            let messages =  room?.messages ? room?.messages : []
+            let messages =  room?.messages ? room.messages : []
             messages.push(data);
             return {
               ...room,
               messages: messages
+            }
+          }
+          return room;
+        })
+      })
+    });
+  }
+
+  listenForTyping(){
+    this.socket.on('typing',(data) => {
+      this.messageState.messageState.update((state:any) => {
+        return state?.map((room:any) => {
+          if(room?.roomID === this.UserService.generateRoomIDs(data?.senderID,data?.receiverID)){
+            let typing = room?.typing ? room.typing : [];
+            if(data?.status === 'started'){
+              if(!typing.find((user:any) => user?.senderID !== data?.senderID)){
+                typing.push(data);
+              }
+            }
+            if(data?.status === 'finished'){
+              typing = typing.filter((user:any)=> user?.senderID !== data?.senderID)
+            }
+            return {
+              ...room,
+              typing : typing
             }
           }
           return room;
@@ -57,7 +83,8 @@ export class MessageSocketService {
         const message = JSON.parse(room?.messages)
         return {
          roomID: room.roomID,
-         messages: message[0] ? message[0] : []
+         messages: message[0] ? message[0] : [],
+         typing: null
         }
       });
       this.messageState.setMessageState = rooms;
@@ -65,13 +92,14 @@ export class MessageSocketService {
 
   }
 
-  messageTransform(){
-
-  }
 
 
   sendMessages(message: Partial<MessageStateI>){
     this.socket.emit('send-message',message);
+  }
+
+  userTyping(message: Partial<MessageStateI>){
+    this.socket.emit('user-typing',message);
   }
 
 }

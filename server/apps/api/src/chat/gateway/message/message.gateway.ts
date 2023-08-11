@@ -32,7 +32,7 @@ export class MessageGateway implements OnGatewayConnection {
 
     // Subscribes to the Typing event emitted by user through redisIO
     // And emits to specific room
-    this.chatRepository.subscribe('typing', async (data: string) => {
+    this.chatRepository.subscribe('user-typing', async (data: string) => {
       this.chatService.typingMessage(this.server, JSON.parse(data));
     });
   }
@@ -47,5 +47,11 @@ export class MessageGateway implements OnGatewayConnection {
   @SubscribeMessage('send-message')
   async sendMessage(@MessageBody() data: any) {
     await this.chatService.sendMessage(data);
+  }
+
+  // Send messages to all the friend rooms user is connected
+  @SubscribeMessage('user-typing')
+  async typing(@MessageBody() data: any) {
+    await this.chatService.userTyping(data);
   }
 }

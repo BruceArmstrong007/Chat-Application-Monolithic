@@ -21,6 +21,11 @@
           </ion-badge>
         </ion-col>
       </ion-row>
+      <ion-row>
+        <span class="long-text" *ngFor="let user of isTyping()">
+          {{(user?.senderID === contact._id && user.status === 'started' ? contact.username : '') + ' typing...'}}
+        </span>
+      </ion-row>
     </ion-grid>
   </ion-toolbar>
 </ion-header>
@@ -37,8 +42,8 @@
 <ion-footer collapse="condense">
   <ion-toolbar>
     <ion-item color="transparant">
-
-      <ion-textarea [(ngModel)]="message" placeholder="Type your message..."></ion-textarea>
+      <ion-textarea [(ngModel)]="message" placeholder="Type your message..." (ionFocus)="onTyping()"
+      (ionBlur)="onFinishedTyping()"></ion-textarea>
       <ion-button color="transparant" (click)="send()">
         <ion-icon name="send" />
       </ion-button>

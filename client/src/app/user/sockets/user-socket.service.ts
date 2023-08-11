@@ -38,7 +38,7 @@ export class UserSocketService {
         return;
       }
       this.userOnline();
-    },60 * 1000)
+    }, 1000)
   }
 
   userOnline(){
@@ -47,7 +47,6 @@ export class UserSocketService {
 
     // Get user's friends that are online every min
     this.socket.emit('online-friends',(res:any)=>{
-      console.log(res);
       this.userState.setOnlineUsers = res;
     });
   }

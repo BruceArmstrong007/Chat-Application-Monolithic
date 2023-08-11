@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { ChatRepository } from './database/repository/chat.repository';
 import { SocketWithAuth } from './middleware/ws-auth.middleware';
 import { v4 as uuidv4 } from 'uuid';
-import { Options } from '@app/common';
 import { Server } from 'socket.io';
 
 export interface Message {
@@ -64,12 +63,11 @@ export class ChatService {
     return messages;
   }
 
+  async userTyping(data: Partial<Message>){
+    await this.chatRepository.publish('user-typing', JSON.stringify(data)); 
+  }
 
   async sendMessage(data: Partial<Message>) {
-    if (data.type === Options.TYPING) {
-      await this.chatRepository.publish('typing', JSON.stringify(data));
-      return;
-    }
     data.messageID = uuidv4();
     await this.chatRepository.publish('user-message', JSON.stringify(data));
   }
@@ -80,7 +78,7 @@ export class ChatService {
       message?.receiverID,
     );
     const room = `rooms:${roomID}`;
-    this.chatRepository.jsonSet(room, message);    
+    this.chatRepository.jsonSet(room, message);
     server.to(roomID).emit('receive-message', message);
   } 
 
@@ -89,7 +87,7 @@ export class ChatService {
       message?.senderID,
       message?.receiverID,
     );
-    server.to(roomID).emit('receive-message', message);
+    server.to(roomID).emit('typing', message);
   }
 
   private async getContacts(userID: string): Promise<any[]> {

@@ -6,7 +6,7 @@ import { MessageCardComponent } from '../message-card/message-card.component';
 import { MessageState } from 'src/app/user/state/message.state';
 import { UserService } from '../../../app/user/user.service';
 import { MessageSocketService } from 'src/app/user/sockets/message-socket.service';
-import { NgFor } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 
 
 @Component({
@@ -14,7 +14,7 @@ import { NgFor } from '@angular/common';
   templateUrl: './messages.component.html',
   styleUrls: ['./messages.component.scss'],
   standalone:true,
-  imports: [IonicModule, FormsModule, MessageCardComponent, NgFor]
+  imports: [IonicModule, FormsModule, MessageCardComponent, NgFor, NgIf]
 })
 export class MessagesComponent  implements OnInit {
   @Input() user!: UserStateI;
@@ -27,6 +27,7 @@ export class MessagesComponent  implements OnInit {
   private readonly usersState = inject(UserState);
   isOnline!: Signal<boolean>;
   roomData!: Signal<any>;
+  isTyping!: Signal<any>;
   message!: string;
 
   cancel() {
@@ -35,7 +36,6 @@ export class MessagesComponent  implements OnInit {
 
 
   ngOnInit() {
-
     this.isOnline = computed(() => {
       let state = false;
       this.usersState.onlineUsers()?.forEach((onlineUser:any) => {
@@ -44,11 +44,21 @@ export class MessagesComponent  implements OnInit {
         }
       });
       return state;
-    })
+    });
+
+    this.isTyping = computed(() => {
+      let typing: any[] = [];
+      this.messageState.messageState()?.forEach((room) => {
+        if(room?.roomID === this.userService.generateRoomIDs(this.usersState.user()?._id,this.contact._id)){
+          typing = room?.typing?.length ? room?.typing : [];
+        }
+      });
+      return typing;
+    });
 
     this.roomData = computed(() => {
       // side effect - scroll
-      setTimeout(()=>this.content?.scrollToBottom(300),100);
+      setTimeout(()=>this.content?.scrollToBottom(300),300);
 
       let roomData;
       this.messageState?.messageState()?.forEach((room:any) => {
@@ -61,6 +71,7 @@ export class MessagesComponent  implements OnInit {
       });
       return roomData;
     });
+
   }
 
   send(){
@@ -74,6 +85,24 @@ export class MessagesComponent  implements OnInit {
     });
 
     this.message = '';
+  }
+
+  onTyping(){
+    this.messageSocket.userTyping({
+      senderID: this.user._id,
+      receiverID: this.contact._id,
+      status: 'started',
+      type: 'typing'
+    });
+  }
+
+  onFinishedTyping(){
+    this.messageSocket.userTyping({
+      senderID: this.user._id,
+      receiverID: this.contact._id,
+      status: 'finished',
+      type: 'typing'
+    });
   }
 
 

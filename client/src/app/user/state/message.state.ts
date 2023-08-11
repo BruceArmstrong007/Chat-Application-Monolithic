@@ -14,6 +14,7 @@ export interface MessageStateI {
 export interface MessageStateW {
   messages: Partial<MessageStateI>[];
   roomID: string;
+  typing: any[] | null
 }
 
 export type MessageStateT = Partial<MessageStateW[]> | null;
