@@ -17,6 +17,13 @@ export interface UserStateI {
   updatedAt: string
 }
 
+export interface OnlineUsersState {
+  id: string,
+  socketID: string,
+  isOnline: boolean
+}
+
+export type OnlineUsersT = Partial<OnlineUsersState>[] | null;
 
 
 @Injectable({
@@ -24,7 +31,7 @@ export interface UserStateI {
 })
 export class UserState {
   readonly user : WritableSignal<UserStateT> = signal(null);
-
+  readonly onlineUsers: WritableSignal<OnlineUsersT> = signal(null);
 
   get getUser(){
     return this.user();
@@ -33,4 +40,14 @@ export class UserState {
   set setUser(value : UserStateT){
     this.user.set(value);
   }
+
+
+  get getOnlineUsers(){
+    return this.onlineUsers();
+  }
+
+  set setOnlineUsers(value : OnlineUsersT){
+    this.onlineUsers.set(value);
+  }
+
 }

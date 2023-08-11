@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, Signal, ViewChild, computed, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IonContent, IonicModule, ModalController } from '@ionic/angular';
-import { UserStateI } from 'src/app/user/state/user.state';
+import { UserState, UserStateI } from 'src/app/user/state/user.state';
 import { MessageCardComponent } from '../message-card/message-card.component';
 import { MessageState } from 'src/app/user/state/message.state';
 import { UserService } from '../../../app/user/user.service';
@@ -24,6 +24,8 @@ export class MessagesComponent  implements OnInit {
   private readonly userService = inject(UserService);
   private readonly messageSocket = inject(MessageSocketService);
   private readonly modalCtrl = inject(ModalController);
+  private readonly usersState = inject(UserState);
+  isOnline!: Signal<boolean>;
   roomData!: Signal<any>;
   message!: string;
 
@@ -33,6 +35,16 @@ export class MessagesComponent  implements OnInit {
 
 
   ngOnInit() {
+
+    this.isOnline = computed(() => {
+      let state = false;
+      this.usersState.onlineUsers()?.forEach((onlineUser:any) => {
+        if(onlineUser.id === this.contact._id){
+          state = onlineUser.isOnline;
+        }
+      });
+      return state;
+    })
 
     this.roomData = computed(() => {
       // side effect - scroll

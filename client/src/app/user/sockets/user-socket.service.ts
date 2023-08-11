@@ -3,11 +3,13 @@ import { io } from 'socket.io-client';
 import { environment } from 'src/environments/environment';
 import { TokenService } from 'src/shared/services/token.service';
 import { Socket } from 'socket.io-client';
+import { UserState } from '../state/user.state';
 @Injectable({
   providedIn: 'root'
 })
 export class UserSocketService {
   private readonly env = environment;
+  private readonly userState = inject(UserState);
   private readonly tokenService = inject(TokenService);
   private readonly socket: Socket;
 
@@ -40,12 +42,13 @@ export class UserSocketService {
   }
 
   userOnline(){
-    // Set user as online
+    // Set user as online as a ttl cache in redis
     this.socket.emit('online');
 
-    // Get user's friends that are online
+    // Get user's friends that are online every min
     this.socket.emit('online-friends',(res:any)=>{
-      console.log(res)
+      console.log(res);
+      this.userState.setOnlineUsers = res;
     });
   }
 
