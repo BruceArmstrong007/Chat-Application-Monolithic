@@ -3,7 +3,7 @@ import { NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule, ModalController } from '@ionic/angular';
 import { UserRef, UserState } from '../../state/user.state';
-import { ChatsCardComponent } from 'src/shared/components/chats-card/chats-card.component';
+import { ChatsCardComponent } from 'src/app/user/pages/chats/chats-card/chats-card.component';
 import { MessagesComponent } from 'src/shared/components/messages/messages.component';
 
 @Component({

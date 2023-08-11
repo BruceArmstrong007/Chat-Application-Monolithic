@@ -9,22 +9,22 @@ export const routes: Routes = [
       {
         path: 'chats',
         loadComponent: () =>
-          import('./components/chats/chats.page').then((m) => m.ChatsPage),
+          import('./pages/chats/chats.page').then((m) => m.ChatsPage),
       },
       {
         path: 'friends',
         loadComponent: () =>
-          import('./components/friends/friends.page').then((m) => m.FriendsPage),
+          import('./pages/friends/friends.page').then((m) => m.FriendsPage),
       },
       {
         path: 'search',
         loadComponent: () =>
-          import('./components/search/search.page').then((m) => m.SearchPage),
+          import('./pages/search/search.page').then((m) => m.SearchPage),
       },
       {
         path: 'settings',
         loadComponent: () =>
-          import('./components/settings/settings.page').then((m) => m.SettingsPage),
+          import('./pages/settings/settings.page').then((m) => m.SettingsPage),
       },
       {
         path: '**',
@@ -35,7 +35,7 @@ export const routes: Routes = [
   },
   {
     path: 'settings',
-    loadComponent: () => import('./components/settings/settings.page').then( m => m.SettingsPage)
+    loadComponent: () => import('./pages/settings/settings.page').then( m => m.SettingsPage)
   },
 
 ];

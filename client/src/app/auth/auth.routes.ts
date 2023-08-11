@@ -9,17 +9,17 @@ export const routes: Routes = [
       {
         path: 'login',
         loadComponent: () =>
-          import('./components/login/login.page').then((m) => m.LoginPage),
+          import('./pages/login/login.page').then((m) => m.LoginPage),
       },
       {
         path: 'register',
         loadComponent: () =>
-          import('./components/register/register.page').then((m) => m.RegisterPage),
+          import('./pages/register/register.page').then((m) => m.RegisterPage),
       },
       {
         path: 'reset-password',
         loadComponent: () =>
-          import('./components/reset-password/reset-password.page').then((m) => m.ResetPasswordPage),
+          import('./pages/reset-password/reset-password.page').then((m) => m.ResetPasswordPage),
       },
       {
         path: '**',

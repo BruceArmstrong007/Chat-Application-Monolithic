@@ -2,7 +2,7 @@ import { Component, Input, OnInit, Output, EventEmitter, inject, Signal, compute
 import { IonicModule } from '@ionic/angular';
 import { UserState, UserStateI } from 'src/app/user/state/user.state';
   import { NgClass, NgFor, NgIf } from '@angular/common';
-import { MessageState } from '../../../app/user/state/message.state';
+import { MessageState } from '../../../state/message.state';
 import { UserService } from 'src/app/user/user.service';
 
 @Component({

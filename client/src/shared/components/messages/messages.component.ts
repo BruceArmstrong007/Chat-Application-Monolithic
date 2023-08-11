@@ -2,7 +2,7 @@ import { Component, Input, OnInit, Signal, ViewChild, computed, inject } from '@
 import { FormsModule } from '@angular/forms';
 import { IonContent, IonicModule, ModalController } from '@ionic/angular';
 import { UserState, UserStateI } from 'src/app/user/state/user.state';
-import { MessageCardComponent } from '../message-card/message-card.component';
+import { MessageCardComponent } from './message-card/message-card.component';
 import { MessageState } from 'src/app/user/state/message.state';
 import { UserService } from '../../../app/user/user.service';
 import { MessageSocketService } from 'src/app/user/sockets/message-socket.service';
