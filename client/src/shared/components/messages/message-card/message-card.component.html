@@ -14,9 +14,9 @@
           <ion-text color="medium" class="long-text">{{ chatData.user.username }}</ion-text>
         </ion-row>
         <ion-row>
-            <h4>
+            <p class="message">
               {{chatData.message.content}}
-            </h4>
+            </p>
         </ion-row>
         <ion-row class="ion-justify-content-end">
             <ion-text color="medium" class="long-text">{{ chatData.message.timestamp | date:'h:mm a' }}</ion-text>
