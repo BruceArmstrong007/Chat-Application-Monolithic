@@ -54,10 +54,14 @@ export class UserService {
         return await this.userRepository.userProfile(username);
     }
 
-    async getUsers(searchTerm: string) {
-        const user = await this.userRepository.searchUsers(searchTerm,'username name profileURL bio');
-        return user;
-    }
+  async getUsers(username: string, searchTerm: string) {
+    const regex = new RegExp(searchTerm, 'i');
+    const user = await this.userRepository.searchUsers(
+      'username name profileURL bio',
+      { $regex: regex, $ne: username }
+    );
+    return user;
+  }
 
     async updateUser(username: string,fields : UpdateUserRequest){
         await this.userRepository.updateUser(username,fields);

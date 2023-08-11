@@ -18,8 +18,11 @@ export class UserController {
 
 
   @Post('search')
-  async searchUser(@Body() request: SearchUserRequest) {
-    return await this.userService.getUsers(request?.search);
+  async searchUser(
+    @CurrentUser() user: User,
+    @Body() request: SearchUserRequest,
+  ) {
+    return await this.userService.getUsers(user?.username, request?.search);
   }
 
   @Put('update')

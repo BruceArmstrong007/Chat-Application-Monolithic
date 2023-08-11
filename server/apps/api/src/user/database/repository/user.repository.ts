@@ -25,9 +25,8 @@ export class UserRepository {
       .exec();
   }
 
-  async searchUsers(keyword: string, select?:string): Promise<User[]> {
-    const regex = new RegExp(keyword, 'i'); 
-    const query = this.userModel.find({ username: regex })
+  async searchUsers(select?: string, options: any): Promise<User[]> {
+    const query = this.userModel.find({ username: options });
     if (select) {
       query.select(select);
     }
