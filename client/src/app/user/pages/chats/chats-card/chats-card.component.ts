@@ -3,7 +3,7 @@ import { IonicModule } from '@ionic/angular';
 import { UserState, UserStateI } from 'src/app/user/state/user.state';
   import { NgClass, NgFor, NgIf } from '@angular/common';
 import { MessageState } from '../../../state/message.state';
-import { UserService } from 'src/app/user/user.service';
+import { UserService } from 'src/app/user/services/user.service';
 
 @Component({
   selector: 'app-chats-card',

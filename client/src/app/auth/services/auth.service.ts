@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { User } from 'src/shared/utils/interface';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 import { Observable, catchError, throwError, map } from 'rxjs';
 import { TokenService } from 'src/shared/services/token.service';
 import { Router } from '@angular/router';

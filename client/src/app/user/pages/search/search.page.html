@@ -1,15 +1,24 @@
-<ion-header collapse="condense">
+<ion-header>
   <ion-toolbar>
     <ion-title>
       Chat App
     </ion-title>
   </ion-toolbar>
+  <ion-toolbar>
+    <ion-header>
+      <ion-toolbar>
+        <ion-searchbar animated="true" placeholder="Search Friends" [debounce]="1000" (ionInput)="search($event)" (ionClear)="clear()"></ion-searchbar>
+      </ion-toolbar>
+    </ion-header>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">search</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <div *ngIf="users().length === 0" class="container">
+    <ion-item class="item">
+      <ion-icon aria-hidden="true" size="large" name="add-circle-outline"></ion-icon>
+      <ion-label> Find your friends</ion-label>
+    </ion-item>
+  </div>
+  <app-search-card (cardClick)="open($event)" (addClick)="inviteUser($event)" [user]="user" *ngFor="let user of users(); let index"/>
 </ion-content>

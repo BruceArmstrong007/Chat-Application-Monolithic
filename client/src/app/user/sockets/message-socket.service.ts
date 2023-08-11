@@ -4,7 +4,7 @@ import { environment } from 'src/environments/environment';
 import { TokenService } from 'src/shared/services/token.service';
 import { Socket } from 'socket.io-client';
 import { MessageState, MessageStateI, MessageStateW } from '../state/message.state';
-import { UserService } from '../user.service';
+import { UserService } from '../services/user.service';
 @Injectable({
   providedIn: 'root'
 })

@@ -2,7 +2,7 @@ import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
 import { Observable, throwError, catchError, map } from 'rxjs';
 import { environment } from "src/environments/environment";
-import { UserStateT, UserState } from "./state/user.state";
+import { UserStateT, UserState } from "../state/user.state";
 
 
 @Injectable({
@@ -20,6 +20,12 @@ export class UserService {
         this.userState.setUser = res;
         return res;
       }),
+      catchError(this.handleError)
+    )
+  }
+
+  search(key: string): Observable<any>{
+    return this.http.post(this.env.apiUrl+'/user/search',{search:key}).pipe(
       catchError(this.handleError)
     )
   }

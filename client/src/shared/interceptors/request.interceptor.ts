@@ -7,7 +7,7 @@ import {
   HttpErrorResponse
 } from '@angular/common/http';
 import { Observable, catchError, switchMap, throwError } from 'rxjs';
-import { AuthService } from '../../app/auth/auth.service';
+import { AuthService } from '../../app/auth/services/auth.service';
 import { TokenService } from 'src/shared/services/token.service';
 
 @Injectable()

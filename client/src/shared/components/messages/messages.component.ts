@@ -4,7 +4,7 @@ import { IonContent, IonicModule, ModalController } from '@ionic/angular';
 import { UserState, UserStateI } from 'src/app/user/state/user.state';
 import { MessageCardComponent } from './message-card/message-card.component';
 import { MessageState } from 'src/app/user/state/message.state';
-import { UserService } from '../../../app/user/user.service';
+import { UserService } from '../../../app/user/services/user.service';
 import { MessageSocketService } from 'src/app/user/sockets/message-socket.service';
 import { NgFor, NgIf } from '@angular/common';
 

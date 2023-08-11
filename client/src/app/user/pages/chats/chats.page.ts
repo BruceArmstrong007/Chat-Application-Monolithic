@@ -1,5 +1,5 @@
 import { Component, OnInit, Signal, computed, inject } from '@angular/core';
-import { NgFor } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule, ModalController } from '@ionic/angular';
 import { UserRef, UserState } from '../../state/user.state';
@@ -11,7 +11,7 @@ import { MessagesComponent } from 'src/shared/components/messages/messages.compo
   templateUrl: './chats.page.html',
   styleUrls: ['./chats.page.scss'],
   standalone: true,
-  imports: [IonicModule, FormsModule, ChatsCardComponent, NgFor]
+  imports: [IonicModule, FormsModule, ChatsCardComponent, NgFor, NgIf]
 })
 export class ChatsPage implements OnInit {
   private readonly userState = inject(UserState);

@@ -1,15 +1,55 @@
-<ion-header collapse="condense">
+<ion-header>
   <ion-toolbar>
     <ion-title>
       Chat App
     </ion-title>
   </ion-toolbar>
+  <ion-toolbar>
+    <ion-segment value="friends" (ionChange)="changeSection($event)">
+      <ion-segment-button value="friends">
+        <ion-label>Friends</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="sent">
+        <ion-label>Sent invite</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="received">
+        <ion-label>Received invite</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">friends</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content (ionChange)="changeSection($event)" [fullscreen]="true">
+  <ion-list class="section" [ngSwitch]="currentSection()">
+    <div class="section" *ngSwitchCase="'friends'">
+      <app-friends-card [section]="'friends'" (cardClick)="open($event)" (buttonClick)="btnClick($event)" [contact]="contact" *ngFor="let contact of contacts();"/>
+      <div *ngIf="contacts()?.length === 0" class="container">
+        <ion-item class="item">
+          <ion-icon aria-hidden="true" size="large" name="alert-circle-outline"></ion-icon>
+          <ion-label> Friend list is empty</ion-label>
+        </ion-item>
+      </div>
+    </div>
+    <div class="section" *ngSwitchCase="'sent'">
+      <app-friends-card [section]="'sent'" (cardClick)="open($event)" (buttonClick)="btnClick($event)" [contact]="contact" *ngFor="let contact of sentInv();"/>
+      <div *ngIf="sentInv()?.length === 0" class="container">
+        <ion-item class="item">
+          <ion-icon aria-hidden="true" size="large" name="alert-circle-outline"></ion-icon>
+          <ion-label> Sent Invite list is empty</ion-label>
+        </ion-item>
+      </div>
+    </div>
+    <div class="section" *ngSwitchCase="'received'">
+      <app-friends-card [section]="'received'" (cardClick)="open($event)" (buttonClick)="btnClick($event)" [contact]="contact" *ngFor="let contact of receivedInv();"/>
+      <div *ngIf="receivedInv()?.length === 0" class="container">
+        <ion-item class="item">
+          <ion-icon aria-hidden="true" size="large" name="alert-circle-outline"></ion-icon>
+          <ion-label> Received Invite list is empty</ion-label>
+        </ion-item>
+      </div>
+    </div>
+    <div class="section" *ngSwitchDefault>
+      <app-friends-card [section]="'friends'" (cardClick)="open($event)" (buttonClick)="btnClick($event)" [contact]="contact" *ngFor="let contact of contacts();"/>
+    </div>
+  </ion-list>
 </ion-content>

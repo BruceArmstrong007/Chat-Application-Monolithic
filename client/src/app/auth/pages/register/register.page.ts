@@ -4,7 +4,7 @@ import { IonicModule } from '@ionic/angular';
 import { Router, RouterLink } from '@angular/router';
 import { NgIf } from '@angular/common';
 import { ValidationService } from 'src/shared/services/validation.service';
-import { AuthService } from '../../auth.service';
+import { AuthService } from '../../services/auth.service';
 import { HttpClientModule } from '@angular/common/http';
 
 @Component({
