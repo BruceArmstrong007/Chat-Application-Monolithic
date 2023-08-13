@@ -12,7 +12,7 @@ import { UserStateT } from 'src/app/user/state/user.state';
 })
 export class SearchCardComponent  implements OnInit {
   @Output() cardClick: EventEmitter<any> = new EventEmitter();
-  @Output() addClick: EventEmitter<any> = new EventEmitter();
+  @Output() buttonClick: EventEmitter<any> = new EventEmitter();
   @Input() user!: any;
   constructor() { }
 

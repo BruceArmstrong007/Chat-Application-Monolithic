@@ -10,10 +10,28 @@
     <ion-col size="8">
       <ion-text color="medium" class="long-text">{{ user?.username }}</ion-text>
     </ion-col>
-    <ion-col size="4" *ngIf="!user?.isAdded">
-      <ion-buttons>
-        <ion-button color="tertiary" size="large" slot="icon-only" (click)="addClick.emit(user)">
+    <ion-col size="4">
+      <ion-buttons *ngIf="!user?.status">
+        <ion-button color="tertiary" size="large" slot="icon-only" (click)="buttonClick.emit({username: user.username, type: 'invite'})">
           <ion-icon name="person-add"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+      <ion-buttons *ngIf="user?.status === 'friends'">
+        <ion-button color="danger" size="large" slot="icon-only" (click)="buttonClick.emit({username: user.username, type: 'remove'})">
+          <ion-icon name="person-remove"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+      <ion-buttons *ngIf="user?.status === 'sent'">
+        <ion-button color="danger" size="large" slot="icon-only" (click)="buttonClick.emit({username: user.username, type: 'cancel'})">
+          <ion-icon name="close-circle"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+      <ion-buttons *ngIf="user?.status === 'received'">
+        <ion-button color="tertiary" size="large" slot="icon-only" (click)="buttonClick.emit({username: user.username, type: 'accept'})">
+          <ion-icon name="checkmark-circle"></ion-icon>
+        </ion-button>
+        <ion-button color="danger" size="large" slot="icon-only" (click)="buttonClick.emit({username: user.username, type: 'decline'})">
+          <ion-icon name="remove-circle"></ion-icon>
         </ion-button>
       </ion-buttons>
     </ion-col>

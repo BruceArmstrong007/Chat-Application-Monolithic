@@ -100,7 +100,6 @@ export class FriendsPage implements OnInit {
     await actionSheet.present();
   }
 
-
   async acceptInvite(username: string){
     const actionSheet = await this.actionSheetCtrl.create({
       header: 'Accept Invite',

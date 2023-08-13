@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, WritableSignal, signal } from '@angular/core';
+import { Component, OnInit, inject, WritableSignal, signal, effect, Signal, computed } from '@angular/core';
 import { ActionSheetController, IonicModule } from '@ionic/angular';
 import { UserService } from '../../services/user.service';
 import { SearchCardComponent } from './search-card/search-card.component';
@@ -17,44 +17,90 @@ export class SearchPage implements OnInit {
   private readonly userService = inject(UserService);
   private readonly userState = inject(UserState);
   private readonly contactService = inject(ContactService);
-  readonly users: WritableSignal<Partial<UserStateI>[]> = signal([]);
+  readonly fetchedUsers: WritableSignal<Partial<UserStateI>[]> = signal([]);
   private readonly actionSheetCtrl: ActionSheetController = inject(ActionSheetController);
-  private readonly selectedUser: WritableSignal<UserStateT> = signal(null);
+  readonly selectedUsers!: Signal<Partial<UserStateI>[]>;
 
 
-  constructor() { }
+  constructor() {
+  // This is selected users that depend on fetched data and user profile and this changes
+  // if either one of those signal changes
+    this.selectedUsers = computed(() => {
+      const userInfo = this.userState.user();
+      const fetchedUsers = this.fetchedUsers();
+      if(fetchedUsers.length > 0){
+        return fetchedUsers.map((user:any) => {
+          const existInContact = userInfo?.contacts?.find((contact:any) => contact?._id === user?._id);
+          const existInSentInvite = userInfo?.sentInvites?.find((contact:any) => contact?._id === user?._id);
+          const existInReceivedInvite = userInfo?.receivedInvites?.find((contact:any) => contact?._id === user?._id);
+          if(existInContact){
+            return {
+              ...user,
+              status: 'friends'
+            }
+          }
+          if(existInSentInvite){
+            return {
+              ...user,
+              status: 'sent'
+            }
+          }
+          if(existInReceivedInvite){
+            return {
+              ...user,
+              status: 'received'
+            }
+          }
+          return {...user};
+        })
+      }
+      return [];
+    });
+   }
 
   ngOnInit() {
+
   }
 
   search(event:any){
     const value = event?.target?.value;
     if(value == ''){
-      this.users.set([]);
+      this.fetchedUsers.set([]);
       return;
     }
     this.userService.search(value).subscribe((res)=>{
-      const contacts = this.userState.getUser?.contacts;
-      const users = res.map((user:any)=>{
-        const exist = contacts?.find((contact) => contact?._id === user?._id);
-        if(exist){
-          return {
-            ...user,
-            isAdded: true
-          }
-        }
-        return user;
-      });
-      this.users.set(users);
+      this.fetchedUsers.set(res);
     });
   }
 
   clear(){
-    this.users.set([]);
+    this.fetchedUsers.set([]);
   }
 
-  async inviteUser(event:any){
-    this.selectedUser.set(event);
+  async btnClick(event:any){
+    switch(event.type){
+      case 'invite':
+        this.inviteUser(event?.username);
+        break;
+      case 'remove':
+        this.removeUser(event?.username);
+        break;
+      case 'cancel':
+        this.cancelInvite(event?.username);
+        break;
+      case 'accept':
+        this.acceptInvite(event?.username);
+        break;
+      case 'decline':
+        this.declineInvite(event?.username);
+        break;
+      default:
+    }
+
+  }
+
+
+  async inviteUser(username: string){
     const actionSheet = await this.actionSheetCtrl.create({
       header: 'Invite User',
       buttons: [
@@ -63,7 +109,10 @@ export class SearchPage implements OnInit {
           data: {
             action: 'add',
           },
-          handler:() => this.handleInvite()
+          handler:() => {
+            this.contactService.sendInvite(username).subscribe((res)=>{
+            });
+          }
         },
         {
           text: 'Cancel',
@@ -77,10 +126,109 @@ export class SearchPage implements OnInit {
     await actionSheet.present();
   }
 
-  handleInvite(){
-    this.contactService.sendInvite(this.selectedUser()?.username as string).subscribe((res)=>{
-    })
+  async removeUser(username: string){
+    const actionSheet = await this.actionSheetCtrl.create({
+      header: 'Remove User',
+      buttons: [
+        {
+          text: 'Remove',
+          role: 'destructive',
+          data: {
+            action: 'remove-user',
+          },
+          handler:() =>  {
+            this.contactService.removeContact(username).subscribe((res) => {})
+          }
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          data: {
+            action: 'cancel',
+          },
+        },
+      ]
+    });
+    await actionSheet.present();
   }
+
+  async cancelInvite(username: string){
+    const actionSheet = await this.actionSheetCtrl.create({
+      header: 'Cancel Invite',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'destructive',
+          data: {
+            action: 'cancel-invite',
+          },
+          handler:() =>  {
+            this.contactService.cancelInvite(username).subscribe((res) => {})
+          }
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          data: {
+            action: 'cancel',
+          },
+        },
+      ]
+    });
+    await actionSheet.present();
+  }
+
+  async acceptInvite(username: string){
+    const actionSheet = await this.actionSheetCtrl.create({
+      header: 'Accept Invite',
+      buttons: [
+        {
+          text: 'Accept',
+          data: {
+            action: 'accept-invite',
+          },
+          handler:() =>  {
+            this.contactService.acceptInvite(username).subscribe((res) => {})
+          }
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          data: {
+            action: 'cancel',
+          },
+        },
+      ]
+    });
+    await actionSheet.present();
+  }
+
+  async declineInvite(username: string){
+    const actionSheet = await this.actionSheetCtrl.create({
+      header: 'Decline Invite',
+      buttons: [
+        {
+          text: 'Decline',
+          role: 'destructive',
+          data: {
+            action: 'decline-invite',
+          },
+          handler:() =>  {
+            this.contactService.declineInvite(username).subscribe((res) => {})
+          }
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          data: {
+            action: 'cancel',
+          },
+        },
+      ]
+    });
+    await actionSheet.present();
+  }
+
 
 
   open(event:any){

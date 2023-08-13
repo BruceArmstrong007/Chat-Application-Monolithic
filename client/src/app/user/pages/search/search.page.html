@@ -14,11 +14,11 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <div *ngIf="users().length === 0" class="container">
+  <div *ngIf="fetchedUsers().length === 0" class="container">
     <ion-item class="item">
       <ion-icon aria-hidden="true" size="large" name="add-circle-outline"></ion-icon>
       <ion-label> Find your friends</ion-label>
     </ion-item>
   </div>
-  <app-search-card (cardClick)="open($event)" (addClick)="inviteUser($event)" [user]="user" *ngFor="let user of users(); let index"/>
+  <app-search-card (cardClick)="open($event)" (buttonClick)="btnClick($event)" [user]="user" *ngFor="let user of selectedUsers(); let index"/>
 </ion-content>

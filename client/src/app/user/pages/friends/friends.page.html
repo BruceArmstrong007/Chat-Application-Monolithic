@@ -22,7 +22,7 @@
 <ion-content (ionChange)="changeSection($event)" [fullscreen]="true">
   <ion-list class="section" [ngSwitch]="currentSection()">
     <div class="section" *ngSwitchCase="'friends'">
-      <app-friends-card [section]="'friends'" (cardClick)="open($event)" (buttonClick)="btnClick($event)" [contact]="contact" *ngFor="let contact of contacts();"/>
+      <app-friends-card [status]="'friends'" (cardClick)="open($event)" (buttonClick)="btnClick($event)" [contact]="contact" *ngFor="let contact of contacts();"/>
       <div *ngIf="contacts()?.length === 0" class="container">
         <ion-item class="item">
           <ion-icon aria-hidden="true" size="large" name="alert-circle-outline"></ion-icon>
@@ -31,7 +31,7 @@
       </div>
     </div>
     <div class="section" *ngSwitchCase="'sent'">
-      <app-friends-card [section]="'sent'" (cardClick)="open($event)" (buttonClick)="btnClick($event)" [contact]="contact" *ngFor="let contact of sentInv();"/>
+      <app-friends-card [status]="'sent'" (cardClick)="open($event)" (buttonClick)="btnClick($event)" [contact]="contact" *ngFor="let contact of sentInv();"/>
       <div *ngIf="sentInv()?.length === 0" class="container">
         <ion-item class="item">
           <ion-icon aria-hidden="true" size="large" name="alert-circle-outline"></ion-icon>
@@ -40,7 +40,7 @@
       </div>
     </div>
     <div class="section" *ngSwitchCase="'received'">
-      <app-friends-card [section]="'received'" (cardClick)="open($event)" (buttonClick)="btnClick($event)" [contact]="contact" *ngFor="let contact of receivedInv();"/>
+      <app-friends-card [status]="'received'" (cardClick)="open($event)" (buttonClick)="btnClick($event)" [contact]="contact" *ngFor="let contact of receivedInv();"/>
       <div *ngIf="receivedInv()?.length === 0" class="container">
         <ion-item class="item">
           <ion-icon aria-hidden="true" size="large" name="alert-circle-outline"></ion-icon>
@@ -49,7 +49,7 @@
       </div>
     </div>
     <div class="section" *ngSwitchDefault>
-      <app-friends-card [section]="'friends'" (cardClick)="open($event)" (buttonClick)="btnClick($event)" [contact]="contact" *ngFor="let contact of contacts();"/>
+      <app-friends-card [status]="'friends'" (cardClick)="open($event)" (buttonClick)="btnClick($event)" [contact]="contact" *ngFor="let contact of contacts();"/>
     </div>
   </ion-list>
 </ion-content>

@@ -12,7 +12,7 @@ import { UserStateI } from 'src/app/user/state/user.state';
 })
 export class FriendsCardComponent  implements OnInit {
   @Input() contact!: UserStateI;
-  @Input() section!: any;
+  @Input() status!: any;
   @Output() cardClick: EventEmitter<any> = new EventEmitter();
   @Output() buttonClick: EventEmitter<any> = new EventEmitter();
   constructor() { }
