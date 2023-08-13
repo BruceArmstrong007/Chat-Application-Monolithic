@@ -57,8 +57,8 @@ export class UserService {
   async getUsers(username: string, searchTerm: string) {
     const regex = new RegExp(searchTerm, 'i');
     const user = await this.userRepository.searchUsers(
-      'username name profileURL bio',
-      { $regex: regex, $ne: username }
+      { $regex: regex, $ne: username },
+      'username name profileURL bio'
     );
     return user;
   }
