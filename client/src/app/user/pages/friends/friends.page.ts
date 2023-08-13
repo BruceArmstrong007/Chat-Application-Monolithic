@@ -59,7 +59,7 @@ export class FriendsPage implements OnInit {
             action: 'remove-user',
           },
           handler:() =>  {
-            this.contactService.removeContact(username).subscribe((res) => console.log(res))
+            this.contactService.removeContact(username).subscribe((res) => {})
           }
         },
         {
@@ -85,7 +85,7 @@ export class FriendsPage implements OnInit {
             action: 'cancel-invite',
           },
           handler:() =>  {
-            this.contactService.cancelInvite(username).subscribe((res) => console.log(res))
+            this.contactService.cancelInvite(username).subscribe((res) => {})
           }
         },
         {
@@ -111,7 +111,7 @@ export class FriendsPage implements OnInit {
             action: 'accept-invite',
           },
           handler:() =>  {
-            this.contactService.acceptInvite(username).subscribe((res) => console.log(res))
+            this.contactService.acceptInvite(username).subscribe((res) => {})
           }
         },
         {
@@ -137,7 +137,7 @@ export class FriendsPage implements OnInit {
             action: 'decline-invite',
           },
           handler:() =>  {
-            this.contactService.declineInvite(username).subscribe((res) => console.log(res))
+            this.contactService.declineInvite(username).subscribe((res) => {})
           }
         },
         {

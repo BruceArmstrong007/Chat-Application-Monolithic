@@ -4,11 +4,15 @@ import { environment } from 'src/environments/environment';
 import { TokenService } from 'src/shared/services/token.service';
 import { Socket } from 'socket.io-client';
 import { UserState } from '../state/user.state';
+import { UserService } from '../services/user.service';
+import { NotificationService } from 'src/shared/services/notification.service';
 @Injectable({
   providedIn: 'root'
 })
 export class UserSocketService {
   private readonly env = environment;
+  private readonly userService = inject(UserService);
+  private readonly notificationService = inject(NotificationService);
   private readonly userState = inject(UserState);
   private readonly tokenService = inject(TokenService);
   private readonly socket: Socket;
@@ -27,6 +31,7 @@ export class UserSocketService {
         token:  this.tokenService.getToken
       }
     });
+    this.listenToNotifications();
 
   }
 
@@ -50,6 +55,44 @@ export class UserSocketService {
       this.userState.setOnlineUsers = res;
     });
   }
+
+
+  listenToNotifications(){
+    this.socket.on('notify-contact',(event:any) => {
+      switch(event?.type){
+        case 'contact':
+          this.contactNotifications(event?.data);
+          break;
+        default:
+      }
+    })
+
+
+    }
+
+    contactNotifications(data:any){
+      // Handle contact notifications
+      switch(data?.option){
+        case 'sent-invite':
+          this.notificationService.setBasicNotification('Contact Notification', data?.sender+' sent you a invite.');
+          break;
+        case 'cancel-invite':
+          this.notificationService.setBasicNotification('Contact Notification', data?.sender+' cancelled his invite to you.');
+          break;
+        case 'accept-invite':
+          this.notificationService.setBasicNotification('Contact Notification', data?.sender+' accepted your invite.');
+          break;
+        case 'decline-invite':
+          this.notificationService.setBasicNotification('Contact Notification', data?.sender+' declined your invite.');
+          break;
+        case 'remove-contact':
+          this.notificationService.setBasicNotification('Contact Notification', data?.sender+' removed your from his contacts.');
+          break;
+        default:
+      }
+      this.userService.profile().subscribe(()=>{});
+    }
+
 
 
 }

@@ -1,5 +1,6 @@
-import { Component, EnvironmentInjector, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
+import { NotificationService } from 'src/shared/services/notification.service';
 
 @Component({
   selector: 'app-root',
@@ -7,9 +8,11 @@ import { IonicModule } from '@ionic/angular';
   styleUrls: ['app.component.scss'],
   standalone: true,
   imports: [IonicModule],
+  providers: []
 })
-export class AppComponent {
-  public environmentInjector = inject(EnvironmentInjector);
-
-  constructor() {}
+export class AppComponent{
+  private readonly notificationService = inject(NotificationService);
+  constructor() {
+    this.notificationService.register();
+  }
 }

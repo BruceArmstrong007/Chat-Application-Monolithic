@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { UserSocketService } from './sockets/user-socket.service';
 import { MessageSocketService } from './sockets/message-socket.service';
@@ -10,11 +10,12 @@ import { MessageSocketService } from './sockets/message-socket.service';
   standalone: true,
   imports: [IonicModule]
 })
-export class UserPage implements OnInit {
+export class UserPage{
   private readonly userSocket = inject(UserSocketService);
   private readonly messageSocket = inject(MessageSocketService);
 
-  ngOnInit() {
+  constructor() {
+
     this.userSocket.establishConnection();
     this.messageSocket.getMessages();
   }

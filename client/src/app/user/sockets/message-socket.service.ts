@@ -1,19 +1,24 @@
-import { Injectable,inject } from '@angular/core';
-import { io } from 'socket.io-client';
+import { Injectable,inject, signal } from '@angular/core';
+import { io, Socket } from 'socket.io-client';
 import { environment } from 'src/environments/environment';
 import { TokenService } from 'src/shared/services/token.service';
-import { Socket } from 'socket.io-client';
 import { MessageState, MessageStateI, MessageStateW } from '../state/message.state';
 import { UserService } from '../services/user.service';
+import { UserState } from '../state/user.state';
+import { NotificationService } from 'src/shared/services/notification.service';
+
 @Injectable({
   providedIn: 'root'
 })
 export class MessageSocketService {
   private readonly env = environment;
   private readonly messageState = inject(MessageState);
+  private readonly userContacts = signal(inject(UserState).user()?.contacts);
   private readonly tokenService = inject(TokenService);
-  private readonly UserService = inject(UserService);
+  private readonly userService = inject(UserService);
+  private readonly notificationService = inject(NotificationService);
   private readonly socket: Socket;
+
 
   constructor(){
     this.socket = io(this.env.wsUrl+'/message', {
@@ -29,15 +34,18 @@ export class MessageSocketService {
         token:  this.tokenService.getToken
       }
     });
+
     this.listenForMessages();
-    this.listenForTyping()
+    this.listenForTyping();
   }
 
   listenForMessages(){
-    this.socket.on('receive-message',(data) => {
+    this.socket.on('receive-message',async (data) => {
+
+      // Update received message in the Application State
       this.messageState.messageState.update((state:any) => {
         return state?.map((room:any) => {
-          if(room?.roomID === this.UserService.generateRoomIDs(data?.senderID,data?.receiverID)){
+          if(room?.roomID === this.userService.generateRoomIDs(data?.senderID,data?.receiverID)){
             let messages =  room?.messages ? room.messages : []
             messages.push(data);
             return {
@@ -48,6 +56,9 @@ export class MessageSocketService {
           return room;
         })
       })
+
+        const contact = this.userContacts()?.find((contact:any) => contact?._id === data?.senderID);
+        this.notificationService.setBasicNotification(contact?.name +' sent you a message.',data?.content);
     });
   }
 
@@ -55,7 +66,7 @@ export class MessageSocketService {
     this.socket.on('typing',(data) => {
       this.messageState.messageState.update((state:any) => {
         return state?.map((room:any) => {
-          if(room?.roomID === this.UserService.generateRoomIDs(data?.senderID,data?.receiverID)){
+          if(room?.roomID === this.userService.generateRoomIDs(data?.senderID,data?.receiverID)){
             let typing = room?.typing ? room.typing : [];
             if(data?.status === 'started'){
               if(!typing.find((user:any) => user?.senderID !== data?.senderID)){
@@ -101,5 +112,6 @@ export class MessageSocketService {
   userTyping(message: Partial<MessageStateI>){
     this.socket.emit('user-typing',message);
   }
+
 
 }
