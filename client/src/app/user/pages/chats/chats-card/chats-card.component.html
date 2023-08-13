@@ -1,6 +1,7 @@
   <ion-item (click)="cardClick.emit({click:true, contact: contact})">
-  <ion-avatar slot="start">
+  <ion-avatar class="header-icon" slot="start">
     <img [src]="contact.profileURL" alt="avatar"/>
+    <div class="dot" [ngClass]="{'online':  isOnline(), 'offline': !isOnline()}"></div>
   </ion-avatar>
   <ion-grid>
     <ion-row>
@@ -11,9 +12,7 @@
       <ion-text color="medium" class="long-text">{{ contact.username }}</ion-text>
     </ion-col>
     <ion-col size="4">
-      <ion-badge [color]="isOnline() ? 'success' : 'danger'">
-        {{ isOnline() ? 'Online' : 'Offline' }}
-      </ion-badge>
+      <ion-badge slot="end">22</ion-badge>
     </ion-col>
   </ion-row>
   <ion-row>

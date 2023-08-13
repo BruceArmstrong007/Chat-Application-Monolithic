@@ -1,0 +1,20 @@
+.dot{
+  height: 12px;
+  width: 12px;
+  border-radius: 100%;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+}
+
+.online {
+  background-color: rgb(1, 255, 1);
+}
+
+.offline {
+  background-color: red;
+}
+
+.header-icon {
+  position: relative;
+}

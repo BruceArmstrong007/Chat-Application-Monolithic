@@ -4,22 +4,16 @@
       <ion-icon name="arrow-back">
       </ion-icon>
     </ion-button>
-    <ion-avatar slot="start">
+    <ion-avatar class="header-icon" slot="start">
       <img [src]="contact.profileURL" alt="avatar"/>
+     <div class="dot" [ngClass]="{'online':  isOnline(), 'offline': !isOnline()}"></div>
     </ion-avatar>
     <ion-grid class="ion-padding">
       <ion-row>
         <ion-label class="long-text">{{ contact.name }}</ion-label>
       </ion-row>
       <ion-row>
-        <ion-col size="8">
           <ion-text color="medium" class="long-text">{{ contact.username }}</ion-text>
-        </ion-col>
-        <ion-col size="4">
-          <ion-badge [color]="isOnline() ? 'success' : 'danger'">
-            {{ isOnline() ? 'Online' : 'Offline' }}
-          </ion-badge>
-        </ion-col>
       </ion-row>
       <ion-row>
         <span class="long-text" *ngFor="let user of isTyping()">
