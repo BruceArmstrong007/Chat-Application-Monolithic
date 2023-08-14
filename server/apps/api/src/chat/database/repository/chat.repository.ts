@@ -8,11 +8,11 @@ import { User } from 'apps/api/src/user/database/model/user.model';
 export class ChatRepository {
   constructor(
     private readonly redisProvider: RedisProvider,
-    @InjectModel(User.name) public readonly userModel: Model<User>,) {}
+    @InjectModel(User.name) public readonly userModel: Model<User>,
+  ) {}
 
   subscribe(channel: string, callback: (message: string) => void) {
-    this.redisProvider.subscriber.subscribe(channel);
-    this.redisProvider.subscriber.on('message', (chan, message) => {
+    this.redisProvider.subscriber.subscribe(channel, (message, chan) => {
       if (chan === channel) {
         callback(message);
       }
@@ -37,72 +37,54 @@ export class ChatRepository {
   }
 
   async set(key: string, value: any, ttl?: number) {
-    if (!ttl){
+    if (!ttl) {
       await this.redisProvider.publisher.set(key, value);
       return;
     }
-    await this.redisProvider.publisher.set(key, value, 'EX', ttl);
+    await this.redisProvider.publisher.set(key, value, { EX: ttl });
   }
-
 
   async get(key: string): Promise<string> {
     return await this.redisProvider.publisher.get(key);
   }
 
-  async del(key: string){
+  async del(key: string) {
     await this.redisProvider.publisher.del(key);
   }
 
-  async listAddElts(key: string, value: any){
-    await this.redisProvider.publisher.rpush(
-      `room_messages:${key}`, 
-      JSON.stringify(value),
-    );
-  }
 
-  async listGetElts(key: string, start: number, end: number): Promise<any>{
-    return await this.redisProvider.publisher.lrange(key, start, end);
-  }
-
-  generateRoomIDs(id1: any, id2: any): string{
+  generateRoomIDs(id1: any, id2: any): string {
     return [id1, id2].sort().join('-');
   }
 
 
-  async setAddElts(key: string, value: string[]){
-    await this.redisProvider.publisher.sadd(key, ...value);
+  async jsonGet(key: string, option?: string) {
+    if (!option) {
+      option = '$';
+    }
+    return await this.redisProvider.publisher.json.get(key, {
+      path: option,
+    });
   }
 
-  
-  async setRemoveElt(key: string, value: string){
-    await this.redisProvider.publisher.srem(key, value);
+  async jsonSet(key: string, value: any, option?: string) {
+    if (!option) {
+      option = '$';
+    }
+    await this.redisProvider.publisher.json.set(key, option, value);
   }
 
-  async setFindElt(key: string, value: string){
-    return this.redisProvider.publisher.sismember(key, value);
-  }
 
-  async jsonSet(key: string, value: any, condition?: string){
-    const isExist = await this.jsonGet(key);
-    const option = !condition ? '$' : '$' + condition;
-    if(isExist) {
-      //@ts-ignore
-      const chat = JSON.stringify(value);
-      await this.redisProvider.publisher.call(
-        'JSON.ARRAPPEND',
-        key,
-        option,
-        chat,
-      );
-    }else{
-      const chat = JSON.stringify([value]);
-      //@ts-ignore
-      await this.redisProvider.publisher.call('JSON.SET', key, option, chat);
+  async jsonArraySetOrAppend(key: string, value: any, option?: string) {
+    if (!option) {
+      option = '$';
+    }
+    const isExist = await this.jsonGet(key, option);
+    if (isExist) {
+      await this.redisProvider.publisher.json.arrAppend(key, option, value);
+    } else {
+      await this.jsonSet(key, [value], option);
     }
   }
 
-  async jsonGet(key: string){
-    return await this.redisProvider.publisher.call('JSON.GET', key, '$');
-  }
-  
 }
