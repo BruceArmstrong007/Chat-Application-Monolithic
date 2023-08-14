@@ -8,11 +8,11 @@ import { User } from 'apps/api/src/user/database/model/user.model';
 export class ChatRepository {
   constructor(
     private readonly redisProvider: RedisProvider,
-    @InjectModel(User.name) public readonly userModel: Model<User>,) {}
+    @InjectModel(User.name) public readonly userModel: Model<User>,
+  ) {}
 
   subscribe(channel: string, callback: (message: string) => void) {
-    this.redisProvider.subscriber.subscribe(channel);
-    this.redisProvider.subscriber.on('message', (chan, message) => {
+    this.redisProvider.subscriber.subscribe(channel, (message, chan) => {
       if (chan === channel) {
         callback(message);
       }
@@ -37,72 +37,78 @@ export class ChatRepository {
   }
 
   async set(key: string, value: any, ttl?: number) {
-    if (!ttl){
+    if (!ttl) {
       await this.redisProvider.publisher.set(key, value);
       return;
     }
-    await this.redisProvider.publisher.set(key, value, 'EX', ttl);
+    await this.redisProvider.publisher.set(key, value, { EX: ttl });
   }
-
 
   async get(key: string): Promise<string> {
     return await this.redisProvider.publisher.get(key);
   }
 
-  async del(key: string){
+  async del(key: string) {
     await this.redisProvider.publisher.del(key);
   }
 
-  async listAddElts(key: string, value: any){
-    await this.redisProvider.publisher.rpush(
-      `room_messages:${key}`, 
+  async listAddElts(key: string, value: any) {
+    await this.redisProvider.publisher.rPush(
+      `room_messages:${key}`,
       JSON.stringify(value),
     );
   }
 
-  async listGetElts(key: string, start: number, end: number): Promise<any>{
-    return await this.redisProvider.publisher.lrange(key, start, end);
+  async listGetElts(key: string, start: number, end: number): Promise<any> {
+    return await this.redisProvider.publisher.lRange(key, start, end);
   }
 
-  generateRoomIDs(id1: any, id2: any): string{
+  generateRoomIDs(id1: any, id2: any): string {
     return [id1, id2].sort().join('-');
   }
 
-
-  async setAddElts(key: string, value: string[]){
-    await this.redisProvider.publisher.sadd(key, ...value);
+  async setAddElts(key: string, value: string[]) {
+    await this.redisProvider.publisher.sAdd(key, value);
   }
 
-  
-  async setRemoveElt(key: string, value: string){
-    await this.redisProvider.publisher.srem(key, value);
+  async setRemoveElt(key: string, value: string) {
+    await this.redisProvider.publisher.sRem(key, value);
   }
 
-  async setFindElt(key: string, value: string){
-    return this.redisProvider.publisher.sismember(key, value);
+  async setFindElt(key: string, value: string) {
+    return this.redisProvider.publisher.sIsMember(key, value);
   }
 
-  async jsonSet(key: string, value: any, condition?: string){
+  async jsonArraySetOrAppend(key: string, value: any, option?: string) {
     const isExist = await this.jsonGet(key);
-    const option = !condition ? '$' : '$' + condition;
-    if(isExist) {
-      //@ts-ignore
-      const chat = JSON.stringify(value);
-      await this.redisProvider.publisher.call(
-        'JSON.ARRAPPEND',
-        key,
-        option,
-        chat,
-      );
-    }else{
-      const chat = JSON.stringify([value]);
-      //@ts-ignore
-      await this.redisProvider.publisher.call('JSON.SET', key, option, chat);
+    if (!option) {
+      option = '$';
     }
+    if (isExist) {
+      const chat = JSON.stringify(value);
+      await this.redisProvider.publisher.json.arrAppend(key, option, chat);
+    } else {
+      const chat = JSON.stringify([value]);
+      await this.jsonSet(key, option, chat);
+    }
+
+    // const option = !condition ? '$' : '$' + condition;
+    // console.info(option)
+    // await this.redisProvider.publisher.json.arrAppend(key, option, [value], {
+    //   NX: true,
+    // });
   }
 
-  async jsonGet(key: string){
-    return await this.redisProvider.publisher.call('JSON.GET', key, '$');
+  async jsonGet(key: string, option?: string) {
+    return await this.redisProvider.publisher.json.get(key, {
+      path: !option ? '$' : option,
+    });
   }
-  
+
+  async jsonSet(key: string, value: string, option?: string) {
+    if (!option) {
+      option = '$';
+    }
+    await this.redisProvider.publisher.json.set(key, option, value);
+  }
 }

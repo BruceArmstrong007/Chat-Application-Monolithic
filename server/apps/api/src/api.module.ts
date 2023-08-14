@@ -18,6 +18,7 @@ import { ChatModule } from './chat/chat.module';
         REDIS_URI: Joi.string().required(),
         REDIS_PORT: Joi.required(),
         REDIS_HOST: Joi.string().required(),
+        REDIS_USERNAME: Joi.string().required(),
         JWT_SECRET: Joi.string().required(),
         JWT_EXPIRATION: Joi.required()
       }),
