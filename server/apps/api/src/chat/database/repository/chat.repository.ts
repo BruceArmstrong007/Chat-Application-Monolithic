@@ -52,63 +52,39 @@ export class ChatRepository {
     await this.redisProvider.publisher.del(key);
   }
 
-  async listAddElts(key: string, value: any) {
-    await this.redisProvider.publisher.rPush(
-      `room_messages:${key}`,
-      JSON.stringify(value),
-    );
-  }
-
-  async listGetElts(key: string, start: number, end: number): Promise<any> {
-    return await this.redisProvider.publisher.lRange(key, start, end);
-  }
 
   generateRoomIDs(id1: any, id2: any): string {
     return [id1, id2].sort().join('-');
   }
 
-  async setAddElts(key: string, value: string[]) {
-    await this.redisProvider.publisher.sAdd(key, value);
-  }
 
-  async setRemoveElt(key: string, value: string) {
-    await this.redisProvider.publisher.sRem(key, value);
-  }
-
-  async setFindElt(key: string, value: string) {
-    return this.redisProvider.publisher.sIsMember(key, value);
-  }
-
-  async jsonArraySetOrAppend(key: string, value: any, option?: string) {
-    const isExist = await this.jsonGet(key);
+  async jsonGet(key: string, option?: string) {
     if (!option) {
       option = '$';
     }
-    if (isExist) {
-      const chat = JSON.stringify(value);
-      await this.redisProvider.publisher.json.arrAppend(key, option, chat);
-    } else {
-      const chat = JSON.stringify([value]);
-      await this.jsonSet(key, option, chat);
-    }
-
-    // const option = !condition ? '$' : '$' + condition;
-    // console.info(option)
-    // await this.redisProvider.publisher.json.arrAppend(key, option, [value], {
-    //   NX: true,
-    // });
-  }
-
-  async jsonGet(key: string, option?: string) {
     return await this.redisProvider.publisher.json.get(key, {
-      path: !option ? '$' : option,
+      path: option,
     });
   }
 
-  async jsonSet(key: string, value: string, option?: string) {
+  async jsonSet(key: string, value: any, option?: string) {
     if (!option) {
       option = '$';
     }
     await this.redisProvider.publisher.json.set(key, option, value);
   }
+
+
+  async jsonArraySetOrAppend(key: string, value: any, option?: string) {
+    if (!option) {
+      option = '$';
+    }
+    const isExist = await this.jsonGet(key, option);
+    if (isExist) {
+      await this.redisProvider.publisher.json.arrAppend(key, option, value);
+    } else {
+      await this.jsonSet(key, [value], option);
+    }
+  }
+
 }

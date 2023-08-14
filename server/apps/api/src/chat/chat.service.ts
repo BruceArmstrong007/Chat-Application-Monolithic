@@ -78,7 +78,7 @@ export class ChatService {
       message?.receiverID,
     );
     const room = `rooms:${roomID}`;
-    this.chatRepository.jsonSet(room, message);
+    this.chatRepository.jsonArraySetOrAppend(room, message);
     server.to(roomID).emit('receive-message', message);
   } 
 
@@ -88,6 +88,28 @@ export class ChatService {
       message?.receiverID,
     );
     server.to(roomID).emit('typing', message);
+  }
+
+  async messageStatus(rooms: any[]){
+    rooms.forEach((room: any) => {
+      const messageIDs = room?.messageID;
+      
+      // this.chatRepository.jsonSet(`rooms:${room?.roomID}`,room?.status,`$.[*].status`)
+      // if(messageIDs.length === 0){
+      //   this.chatRepository.jsonSet(`rooms:${room?.roomID}`,room?.status,`$.[*].status`)
+      // }else{
+      //   messageIDs.forEach((id:string) => {
+      //     this.chatRepository.jsonSet(`rooms:${room?.roomID}`,room?.status,`$.[?(@.messageID == ${id})].status`)
+      //   });
+      // }
+    })
+    this.chatRepository.publish('message-status', JSON.stringify(rooms));
+  }
+
+  async updateStatus(server: Server, rooms: any[]){
+    rooms.forEach((room: any) => {
+      server.to(room.roomID).emit('update-status', rooms);
+    });
   }
 
   private async getContacts(userID: string): Promise<any[]> {
