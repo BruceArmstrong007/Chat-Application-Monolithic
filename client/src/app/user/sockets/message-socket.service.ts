@@ -91,10 +91,10 @@ export class MessageSocketService {
    getMessages(){
     this.socket.emit('get-messages',async (data: any) => {
       const rooms =  data?.map((room: any): MessageStateW=>{
-        const message = JSON.parse(room?.messages)
+        const message = room?.messages[0]
         return {
          roomID: room.roomID,
-         messages: message[0] ? message[0] : [],
+         messages: message ? message : [],
          typing: null
         }
       });
