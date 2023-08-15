@@ -1,9 +1,11 @@
 <ion-header>
   <ion-toolbar>
-    <ion-button color="transparant" slot="start" (click)="cancel()">
-      <ion-icon name="arrow-back">
-      </ion-icon>
+    <ion-buttons slot="start">
+      <ion-button slot="icon-only" (click)="cancel()">
+        <ion-icon name="arrow-back">
+        </ion-icon>
     </ion-button>
+  </ion-buttons>
     <ion-avatar class="header-icon" slot="start">
       <img [src]="contact.profileURL" alt="avatar"/>
      <div class="dot" [ngClass]="{'online':  isOnline(), 'offline': !isOnline()}"></div>
@@ -38,9 +40,11 @@
     <ion-item color="transparant">
       <ion-textarea [(ngModel)]="message" placeholder="Type your message..." (ionFocus)="onTyping()"
       (ionBlur)="onFinishedTyping()"></ion-textarea>
-      <ion-button color="transparant" (click)="send()">
-        <ion-icon name="send" />
-      </ion-button>
+      <ion-buttons>
+        <ion-button slot="icon-only" color="success" (click)="send()">
+          <ion-icon name="send" />
+        </ion-button>
+      </ion-buttons>
     </ion-item>
     </ion-toolbar>
 </ion-footer>
