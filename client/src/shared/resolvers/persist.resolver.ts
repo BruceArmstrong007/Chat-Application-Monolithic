@@ -6,6 +6,7 @@ import {
 } from '@angular/router';
 import { Observable, of, map } from 'rxjs';
 import { AuthService } from 'src/app/auth/services/auth.service';
+import { TokenService } from '../services/token.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,8 +14,9 @@ import { AuthService } from 'src/app/auth/services/auth.service';
 export class PersistResolver implements Resolve<boolean> {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly tokenService = inject(TokenService);
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
-    const token = localStorage.getItem('token');
+    const token = this.tokenService.getRefreshToken;
     if(token){
       return this.authService.refreshToken({
         refresh: token

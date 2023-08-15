@@ -18,8 +18,8 @@ export class AuthService{
   login(data: Partial<User>): Observable<any>{
     return this.http.post(this.env.apiUrl+'/auth/login',data).pipe(
       map((res:any)=> {
-        localStorage.setItem('token', res.refreshToken);
         this.tokenService.setToken = res.accessToken;
+        this.tokenService.setRefreshToken = res.refreshToken;
         this.router.navigateByUrl('user');
     }),
       catchError(this.handleError))
@@ -37,7 +37,8 @@ export class AuthService{
   }
 
   logout(): Observable<any>{
-    localStorage.removeItem('token');
+    // localStorage.removeItem('token');
+    this.tokenService.removeToken();
     this.tokenService.setToken = '';
     this.router.navigateByUrl('auth');
     return this.http.get(this.env.apiUrl+'/auth/logout').pipe(

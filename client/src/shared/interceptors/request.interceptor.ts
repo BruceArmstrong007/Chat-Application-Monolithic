@@ -15,7 +15,10 @@ export class RequestInterceptor implements HttpInterceptor {
   private readonly authService = inject(AuthService);
   private readonly tokenService = inject(TokenService);
 
-  intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
+  constructor(){
+  }
+
+   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     return next.handle(this.addAuthHeader(request)).pipe(
       catchError((response : HttpErrorResponse) => {
           return this.handle401Error(request, next, response);
@@ -30,8 +33,9 @@ export class RequestInterceptor implements HttpInterceptor {
     }
 
     if (this.tokenService.getToken) {
+      // localStorage.getItem('token')
       return this.authService.refreshToken({
-        refresh : localStorage.getItem('token')
+        refresh : this.tokenService.getRefreshToken
       }).pipe(
         switchMap((response) => {
           return next.handle(this.addAuthHeader(request));

@@ -5,9 +5,19 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header>
-    <ion-toolbar>
-      <ion-title size="large">settings</ion-title>
-    </ion-toolbar>
-  </ion-header>
+ <ion-list>
+   <ion-item>
+    <ion-toggle [(ngModel)]="mode" (ionChange)="darkMode()">Dark Mode</ion-toggle>
+   </ion-item>
+   <ion-item>
+    <div  class="logoutArea">
+        <ion-buttons>
+          <ion-button color="danger" (click)="logout()">
+            <ion-icon slot="start" name="exit-outline"></ion-icon>
+            <ion-label  slot="end">Logout</ion-label>
+          </ion-button>
+        </ion-buttons>
+    </div>
+   </ion-item>
+ </ion-list>
 </ion-content>
