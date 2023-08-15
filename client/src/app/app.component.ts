@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, effect, Renderer2 } from '@angular/core';
+import { Component, inject, OnInit, effect } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { NotificationService } from 'src/shared/services/notification.service';
 import { StorageService } from 'src/shared/services/storage.service';
@@ -18,7 +18,6 @@ export class AppComponent implements OnInit{
   private readonly storageService = inject(StorageService);
   private readonly tokenService = inject(TokenService);
   private readonly themeService = inject(ThemeService);
-  private readonly renderer2 = inject(Renderer2);
   constructor() {
     this.notificationService.register();
       effect(()=> {
