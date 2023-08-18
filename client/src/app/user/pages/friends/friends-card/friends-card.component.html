@@ -12,21 +12,21 @@
     </ion-col>
     <ion-col size="4">
       <ng-container *ngIf="status === 'friends'">
-        <ion-buttons>
+        <ion-buttons class="ion-justify-content-end">
           <ion-button color="danger" size="large" slot="icon-only" (click)="buttonClick.emit({username: contact.username, type: 'remove'})">
             <ion-icon name="person-remove"></ion-icon>
           </ion-button>
         </ion-buttons>
       </ng-container>
       <ng-container *ngIf="status === 'sent'">
-        <ion-buttons>
+        <ion-buttons class="ion-justify-content-end">
           <ion-button color="danger" size="large" slot="icon-only" (click)="buttonClick.emit({username: contact.username, type: 'cancel'})">
             <ion-icon name="close-circle"></ion-icon>
           </ion-button>
         </ion-buttons>
       </ng-container>
       <ng-container *ngIf="status === 'received'">
-        <ion-buttons>
+        <ion-buttons class="ion-justify-content-end">
           <ion-button color="tertiary" size="large" slot="icon-only" (click)="buttonClick.emit({username: contact.username, type: 'accept'})">
             <ion-icon name="checkmark-circle"></ion-icon>
           </ion-button>
