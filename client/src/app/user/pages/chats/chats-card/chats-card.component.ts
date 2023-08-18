@@ -12,49 +12,50 @@ import { UserService } from 'src/app/user/services/user.service';
   standalone: true,
   imports:[IonicModule ,NgClass, NgFor, NgIf]
 })
-export class ChatsCardComponent  implements OnInit {
+export class ChatsCardComponent {
   @Input() contact!: UserStateI;
   private readonly usersState = inject(UserState);
   private readonly messageState = inject(MessageState);
   private readonly userService = inject(UserService);
-  isOnline!: Signal<boolean>;
-  isTyping!: Signal<any>;
-  lastMessage!: Signal<string | undefined>;
   @Output() cardClick = new EventEmitter();
+  isOnline: Signal<boolean> = computed(() => {
+    let state = false;
+    this.usersState.onlineUsers()?.forEach((onlineUser:any) => {
+      if(onlineUser.id === this.contact._id){
+        state = onlineUser.isOnline;
+      }
+    });
+    return state;
+  });
+  isTyping: Signal<any> = computed(() => {
+    let typing: any[] = [];
+    this.messageState.messageState()?.forEach((room) => {
+      if(room?.roomID === this.userService.generateRoomIDs(this.usersState.user()?._id,this.contact._id)){
+        typing = room?.typing?.length ? room?.typing : [];
+      }
+    });
+    return typing;
+  });
+  lastMessage: Signal<string | undefined> = computed(() => {
+    let messages!: any, message!: any;
+    this.messageState.messageState()?.forEach((room) => {
+      if(room?.roomID === this.userService.generateRoomIDs(this.usersState.user()?._id,this.contact._id)){
+        messages = room?.messages;
+        if(messages?.length > 0) message = messages[messages?.length - 1]?.content;
+      }
+    });
+    return message;
+  });
+  deliveredCount: Signal<number> = computed(() => {
+    let count!: number;
+    this.messageState.messageState()?.forEach((room) => {
+      if(room?.roomID === this.userService.generateRoomIDs(this.usersState.user()?._id,this.contact._id)){
+        count = room?.messages.filter((msg:any)=> msg.senderID == this.contact?._id && msg.status === 'delivered').length;
+      }
+    });
+    return count ? count : 0;
+  });
   constructor() { }
 
-  ngOnInit() {
-    this.isOnline = computed(() => {
-      let state = false;
-      this.usersState.onlineUsers()?.forEach((onlineUser:any) => {
-        if(onlineUser.id === this.contact._id){
-          state = onlineUser.isOnline;
-        }
-      });
-      return state;
-    });
-
-    this.isTyping = computed(() => {
-      let typing: any[] = [];
-      this.messageState.messageState()?.forEach((room) => {
-        if(room?.roomID === this.userService.generateRoomIDs(this.usersState.user()?._id,this.contact._id)){
-          typing = room?.typing?.length ? room?.typing : [];
-        }
-      });
-      return typing;
-    });
-
-    this.lastMessage = computed(() => {
-      let messages: any[] = [], message;
-      this.messageState.messageState()?.forEach((room) => {
-        if(room?.roomID === this.userService.generateRoomIDs(this.usersState.user()?._id,this.contact._id)){
-          messages = room?.messages;
-          if(messages?.length > 0) message = messages[messages?.length - 1]?.content;
-        }
-      });
-      return message;
-    })
-
-  }
 
 }

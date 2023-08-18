@@ -18,7 +18,7 @@ import { UserService } from '../../services/user.service';
 export class ChatsPage implements OnInit {
   private readonly userState = inject(UserState);
   private readonly userService = inject(UserService);
-  private readonly messageSocket = inject(MessageSocketService);
+  private readonly messageSocketService = inject(MessageSocketService);
   private readonly modalCtrl: ModalController = inject(ModalController);
   readonly contacts: Signal<UserRef | undefined> = computed(() => this.userState?.user()?.contacts);
 
@@ -40,7 +40,7 @@ export class ChatsPage implements OnInit {
       roomID: this.userService.generateRoomIDs(event?.contact?._id, this.userState.getUser?._id),
       messageID: []
     }
-    this.messageSocket.seenMessages(room);
+    this.messageSocketService.seenMessages(room);
   }
 }
 
