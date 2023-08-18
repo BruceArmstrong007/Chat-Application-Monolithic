@@ -6,6 +6,7 @@ import { MessageState, MessageStateI, MessageStateW } from '../state/message.sta
 import { UserService } from '../services/user.service';
 import { UserState } from '../state/user.state';
 import { NotificationService } from 'src/shared/services/notification.service';
+import { UpdateStatus } from 'src/shared/utils/interface';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,8 @@ import { NotificationService } from 'src/shared/services/notification.service';
 export class MessageSocketService {
   private readonly env = environment;
   private readonly messageState = inject(MessageState);
-  private readonly userContacts = signal(inject(UserState).user()?.contacts);
+  private readonly userState = inject(UserState);
+  private readonly userContacts = signal(this.userState.user()?.contacts);
   private readonly tokenService = inject(TokenService);
   private readonly userService = inject(UserService);
   private readonly notificationService = inject(NotificationService);
@@ -34,18 +36,18 @@ export class MessageSocketService {
         token:  this.tokenService.getToken
       }
     });
-
     this.listenForMessages();
     this.listenForTyping();
+    this.listenForMessageUpdates();
   }
-
+  // listening for messages send to user realtime
   listenForMessages(){
     this.socket.on('receive-message',async (data) => {
-
+      const roomID = this.userService.generateRoomIDs(data?.senderID,data?.receiverID);
       // Update received message in the Application State
       this.messageState.messageState.update((state:any) => {
         return state?.map((room:any) => {
-          if(room?.roomID === this.userService.generateRoomIDs(data?.senderID,data?.receiverID)){
+          if(room?.roomID === roomID){
             let messages =  room?.messages ? room.messages : []
             messages.push(data);
             return {
@@ -56,12 +58,18 @@ export class MessageSocketService {
           return room;
         })
       })
-
-        const contact = this.userContacts()?.find((contact:any) => contact?._id === data?.senderID);
-        this.notificationService.setBasicNotification(contact?.name +' sent you a message.',data?.content);
+      this.socket.emit('message-status',{
+        roomID: roomID,
+        messageID: [data?.messageID],
+        crntStatus: 'delivered',
+        prevStatus: 'sent'
+      });
+      const contact = this.userContacts()?.find((contact:any) => contact?._id === data?.senderID);
+      this.notificationService.setBasicNotification(contact?.name +' sent you a message.',data?.content);
     });
   }
 
+  // listening for typing realtime
   listenForTyping(){
     this.socket.on('typing',(data) => {
       this.messageState.messageState.update((state:any) => {
@@ -87,11 +95,90 @@ export class MessageSocketService {
     });
   }
 
+  // listening where message is delivered or seen realtime
+  listenForMessageUpdates(){
+    this.socket.on('update-status',async (data) => {
+      // Bulk update message seen, delivered
+      if(data?.messageID.length === 0){
+        this.messageState.messageState.update((state:any) => {
+          return state?.map((room:any) => {
+            if(room?.roomID === data?.roomID){
+              const messages = room?.messages.map((msg:any) => {
+                var condition = (msg.status == data?.prevStatus);
+                // not necessory
+                if(data?.userID == this.userState.getUser?._id && msg.senderID != this.userState.getUser?._id && condition){
+                  return {
+                    ...msg,
+                    status: data?.crntStatus
+                  }
+                }
+                // necessory
+                if(data?.userID != this.userState.getUser?._id && msg.senderID == this.userState.getUser?._id && condition){
+                  return {
+                    ...msg,
+                    status: data?.crntStatus
+                  }
+                }
+                return msg;
+              })
+              return {
+                ...room,
+                messages
+              }
+            }
+            return room;
+          });
+        });
+      } else {  // update specific message ids
+        this.messageState.messageState.update((state:any) => {
+          return state?.map((room:any) => {
+            if(room?.roomID === data?.roomID){
+              const messages = room?.messages.map((msg:any) => {
+                var condition = (msg.status == data?.prevStatus);
+                var thisMessage = data?.messageID.find((id: string) => msg?.messageID === id);
+                if(thisMessage && condition){
+                  return {
+                    ...msg,
+                    status: data?.crntStatus
+                  }
+                }
+                return msg;
+              })
+              return {
+                ...room,
+                messages
+              }
+            }
+            return room;
+          });
+        });
+      }
+    });
+  }
+
+  // if reciever views user chat, update the delivered to seen realtime
+  seenMessages(room: Partial<UpdateStatus>){
+    this.socket.emit('message-status',{
+      roomID: room.roomID,
+      userID: this.userState.getUser?._id,
+      messageID: room.messageID,
+      crntStatus: 'seen',
+      prevStatus: 'delivered'
+    });
+  }
+
   // Get all friend messages and store in state
    getMessages(){
     this.socket.emit('get-messages',async (data: any) => {
       const rooms =  data?.map((room: any): MessageStateW=>{
-        const message = room?.messages[0]
+        const message = room?.messages[0];
+        this.socket.emit('message-status',{
+          roomID: room.roomID,
+          userID: this.userState.getUser?._id,
+          messageID: [],
+          crntStatus: 'delivered',
+          prevStatus: 'sent'
+        });
         return {
          roomID: room.roomID,
          messages: message ? message : [],

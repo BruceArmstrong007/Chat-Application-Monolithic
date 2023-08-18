@@ -1,4 +1,4 @@
-import { DatePipe, NgClass } from '@angular/common';
+import { DatePipe, NgClass, NgIf } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 @Component({
@@ -6,7 +6,7 @@ import { IonicModule } from '@ionic/angular';
   templateUrl: './message-card.component.html',
   styleUrls: ['./message-card.component.scss'],
   standalone: true,
-  imports: [IonicModule, NgClass, DatePipe]
+  imports: [IonicModule, NgIf, NgClass, DatePipe]
 })
 export class MessageCardComponent implements OnInit {
   @Input() chatData!: any;

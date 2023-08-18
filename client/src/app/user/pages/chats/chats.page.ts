@@ -5,6 +5,8 @@ import { IonicModule, ModalController } from '@ionic/angular';
 import { UserRef, UserState } from '../../state/user.state';
 import { ChatsCardComponent } from 'src/app/user/pages/chats/chats-card/chats-card.component';
 import { MessagesComponent } from 'src/shared/components/messages/messages.component';
+import { MessageSocketService } from '../../sockets/message-socket.service';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-chats',
@@ -15,6 +17,8 @@ import { MessagesComponent } from 'src/shared/components/messages/messages.compo
 })
 export class ChatsPage implements OnInit {
   private readonly userState = inject(UserState);
+  private readonly userService = inject(UserService);
+  private readonly messageSocket = inject(MessageSocketService);
   private readonly modalCtrl: ModalController = inject(ModalController);
   readonly contacts: Signal<UserRef | undefined> = computed(() => this.userState?.user()?.contacts);
 
@@ -32,6 +36,11 @@ export class ChatsPage implements OnInit {
       },
     });
     modal.present();
+    const room = {
+      roomID: this.userService.generateRoomIDs(event?.contact?._id, this.userState.getUser?._id),
+      messageID: []
+    }
+    this.messageSocket.seenMessages(room);
   }
 }
 

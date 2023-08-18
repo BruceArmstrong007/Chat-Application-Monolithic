@@ -35,6 +35,12 @@ export class MessageGateway implements OnGatewayConnection {
     this.chatRepository.subscribe('user-typing', async (data: string) => {
       this.chatService.typingMessage(this.server, JSON.parse(data));
     });
+
+    // Subscribes to the message status event emitted by user through redisIO
+    // And emits to specific room
+    this.chatRepository.subscribe('message-status', async (data: string) => {
+      this.chatService.updateStatus(this.server, JSON.parse(data));
+    });
   }
 
   // Send all the user messages in response
@@ -53,5 +59,10 @@ export class MessageGateway implements OnGatewayConnection {
   @SubscribeMessage('user-typing')
   async typing(@MessageBody() data: any) {
     await this.chatService.userTyping(data);
+  }
+
+  @SubscribeMessage('message-status')
+  async updateMsgStatus(@MessageBody() data: any){
+    await this.chatService.messageStatus(data);
   }
 }

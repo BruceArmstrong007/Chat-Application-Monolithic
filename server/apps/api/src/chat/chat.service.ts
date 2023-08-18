@@ -57,32 +57,36 @@ export class ChatService {
       )) as string;
       messages.push({
         roomID: roomIDs[i],
-        messages: message ? message : '[]' 
+        messages: message ? message : '[]'
       })
-    }    
+    }
     return messages;
   }
 
-  async userTyping(data: Partial<Message>){
-    await this.chatRepository.publish('user-typing', JSON.stringify(data)); 
+  async userTyping(data: Partial<Message>) {
+    await this.chatRepository.publish('user-typing', JSON.stringify(data));
   }
 
   async sendMessage(data: Partial<Message>) {
     data.messageID = uuidv4();
+    const roomID = await this.chatRepository.generateRoomIDs(
+      data?.senderID,
+      data?.receiverID,
+    );
+    const room = `rooms:${roomID}`;
+    this.chatRepository.jsonArraySetOrAppend(room, data);
     await this.chatRepository.publish('user-message', JSON.stringify(data));
   }
 
-  async receiveMessage(server: Server, message: Partial<Message>){
+  async receiveMessage(server: Server, message: Partial<Message>) {
     const roomID = await this.chatRepository.generateRoomIDs(
       message?.senderID,
       message?.receiverID,
     );
-    const room = `rooms:${roomID}`;
-    this.chatRepository.jsonArraySetOrAppend(room, message);
     server.to(roomID).emit('receive-message', message);
-  } 
+  }
 
-  async typingMessage(server: Server, message: Partial<Message>){
+  async typingMessage(server: Server, message: Partial<Message>) {
     const roomID = await this.chatRepository.generateRoomIDs(
       message?.senderID,
       message?.receiverID,
@@ -90,26 +94,28 @@ export class ChatService {
     server.to(roomID).emit('typing', message);
   }
 
-  async messageStatus(rooms: any[]){
-    rooms.forEach((room: any) => {
-      const messageIDs = room?.messageID;
-      
-      // this.chatRepository.jsonSet(`rooms:${room?.roomID}`,room?.status,`$.[*].status`)
-      // if(messageIDs.length === 0){
-      //   this.chatRepository.jsonSet(`rooms:${room?.roomID}`,room?.status,`$.[*].status`)
-      // }else{
-      //   messageIDs.forEach((id:string) => {
-      //     this.chatRepository.jsonSet(`rooms:${room?.roomID}`,room?.status,`$.[?(@.messageID == ${id})].status`)
-      //   });
-      // }
-    })
-    this.chatRepository.publish('message-status', JSON.stringify(rooms));
+  async messageStatus(room: any) {
+    if (room.messageID.length == 0) {
+      this.chatRepository.jsonSet(
+        `rooms:${room?.roomID}`,
+        room?.crntStatus,
+        `$[?(@.status=='${room?.prevStatus}'&&@.senderID!='${room?.userID}')].status`
+      );
+    } else {
+      room?.messageID.forEach((msgID: string) => {
+        this.chatRepository.jsonSet(
+          `rooms:${room?.roomID}`,
+          room?.crntStatus,
+          `$[?(@.messageID=='${msgID}')].status`
+        );
+      });
+    }
+    this.chatRepository.publish('message-status', JSON.stringify(room));
+
   }
 
-  async updateStatus(server: Server, rooms: any[]){
-    rooms.forEach((room: any) => {
-      server.to(room.roomID).emit('update-status', rooms);
-    });
+  async updateStatus(server: Server, room: any) {
+    server.to(room.roomID).emit('update-status', room);
   }
 
   private async getContacts(userID: string): Promise<any[]> {

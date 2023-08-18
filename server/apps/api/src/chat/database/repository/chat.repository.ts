@@ -9,7 +9,7 @@ export class ChatRepository {
   constructor(
     private readonly redisProvider: RedisProvider,
     @InjectModel(User.name) public readonly userModel: Model<User>,
-  ) {}
+  ) { }
 
   subscribe(channel: string, callback: (message: string) => void) {
     this.redisProvider.subscriber.subscribe(channel, (message, chan) => {
@@ -37,19 +37,31 @@ export class ChatRepository {
   }
 
   async set(key: string, value: any, ttl?: number) {
-    if (!ttl) {
-      await this.redisProvider.publisher.set(key, value);
-      return;
+    try {
+      if (!ttl) {
+        await this.redisProvider.publisher.set(key, value);
+        return;
+      }
+      await this.redisProvider.publisher.set(key, value, { EX: ttl });
+    } catch (err: any) {
+      console.log(err);
     }
-    await this.redisProvider.publisher.set(key, value, { EX: ttl });
   }
 
   async get(key: string): Promise<string> {
-    return await this.redisProvider.publisher.get(key);
+    try {
+      return await this.redisProvider.publisher.get(key);
+    } catch (err: any) {
+      console.log(err);
+    }
   }
 
   async del(key: string) {
-    await this.redisProvider.publisher.del(key);
+    try {
+      await this.redisProvider.publisher.del(key);
+    } catch (err: any) {
+      console.log(err);
+    }
   }
 
 
@@ -59,32 +71,46 @@ export class ChatRepository {
 
 
   async jsonGet(key: string, option?: string) {
-    if (!option) {
-      option = '$';
+    try {
+      if (!option) {
+        option = '$';
+      }
+      return await this.redisProvider.publisher.json.get(key, {
+        path: option,
+      });
+    } catch (err: any) {
+      console.log(err);
+
     }
-    return await this.redisProvider.publisher.json.get(key, {
-      path: option,
-    });
   }
 
   async jsonSet(key: string, value: any, option?: string) {
-    if (!option) {
-      option = '$';
+    try {
+      if (!option) {
+        option = '$';
+      }
+      await this.redisProvider.publisher.json.set(key, option, value);
+    } catch (err: any) {
+      console.log(err);
     }
-    await this.redisProvider.publisher.json.set(key, option, value);
   }
 
 
   async jsonArraySetOrAppend(key: string, value: any, option?: string) {
-    if (!option) {
-      option = '$';
+    try {
+      if (!option) {
+        option = '$';
+      }
+      const isExist = await this.jsonGet(key, option);
+      if (isExist) {
+        await this.redisProvider.publisher.json.arrAppend(key, option, value);
+      } else {
+        await this.jsonSet(key, [value], option);
+      }
+    } catch (err: any) {
+      console.log(err);
     }
-    const isExist = await this.jsonGet(key, option);
-    if (isExist) {
-      await this.redisProvider.publisher.json.arrAppend(key, option, value);
-    } else {
-      await this.jsonSet(key, [value], option);
-    }
+
   }
 
 }

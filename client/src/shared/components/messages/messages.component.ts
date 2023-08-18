@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Signal, ViewChild, computed, inject } from '@angular/core';
+import { Component, Input, OnInit, Signal, ViewChild, computed, inject, effect } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IonContent, IonicModule, ModalController } from '@ionic/angular';
 import { UserState, UserStateI } from 'src/app/user/state/user.state';
@@ -16,7 +16,7 @@ import { NgClass, NgFor, NgIf } from '@angular/common';
   standalone:true,
   imports: [IonicModule, FormsModule, MessageCardComponent, NgFor, NgIf, NgClass]
 })
-export class MessagesComponent  implements OnInit {
+export class MessagesComponent {
   @Input() user!: UserStateI;
   @Input() contact!: UserStateI;
   @ViewChild('content', { static: false }) content!: IonContent;
@@ -25,64 +25,75 @@ export class MessagesComponent  implements OnInit {
   private readonly messageSocket = inject(MessageSocketService);
   private readonly modalCtrl = inject(ModalController);
   private readonly usersState = inject(UserState);
-  isOnline!: Signal<boolean>;
-  roomData!: Signal<any>;
-  isTyping!: Signal<any>;
+  isOnline: Signal<boolean> = computed(() => {
+    let state = false;
+    this.usersState.onlineUsers()?.forEach((onlineUser:any) => {
+      if(onlineUser.id === this.contact._id){
+        state = onlineUser.isOnline;
+      }
+    });
+    return state;
+  });
+  roomData: Signal<any> = computed(() => {
+    let roomData: any;
+    this.messageState?.messageState()?.forEach((room:any) => {
+      if(room?.roomID === this.userService.generateRoomIDs(this.user._id,this.contact._id)){
+        roomData = {
+          ...room,
+          messages: room.messages ?  room?.messages : []
+        }
+      }
+    });
+    return roomData;
+  });
+  isTyping: Signal<any> =  computed(() => {
+    let typing: any[] = [];
+    this.messageState.messageState()?.forEach((room) => {
+      if(room?.roomID === this.userService.generateRoomIDs(this.usersState.user()?._id,this.contact._id)){
+        typing = room?.typing?.length ? room?.typing : [];
+      }
+    });
+    return typing;
+  });
   message!: string;
+
+  constructor(){
+
+    effect(()=> {
+      const roomData = this.roomData();
+      // side effect - scroll
+      setTimeout(()=>this.content?.scrollToBottom(300),300);
+
+      // update status as seen when receiver is also in chat page
+      let msgID = roomData?.messages.filter((msg:any) => msg.status == 'delivered' && msg.senderID != this.user?._id).map((msg:any) => msg.messageID);
+      if(msgID.length > 0){
+        const room = {
+          roomID: roomData?.roomID,
+          messageID: msgID
+        }
+        this.messageSocket.seenMessages(room);
+      }
+    })
+  }
 
   cancel() {
     return this.modalCtrl.dismiss(null, 'cancel');
   }
 
 
-  ngOnInit() {
-    this.isOnline = computed(() => {
-      let state = false;
-      this.usersState.onlineUsers()?.forEach((onlineUser:any) => {
-        if(onlineUser.id === this.contact._id){
-          state = onlineUser.isOnline;
-        }
-      });
-      return state;
-    });
 
-    this.isTyping = computed(() => {
-      let typing: any[] = [];
-      this.messageState.messageState()?.forEach((room) => {
-        if(room?.roomID === this.userService.generateRoomIDs(this.usersState.user()?._id,this.contact._id)){
-          typing = room?.typing?.length ? room?.typing : [];
-        }
-      });
-      return typing;
-    });
-
-    this.roomData = computed(() => {
-      // side effect - scroll
-      setTimeout(()=>this.content?.scrollToBottom(300),300);
-
-      let roomData;
-      this.messageState?.messageState()?.forEach((room:any) => {
-        if(room?.roomID === this.userService.generateRoomIDs(this.user._id,this.contact._id)){
-          roomData = {
-            ...room,
-            messages: room.messages ?  room?.messages : []
-          }
-        }
-      });
-      return roomData;
-    });
-
-  }
 
   send(){
-    this.messageSocket.sendMessages({
-      senderID: this.user._id,
-      receiverID: this.contact._id,
-      timestamp: (new Date()).toISOString(),
-      content: this.message,
-      status: 'sent',
-      type: 'chat'
-    });
+    if(this.message){
+      this.messageSocket.sendMessages({
+        senderID: this.user._id,
+        receiverID: this.contact._id,
+        timestamp: (new Date()).toISOString(),
+        content: this.message,
+        status: 'sent',
+        type: 'chat'
+      });
+    }
 
     this.message = '';
   }
