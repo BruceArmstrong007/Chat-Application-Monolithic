@@ -26,8 +26,13 @@ Chat Application in Dev
 
 # What's special
   Learning the Techs mentioned in note, as well as building a chat application project with backend scalability in mind
+
+# Possibilities
   with redis pub/sub, websockets are H-scalable
   and redis is also H-scalable with redis clusters
+  mongodb also H-scalable with multiple instances
+  NestJS monolithic to microservices (if required) is also possible with message brokers and such 
+  
   
   
   
