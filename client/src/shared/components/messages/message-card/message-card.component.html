@@ -1,0 +1,36 @@
+<ion-grid>
+  <ion-row [ngClass]="{'ion-justify-content-end' : chatData.isSender,'ion-justify-content-start' : !chatData.isSender}">
+    <ion-col size="2">
+      <ion-avatar>
+        <img [src]="chatData.user.profileURL" alt="avatar"/>
+      </ion-avatar>
+    </ion-col>
+    <ion-col size="6">
+      <ion-grid>
+        <ion-row>
+          <ion-label class="long-text">{{ chatData.user.name }}</ion-label>
+        </ion-row>
+        <ion-row>
+          <ion-text color="medium" class="long-text">{{ chatData.user.username }}</ion-text>
+        </ion-row>
+        <ion-row>
+            <p class="message">
+              {{chatData.message.content}}
+            </p>
+        </ion-row>
+        <ion-row>
+          <ion-col size="6">
+            <ion-text color="medium" class="long-text">{{ chatData.message.timestamp | date:'h:mm a' }}</ion-text>
+          </ion-col>
+          <ion-col  size="6">
+            <ion-buttons *ngIf="chatData.isSender" class="ion-justify-content-end">
+              <ion-icon [color]="(chatData?.message?.status === 'delivered' || chatData?.message?.status === 'seen') ? 'success' : ''" name="checkmark" size="small" slot="icon-only"></ion-icon>
+              <ion-icon [color]="(chatData?.message?.status === 'seen') ? 'success' :''" name="checkmark" size="small" slot="icon-only"></ion-icon>
+            </ion-buttons>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-col>
+  </ion-row>
+</ion-grid>
+

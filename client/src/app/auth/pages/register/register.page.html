@@ -1,0 +1,31 @@
+<ion-content>
+  <ion-card>
+    <ion-card-header class="ion-text-center">
+      <h3>Register</h3>
+    </ion-card-header>
+    <form [formGroup]="registerForm" (ngSubmit)="register()">
+      <ion-item>
+        <ion-label position="floating">Username</ion-label>
+        <ion-input formControlName="username" errorText="Enter valid username." type="text" maxlength="25"></ion-input>
+       </ion-item>
+      <ion-item>
+        <ion-label position="floating">Password</ion-label>
+        <ion-input formControlName="password" errorText="Enter valid password." type="password"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Confirm Password</ion-label>
+        <ion-input formControlName="confirmPassword" errorText="Enter valid confirm password." type="password"></ion-input>
+       </ion-item>
+      <ion-button type="submit" [disabled]="registerForm.invalid" expand="full" color="primary">
+        Send
+      </ion-button>
+      <ion-item>
+        <ion-label>
+          <p>Already registered? click here to <a  [routerLink]="['../login']">login</a></p>
+        </ion-label>
+      </ion-item>
+    </form>
+    <ion-card-content>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

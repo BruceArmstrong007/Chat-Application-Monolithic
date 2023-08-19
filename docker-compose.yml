@@ -6,11 +6,9 @@ services:
       dockerfile: Dockerfile
       target: development
     command: npm run start
-    volumes:
-      - ./client:/usr/src/app
-      - /usr/src/app/node_modules
     ports:
       - '4200:4200'
+
   server:
     build:
       context: ./server
@@ -18,22 +16,49 @@ services:
       target: development
     command: npm run start:dev api
     env_file:
-      - ./server/apps/api/.env
+      - ./server/.env
     volumes:
       - ./server:/usr/src/app
       - /usr/src/app/node_modules
     ports:
       - '3000:3000'
+    depends_on:
+      - mongodb
+      - redis
+
   mongodb:
     image: docker.io/bitnami/mongodb:5.0
-    restart: always
+    # restart: always
     environment:
       - MONGODB_ADVERTISED_HOSTNAME=mongodb
       - MONGODB_ROOT_PASSWORD=password123
     volumes:
-      - 'mongodb_master_data:/bitnami/mongodb'
+      - mongo_db:/data
     ports:
       - '27017:27017'
+      
+  redis:
+    image: redislabs/rejson
+    container_name: redis_db
+    ports:
+      - "6379:6379"
+    env_file:
+      - ./server/.env
+    command: /bin/sh -c "redis-server --loadmodule "/usr/lib/redis/modules/rejson.so" --requirepass $$REDIS_PASS --save 60 1 --appendonly yes"
+    volumes:
+      - redis_data:/data
+  
+  redis-insight:
+    image: redislabs/redisinsight
+    container_name: redis-insight
+    ports:
+      - "8001:8001"
+    depends_on:
+      - redis
+      
 volumes:
-  mongodb_master_data:
+  mongo_db:
+    driver: local
+
+  redis_data:
     driver: local
