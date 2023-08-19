@@ -1,7 +1,7 @@
 # Chat-Application
 Cross Platform Chat Application
 
-Chat Application in Dev
+Chat Application in Development 
 
 # Prerequisite
   Docker/Docker-Desktop
