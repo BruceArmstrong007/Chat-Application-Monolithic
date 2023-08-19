@@ -17,7 +17,7 @@ Chat Application in Dev
 6.) check http://localhost:4200/  <br /> 
 
 # Steps 4 & 5 can be skipped if you do this  <br /> 
-  From root cmd - "docker-compose up --build -V"  this will also containerize the Angular-Ionic frontend app
+  From root cmd - "docker-compose up --build -V"  this will also containerize the Angular-Ionic frontend app 
   and also takes some time to containerize and run
 
 # Note
@@ -28,10 +28,10 @@ Chat Application in Dev
   Learning the Techs mentioned in note, as well as building a chat application project with backend scalability in mind
 
 # Possibilities
-  with redis pub/sub, websockets are H-scalable
-  and redis is also H-scalable with redis clusters
-  mongodb also H-scalable with multiple instances
-  NestJS monolithic to microservices (if required) is also possible with message brokers and such 
+  with redis pub/sub, websockets are H-scalable <br />
+  and redis is also H-scalable with redis clusters <br />
+  mongodb also H-scalable with multiple instances <br />
+  NestJS monolithic to microservices (if required) is also possible with message brokers or other methods <br />
   
   
   
