@@ -16,7 +16,7 @@ Chat Application in Dev
 5.) cd to client again and npm run start:local  <br /> 
 6.) check http://localhost:4200/  <br /> 
 
-# Steps 4 & 5 can be skipped if you do this  <br /> 
+# Steps 4 & 5 can be skipped if you do this 
   From root cmd - "docker-compose up --build -V"  this will also containerize the Angular-Ionic frontend app 
   and also takes some time to containerize and run
 
