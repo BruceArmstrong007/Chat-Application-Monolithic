@@ -17,8 +17,8 @@ Chat Application in Dev
 6.) check http://localhost:4200/  <br /> 
 
 # Steps 4 & 5 can be skipped if you do this  <br /> 
-  from root cmd - "docker-compose up --build -V"  this will also containerize the Angular-Ionic frontend App
-  And also takes some time to containerize and run
+  From root cmd - "docker-compose up --build -V"  this will also containerize the Angular-Ionic frontend app
+  and also takes some time to containerize and run
 
 # Note
   Angularv16, IonicV7, NestJS(monolithic), redis pub/sub & redisdb, MongoDB, No NGRX & RxJS so far, Basic default UI and themes, Socket.io extensive implementation <br />
