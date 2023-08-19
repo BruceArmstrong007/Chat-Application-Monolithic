@@ -15,6 +15,8 @@ Chat Application in Development
 4.) cd back to root and docker-compose up server redis redis-insight mongodb --build -V <br /> 
 5.) cd to client again and npm run start:local  <br /> 
 6.) check http://localhost:4200/  <br /> 
+7.) to check redisdb http://localhost:8001/ (Host: redis, port: 6379, name: local, username: default, password: password)
+8.) to check mongodb and connect to this url mongodb://root:password123@localhost:27017/
 
 # Steps 4 & 5 can be skipped if you do this 
   From root cmd - "docker-compose up --build -V"  this will also containerize the Angular-Ionic frontend app 
