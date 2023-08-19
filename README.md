@@ -6,6 +6,7 @@ Chat Application in Development
 # Prerequisite
   Docker/Docker-Desktop
   node & npm
+  MongoDB Compass - Optional
 
 # Procedure to run this repo locally
 
