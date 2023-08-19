@@ -1,6 +1,6 @@
-import { Component, Input, OnInit, Output, EventEmitter, inject, Signal, computed } from '@angular/core';
+import { Component, Input, Output, EventEmitter, inject, Signal, computed } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
-import { UserState, UserStateI } from 'src/app/user/state/user.state';
+import { UserState, ContactRef } from 'src/app/user/state/user.state';
   import { NgClass, NgFor, NgIf } from '@angular/common';
 import { MessageState } from '../../../state/message.state';
 import { UserService } from 'src/app/user/services/user.service';
@@ -13,7 +13,7 @@ import { UserService } from 'src/app/user/services/user.service';
   imports:[IonicModule ,NgClass, NgFor, NgIf]
 })
 export class ChatsCardComponent {
-  @Input() contact!: UserStateI;
+  @Input() contact!: ContactRef;
   private readonly usersState = inject(UserState);
   private readonly messageState = inject(MessageState);
   private readonly userService = inject(UserService);
@@ -21,7 +21,7 @@ export class ChatsCardComponent {
   isOnline: Signal<boolean> = computed(() => {
     let state = false;
     this.usersState.onlineUsers()?.forEach((onlineUser:any) => {
-      if(onlineUser.id === this.contact._id){
+      if(onlineUser.id === this.contact.user._id){
         state = onlineUser.isOnline;
       }
     });
@@ -30,7 +30,7 @@ export class ChatsCardComponent {
   isTyping: Signal<any> = computed(() => {
     let typing: any[] = [];
     this.messageState.messageState()?.forEach((room) => {
-      if(room?.roomID === this.userService.generateRoomIDs(this.usersState.user()?._id,this.contact._id)){
+      if(room?.roomID === this.userService.generateRoomIDs(this.usersState.user()?._id,this.contact.user._id)){
         typing = room?.typing?.length ? room?.typing : [];
       }
     });
@@ -39,7 +39,7 @@ export class ChatsCardComponent {
   lastMessage: Signal<string | undefined> = computed(() => {
     let messages!: any, message!: any;
     this.messageState.messageState()?.forEach((room) => {
-      if(room?.roomID === this.userService.generateRoomIDs(this.usersState.user()?._id,this.contact._id)){
+      if(room?.roomID === this.userService.generateRoomIDs(this.usersState.user()?._id,this.contact.user._id)){
         messages = room?.messages;
         if(messages?.length > 0) message = messages[messages?.length - 1]?.content;
       }
@@ -49,8 +49,8 @@ export class ChatsCardComponent {
   deliveredCount: Signal<number> = computed(() => {
     let count!: number;
     this.messageState.messageState()?.forEach((room) => {
-      if(room?.roomID === this.userService.generateRoomIDs(this.usersState.user()?._id,this.contact._id)){
-        count = room?.messages.filter((msg:any)=> msg.senderID == this.contact?._id && msg.status === 'delivered').length;
+      if(room?.roomID === this.userService.generateRoomIDs(this.usersState.user()?._id,this.contact.user._id)){
+        count = room?.messages.filter((msg:any)=> msg.senderID == this.contact?.user?._id && msg.status === 'delivered').length;
       }
     });
     return count ? count : 0;

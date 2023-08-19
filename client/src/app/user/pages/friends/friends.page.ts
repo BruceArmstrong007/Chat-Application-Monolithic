@@ -1,7 +1,7 @@
 import { Component, OnInit, Signal, WritableSignal, signal, inject, computed } from '@angular/core';
 import { NgSwitch, NgSwitchCase, NgSwitchDefault, NgFor, NgIf } from '@angular/common';
 import { ActionSheetController, IonicModule } from '@ionic/angular';
-import { UserRef, UserState } from '../../state/user.state';
+import { ContactRef, UserState } from '../../state/user.state';
 import { FriendsCardComponent } from './friends-card/friends-card.component';
 import { ContactService } from '../../services/contact.service';
 
@@ -16,9 +16,9 @@ export class FriendsPage implements OnInit {
   private readonly contactService = inject(ContactService);
   currentSection: WritableSignal<string> = signal('friends');
   private readonly userState = inject(UserState);
-  readonly contacts: Signal<UserRef | undefined> = computed(() => this.userState?.user()?.contacts);
-  readonly sentInv: Signal<UserRef | undefined> = computed(() => this.userState?.user()?.sentInvites);
-  readonly receivedInv: Signal<UserRef | undefined> = computed(() => this.userState?.user()?.receivedInvites);
+  readonly contacts: Signal<ContactRef[] | undefined> = computed(() => this.userState?.user()?.contacts);
+  readonly sentInv: Signal<ContactRef[] | undefined> = computed(() => this.userState?.user()?.sentInvites);
+  readonly receivedInv: Signal<ContactRef[] | undefined> = computed(() => this.userState?.user()?.receivedInvites);
   private readonly actionSheetCtrl: ActionSheetController = inject(ActionSheetController);
 
   constructor() { }

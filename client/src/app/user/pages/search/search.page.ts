@@ -1,8 +1,8 @@
-import { Component, OnInit, inject, WritableSignal, signal, effect, Signal, computed } from '@angular/core';
+import { Component, OnInit, inject, WritableSignal, signal, Signal, computed } from '@angular/core';
 import { ActionSheetController, IonicModule } from '@ionic/angular';
 import { UserService } from '../../services/user.service';
 import { SearchCardComponent } from './search-card/search-card.component';
-import { UserState, UserStateI, UserStateT } from '../../state/user.state';
+import { ContactRef, UserState, UserStateI } from '../../state/user.state';
 import { ContactService } from '../../services/contact.service';
 import { NgFor, NgIf } from '@angular/common';
 
@@ -30,9 +30,9 @@ export class SearchPage implements OnInit {
       const fetchedUsers = this.fetchedUsers();
       if(fetchedUsers.length > 0){
         return fetchedUsers.map((user:any) => {
-          const existInContact = userInfo?.contacts?.find((contact:any) => contact?._id === user?._id);
-          const existInSentInvite = userInfo?.sentInvites?.find((contact:any) => contact?._id === user?._id);
-          const existInReceivedInvite = userInfo?.receivedInvites?.find((contact:any) => contact?._id === user?._id);
+          const existInContact = userInfo?.contacts?.find((contact:ContactRef) => contact?.user?._id === user?._id);
+          const existInSentInvite = userInfo?.sentInvites?.find((contact:ContactRef) => contact?.user?._id === user?._id);
+          const existInReceivedInvite = userInfo?.receivedInvites?.find((contact:ContactRef) => contact?.user?._id === user?._id);
           if(existInContact){
             return {
               ...user,

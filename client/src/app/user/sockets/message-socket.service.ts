@@ -1,10 +1,10 @@
-import { Injectable,inject, signal } from '@angular/core';
+import { Injectable, inject, signal, WritableSignal } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
 import { environment } from 'src/environments/environment';
 import { TokenService } from 'src/shared/services/token.service';
 import { MessageState, MessageStateI, MessageStateW } from '../state/message.state';
 import { UserService } from '../services/user.service';
-import { UserState } from '../state/user.state';
+import { ContactRef, UserState } from '../state/user.state';
 import { NotificationService } from 'src/shared/services/notification.service';
 import { UpdateStatus } from 'src/shared/utils/interface';
 
@@ -15,7 +15,7 @@ export class MessageSocketService {
   private readonly env = environment;
   private readonly messageState = inject(MessageState);
   private readonly userState = inject(UserState);
-  private readonly userContacts = signal(this.userState.user()?.contacts);
+  private readonly userContacts : WritableSignal<ContactRef[] | undefined> = signal(this.userState.user()?.contacts);
   private readonly tokenService = inject(TokenService);
   private readonly userService = inject(UserService);
   private readonly notificationService = inject(NotificationService);
@@ -64,8 +64,8 @@ export class MessageSocketService {
         crntStatus: 'delivered',
         prevStatus: 'sent'
       });
-      const contact = this.userContacts()?.find((contact:any) => contact?._id === data?.senderID);
-      this.notificationService.setBasicNotification(contact?.name +' sent you a message.',data?.content);
+      const contact = this.userContacts()?.find((contact:any) => contact?.user?._id === data?.senderID);
+      this.notificationService.setBasicNotification(contact?.user?.name +' sent you a message.',data?.content);
     });
   }
 

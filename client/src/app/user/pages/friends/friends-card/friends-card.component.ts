@@ -1,7 +1,7 @@
 import { NgIf } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
-import { UserStateI } from 'src/app/user/state/user.state';
+import { ContactRef } from 'src/app/user/state/user.state';
 
 @Component({
   selector: 'app-friends-card',
@@ -11,7 +11,7 @@ import { UserStateI } from 'src/app/user/state/user.state';
   imports: [IonicModule, NgIf]
 })
 export class FriendsCardComponent  implements OnInit {
-  @Input() contact!: UserStateI;
+  @Input() contact!: ContactRef;
   @Input() status!: any;
   @Output() cardClick: EventEmitter<any> = new EventEmitter();
   @Output() buttonClick: EventEmitter<any> = new EventEmitter();
