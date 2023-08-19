@@ -21,7 +21,7 @@ Chat Application in Dev
   and also takes some time to containerize and run
 
 # Note
-  Angularv16, IonicV7, NestJS(monolithic), redis pub/sub & redisdb, MongoDB, No NGRX & RxJS so far, Basic default UI and themes, Socket.io extensive implementation <br />
+  Angularv16, IonicV7, NestJS(monolithic), redis pub/sub & redisdb, MongoDB, Docker, No NGRX & RxJS so far, Basic default UI and themes, Socket.io extensive implementation <br />
   Make sure you use toggle device toolbar in your browser and set a android or ios device for better UI (Ionic)
 
 # What's special
