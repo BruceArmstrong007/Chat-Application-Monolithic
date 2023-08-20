@@ -24,8 +24,9 @@ Chat Application in Development
   and also takes some time to containerize and run
 
 # Note
-  Angularv16, IonicV7, NestJS(monolithic), redis pub/sub & redisdb, MongoDB, Docker, No NGRX & RxJS so far, Basic default UI and themes, Socket.io extensive implementation <br />
+  Angularv16, IonicV7, NestJS(monolithic), redis pub/sub & redisdb, MongoDB, Docker, built with only signals ( No NGRX & RxJS so far ), Basic default UI and themes, Socket.io extensive implementation <br />
   Make sure you use toggle device toolbar in your browser and set a android or ios device for better UI (Ionic)
+  Don't expect API & UI with error handling, loggers, testing and stuff (not there yet) , purely focusing on functionality
 
 # What's special
   Learning the Techs mentioned in note, as well as building a chat application project with backend scalability in mind
