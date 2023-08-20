@@ -18,7 +18,7 @@ export class ContactRepository {
   ): Promise<User | null> {
     let user = await this.userModel.findOne({ username });
     await fields.forEach(async (field) => {
-      await user.populate(field+'.user');
+      await user.populate(field);
     });
     return await user;
   }
