@@ -103,8 +103,6 @@ export class MessageSocketService {
         this.messageState.messageState.update((state:any) => {
           return state?.map((room:any) => {
             if(room?.roomID === data?.roomID){
-              console.log(room, room?.messages);
-
               const messages = room?.messages?.map((msg:any) => {
                 var condition = (msg.status == data?.prevStatus);
                 // not necessory
@@ -181,8 +179,6 @@ export class MessageSocketService {
           crntStatus: 'delivered',
           prevStatus: 'sent'
         });
-        console.log(room?.messages, typeof(room?.messages));
-
         message = room?.messages
         if(typeof(room?.messages) == 'string'){
           message = JSON.parse(room?.messages);
