@@ -179,10 +179,11 @@ export class MessageSocketService {
           crntStatus: 'delivered',
           prevStatus: 'sent'
         });
-        message = room?.messages
+        message = room?.messages[0];
         if(typeof(room?.messages) == 'string'){
           message = JSON.parse(room?.messages);
         }
+
         return {
          roomID: room.roomID,
          messages: message ? message : [],
