@@ -65,8 +65,8 @@ export class MessagesComponent {
       setTimeout(()=>this.content?.scrollToBottom(300),300);
 
       // update status as seen when receiver is also in chat page
-      let msgID = roomData?.messages.filter((msg:any) => msg.status == 'delivered' && msg.senderID != this.user?._id).map((msg:any) => msg.messageID);
-      if(msgID.length > 0){
+      let msgID = roomData?.messages?.filter((msg:any) => msg.status == 'delivered' && msg.senderID != this.user?._id).map((msg:any) => msg.messageID);
+      if(msgID && msgID.length > 0){
         const room = {
           roomID: roomData?.roomID,
           messageID: msgID

@@ -103,7 +103,9 @@ export class MessageSocketService {
         this.messageState.messageState.update((state:any) => {
           return state?.map((room:any) => {
             if(room?.roomID === data?.roomID){
-              const messages = room?.messages.map((msg:any) => {
+              console.log(room, room?.messages);
+
+              const messages = room?.messages?.map((msg:any) => {
                 var condition = (msg.status == data?.prevStatus);
                 // not necessory
                 if(data?.userID == this.userState.getUser?._id && msg.senderID != this.userState.getUser?._id && condition){
@@ -133,7 +135,7 @@ export class MessageSocketService {
         this.messageState.messageState.update((state:any) => {
           return state?.map((room:any) => {
             if(room?.roomID === data?.roomID){
-              const messages = room?.messages.map((msg:any) => {
+              const messages = room?.messages?.map((msg:any) => {
                 var condition = (msg.status == data?.prevStatus);
                 var thisMessage = data?.messageID.find((id: string) => msg?.messageID === id);
                 if(thisMessage && condition){
@@ -171,7 +173,7 @@ export class MessageSocketService {
    getMessages(){
     this.socket.emit('get-messages',async (data: any) => {
       const rooms =  data?.map((room: any): MessageStateW=>{
-        const message = room?.messages[0];
+        let message!:any;
         this.socket.emit('message-status',{
           roomID: room.roomID,
           userID: this.userState.getUser?._id,
@@ -179,6 +181,12 @@ export class MessageSocketService {
           crntStatus: 'delivered',
           prevStatus: 'sent'
         });
+        console.log(room?.messages, typeof(room?.messages));
+
+        message = room?.messages
+        if(typeof(room?.messages) == 'string'){
+          message = JSON.parse(room?.messages);
+        }
         return {
          roomID: room.roomID,
          messages: message ? message : [],

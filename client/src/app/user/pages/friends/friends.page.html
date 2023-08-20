@@ -5,13 +5,22 @@
   <ion-toolbar>
     <ion-segment value="friends" (ionChange)="changeSection($event)">
       <ion-segment-button value="friends">
-        <ion-label>Friends</ion-label>
+        <ion-item>
+          <ion-label>Friends</ion-label>
+          <ion-badge *ngIf="sectionStatus().contacts > 0" color="success">{{sectionStatus().contacts}}</ion-badge>
+        </ion-item>
       </ion-segment-button>
       <ion-segment-button value="sent">
-        <ion-label>Sent invite</ion-label>
+        <ion-item>
+          <ion-label>Sent Invite</ion-label>
+          <ion-badge *ngIf="sectionStatus().sentInv > 0" color="success">{{sectionStatus().sentInv}}</ion-badge>
+        </ion-item>
       </ion-segment-button>
       <ion-segment-button value="received">
-        <ion-label>Received invite</ion-label>
+        <ion-item>
+          <ion-label>Received Invite</ion-label>
+          <ion-badge *ngIf="sectionStatus().receivedInv > 0" color="success">{{sectionStatus().receivedInv}}</ion-badge>
+        </ion-item>
       </ion-segment-button>
     </ion-segment>
   </ion-toolbar>

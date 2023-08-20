@@ -51,9 +51,7 @@ export class UserGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
 
   async notificationEvent(event: any) {
-    const socketID = await this.chatRepository.get(
-      event?.data?.receiverID.toString(),
-    );
+    const socketID = await this.chatRepository.get(event?.data?.receiverID);
 
     if (socketID) await this.server.to(socketID).emit('notify-contact', event);
   }

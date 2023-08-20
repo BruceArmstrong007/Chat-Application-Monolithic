@@ -62,8 +62,6 @@ export class ContactRepository {
     existingRecords?.forEach((record: any) => {
       record?.set({ status: 'seen' });
     });
-    console.log(user[field]);
-    
     await user.save();
   }
 }

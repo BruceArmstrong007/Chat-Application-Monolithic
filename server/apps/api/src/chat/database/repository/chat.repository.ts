@@ -22,7 +22,7 @@ export class ChatRepository {
   async getContacts(id: string): Promise<any[]> {
     const user = await this.userModel
       .findById(id)
-      .populate('contacts', '-password')
+      .populate('contacts.user', '-password')
       .exec();
 
     if (user) {
