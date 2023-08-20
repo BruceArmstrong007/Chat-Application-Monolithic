@@ -1,15 +1,15 @@
   <ion-item (click)="cardClick.emit({click:true, contact: contact})">
   <ion-avatar class="header-icon" slot="start">
-    <img [src]="contact.profileURL" alt="avatar"/>
+    <img [src]="contact.user.profileURL" alt="avatar"/>
     <div class="dot" [ngClass]="{'online':  isOnline(), 'offline': !isOnline()}"></div>
   </ion-avatar>
   <ion-grid>
     <ion-row>
-      <ion-label class="long-text">{{ contact.name }}</ion-label>
+      <ion-label class="long-text">{{ contact.user.name }}</ion-label>
     </ion-row>
   <ion-row>
     <ion-col size="8">
-      <ion-text color="medium" class="long-text">{{ contact.username }}</ion-text>
+      <ion-text color="medium" class="long-text">{{ contact.user.username }}</ion-text>
     </ion-col>
     <ion-col size="4" class="badgeStyle">
       <ion-badge color="success" *ngIf="deliveredCount() > 0">{{deliveredCount()}}</ion-badge>
@@ -17,7 +17,7 @@
   </ion-row>
   <ion-row>
     <span class="long-text" *ngFor="let user of isTyping()">
-      {{(user?.senderID === contact._id && user.status === 'started' ? contact.username : '') + ' typing...'}}
+      {{(user?.senderID === contact.user._id && user.status === 'started' ? contact.user.username : '') + ' typing...'}}
     </span>
     <ion-label *ngIf="isTyping()?.length === 0" class="long-text">{{lastMessage()}}</ion-label>
   </ion-row>

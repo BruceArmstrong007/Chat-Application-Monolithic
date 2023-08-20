@@ -3,7 +3,7 @@ import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 import { CurrentUser, UpdateArray } from '@app/common';
 import { User } from '../user/database/model/user.model';
 import { ContactService } from './contact.service';
-import { ContactRequest } from './dto/request/contact.request';
+import { ContactRequest, SeenRequest } from './dto/request/contact.request';
 
 @UseGuards(JwtAuthGuard)
 @Controller('contact')
@@ -33,5 +33,11 @@ export class ContactController {
     @Post('remove-contact')
     async removeContact(@CurrentUser() user : User, @Body() request : ContactRequest){
         return await this.contactService.removeContact(user?.username,request?.username);
+    }  
+    
+    
+  @Post('seen-section')
+    async seenSection(@CurrentUser() user: User, @Body() request: SeenRequest) {
+        return await this.contactService.seenContact(user?.username,request?.reference);
     }    
 }

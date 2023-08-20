@@ -26,7 +26,6 @@ export class NotificationService {
 
     const getDeliveredNotifications = async () => {
       const notificationList = await LocalNotifications.getDeliveredNotifications();
-      // console.log('delivered notifications', notificationList);
     }
 
     const clearDeliveredNotifications = async () => {

@@ -7,19 +7,19 @@
     </ion-button>
   </ion-buttons>
     <ion-avatar class="header-icon" slot="start">
-      <img [src]="contact.profileURL" alt="avatar"/>
+      <img [src]="contact.user.profileURL" alt="avatar"/>
      <div class="dot" [ngClass]="{'online':  isOnline(), 'offline': !isOnline()}"></div>
     </ion-avatar>
     <ion-grid class="ion-padding">
       <ion-row>
-        <ion-label class="long-text">{{ contact.name }}</ion-label>
+        <ion-label class="long-text">{{ contact.user.name }}</ion-label>
       </ion-row>
       <ion-row>
-          <ion-text color="medium" class="long-text">{{ contact.username }}</ion-text>
+          <ion-text color="medium" class="long-text">{{ contact.user.username }}</ion-text>
       </ion-row>
       <ion-row>
         <span class="long-text" *ngFor="let user of isTyping()">
-          {{(user?.senderID === contact._id && user.status === 'started' ? contact.username : '') + ' typing...'}}
+          {{(user?.senderID === contact.user._id && user.status === 'started' ? contact.user.username : '') + ' typing...'}}
         </span>
       </ion-row>
     </ion-grid>

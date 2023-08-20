@@ -1,9 +1,10 @@
-import { Component, OnInit, Signal, WritableSignal, signal, inject, computed } from '@angular/core';
+import { Component, OnInit, Signal, WritableSignal, signal, inject, computed, effect } from '@angular/core';
 import { NgSwitch, NgSwitchCase, NgSwitchDefault, NgFor, NgIf } from '@angular/common';
 import { ActionSheetController, IonicModule } from '@ionic/angular';
-import { UserRef, UserState } from '../../state/user.state';
+import { ContactRef, UserState } from '../../state/user.state';
 import { FriendsCardComponent } from './friends-card/friends-card.component';
 import { ContactService } from '../../services/contact.service';
+import { SectionStatus } from '../../../../shared/utils/interface';
 
 @Component({
   selector: 'app-friends',
@@ -16,12 +17,38 @@ export class FriendsPage implements OnInit {
   private readonly contactService = inject(ContactService);
   currentSection: WritableSignal<string> = signal('friends');
   private readonly userState = inject(UserState);
-  readonly contacts: Signal<UserRef | undefined> = computed(() => this.userState?.user()?.contacts);
-  readonly sentInv: Signal<UserRef | undefined> = computed(() => this.userState?.user()?.sentInvites);
-  readonly receivedInv: Signal<UserRef | undefined> = computed(() => this.userState?.user()?.receivedInvites);
+  readonly contacts: Signal<ContactRef[] | undefined> = computed(() => this.userState?.user()?.contacts);
+  readonly sentInv: Signal<ContactRef[] | undefined> = computed(() => this.userState?.user()?.sentInvites);
+  readonly receivedInv: Signal<ContactRef[] | undefined> = computed(() => this.userState?.user()?.receivedInvites);
   private readonly actionSheetCtrl: ActionSheetController = inject(ActionSheetController);
 
-  constructor() { }
+  readonly sectionStatus: Signal<SectionStatus> = computed(() => {
+    const contacts = this.contacts()?.filter((contact:ContactRef) => contact?.status == 'sent').length;
+    const sentInv = this.sentInv()?.filter((contact:ContactRef) => contact?.status == 'sent').length;
+    const receivedInv = this.receivedInv()?.filter((contact:ContactRef) => contact?.status == 'sent').length;
+    return {
+      contacts: contacts ? contacts : 0,
+      sentInv: sentInv ? sentInv : 0,
+      receivedInv: receivedInv ? receivedInv : 0
+    }
+  })
+
+  constructor() {
+    effect(() => {
+      const sectionStatus = this.sectionStatus();
+      const crntSection = this.currentSection();
+      if(crntSection ==  'friends' && sectionStatus?.contacts > 0){
+        this.contactService.seenSection('contacts').subscribe(() => {});
+      }
+      if(crntSection ==  'sent' && sectionStatus?.sentInv > 0){
+        this.contactService.seenSection('sentInvites').subscribe(() => {});
+      }
+      if(crntSection ==  'received' && sectionStatus?.receivedInv > 0){
+        this.contactService.seenSection('receivedInvites').subscribe(() => {});
+      }
+    })
+
+  }
 
   ngOnInit() {
   }

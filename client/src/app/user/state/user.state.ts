@@ -2,7 +2,12 @@ import { Injectable, WritableSignal, signal } from "@angular/core";
 
 export type UserStateT = Partial<UserStateI> | null;
 
-export type UserRef = UserStateI[];
+export interface ContactRef{
+  user: Partial<UserStateI>,
+  status: string,
+  createdAt: string,
+  updatedAt: string
+}
 
 export interface UserStateI {
   _id: string,
@@ -10,9 +15,9 @@ export interface UserStateI {
   name: string,
   bio: string,
   profileURL: string,
-  contacts: UserRef,
-  sentInvites: UserRef,
-  receivedInvites: UserRef,
+  contacts: ContactRef[],
+  sentInvites: ContactRef[],
+  receivedInvites: ContactRef[],
   createdAt: string,
   updatedAt: string
 }
