@@ -16,7 +16,7 @@ export class ContactRepository {
     username: string,
     fields: Fields[],
   ): Promise<User | null> {
-    let user = await this.userModel.findOne({ username });
+    const user = await this.userModel.findOne({ username });
     await fields.forEach(async (field) => {
       await user.populate(field);
     });
@@ -53,5 +53,17 @@ export class ContactRepository {
       user[field].pull({ user: new Types.ObjectId(id) });
       await user.save();
     }
+  }
+
+  async seenSection(user: any, field: string) {
+    const existingRecords = await user[field]?.filter(
+      (record) => record?.status === 'sent',
+    );
+    existingRecords?.forEach((record: any) => {
+      record?.set({ status: 'seen' });
+    });
+    console.log(user[field]);
+    
+    await user.save();
   }
 }
