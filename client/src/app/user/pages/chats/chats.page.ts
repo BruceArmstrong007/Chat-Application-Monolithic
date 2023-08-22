@@ -42,6 +42,10 @@ export class ChatsPage implements OnInit {
     }
     this.messageSocketService.seenMessages(room);
   }
+
+  contactID(index:number, contact:any){
+    return contact?.user?._id
+  }
 }
 
 

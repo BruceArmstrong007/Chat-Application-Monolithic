@@ -235,4 +235,7 @@ export class SearchPage implements OnInit {
 
   }
 
+  userID(index: number, user: any){
+    return user?._id;
+  }
 }

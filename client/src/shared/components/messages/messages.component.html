@@ -27,12 +27,14 @@
 </ion-header>
 <ion-content #content>
   <ion-list class="bg">
-    <app-message-card [chatData]="{
-      user: user,
-      contact: contact,
-      message,
-      isSender: message.senderID === user._id}"
-      *ngFor="let message of roomData()?.messages"></app-message-card>
+    <ng-template ngFor let-message [ngForOf]="roomData()?.messages" let-i="index" [ngForTrackBy]="messageID">
+      <app-message-card [chatData]="{
+        user: user,
+        contact: contact,
+        message,
+        isSender: message.senderID === user._id}"
+        ></app-message-card>
+    </ng-template>
   </ion-list>
 </ion-content>
 <ion-footer collapse="condense">
