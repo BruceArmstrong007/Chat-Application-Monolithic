@@ -19,5 +19,5 @@
       <ion-label> Find your friends</ion-label>
     </ion-item>
   </div>
-  <app-search-card (cardClick)="open($event)" (buttonClick)="btnClick($event)" [user]="user" *ngFor="let user of selectedUsers(); let index"/>
+  <app-search-card (cardClick)="open($event)" (buttonClick)="btnClick($event)" [user]="user" *ngFor="let user of selectedUsers(); trackBy: userID"/>
 </ion-content>

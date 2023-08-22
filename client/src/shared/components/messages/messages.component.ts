@@ -6,7 +6,7 @@ import { MessageCardComponent } from './message-card/message-card.component';
 import { MessageState } from 'src/app/user/state/message.state';
 import { UserService } from '../../../app/user/services/user.service';
 import { MessageSocketService } from 'src/app/user/sockets/message-socket.service';
-import { NgClass, NgFor, NgIf } from '@angular/common';
+import { NgClass, NgFor, NgIf, NgForOf } from '@angular/common';
 
 
 @Component({
@@ -14,7 +14,7 @@ import { NgClass, NgFor, NgIf } from '@angular/common';
   templateUrl: './messages.component.html',
   styleUrls: ['./messages.component.scss'],
   standalone:true,
-  imports: [IonicModule, FormsModule, MessageCardComponent, NgFor, NgIf, NgClass]
+  imports: [IonicModule, FormsModule, MessageCardComponent, NgForOf, NgFor, NgIf, NgClass]
 })
 export class MessagesComponent {
   @Input() user!: UserStateI;
@@ -116,5 +116,8 @@ export class MessagesComponent {
     });
   }
 
+  messageID(index: number, message: any){
+    return message?._id;
+  }
 
 }

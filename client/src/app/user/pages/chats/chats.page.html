@@ -5,6 +5,6 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <app-chats-card (cardClick)="openMessages($event)" [contact]="contact" *ngFor="let contact of contacts(); let index"/>
+  <app-chats-card (cardClick)="openMessages($event)" [contact]="contact" *ngFor="let contact of contacts(); trackBy: contactID"/>
 </ion-content>
 

@@ -181,4 +181,8 @@ export class FriendsPage implements OnInit {
   open(event:any){
 
   }
+
+  contactID(index: number, contact: any){
+    return contact?.user?._id
+  }
 }
