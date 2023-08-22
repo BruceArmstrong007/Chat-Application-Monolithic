@@ -21,7 +21,7 @@ export class UserRepository {
     return await this.userModel
       .findOne({ username })
       .select('-password')
-      .populate('contacts sentInvites receivedInvites', '-password')
+      .populate('contacts.user sentInvites.user receivedInvites.user', '-password -receivedInvites -contacts -sentInvites')
       .exec();
   }
 

@@ -182,4 +182,17 @@ export class ContactService {
       message: 'Operation Successful.',
     };
   }
+
+  async seenContact(username: string, section: Fields) {
+    const user = await this.contactRepository.findAndPopulate(username, [
+      section,
+    ]);
+    await this.contactRepository.seenSection(user, section);
+    return {
+      message: 'Operation Successful.',
+    };
+  }
+
+
+
 }

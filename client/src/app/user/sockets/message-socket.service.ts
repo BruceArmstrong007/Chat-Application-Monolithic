@@ -1,10 +1,10 @@
-import { Injectable,inject, signal } from '@angular/core';
+import { Injectable, inject, signal, WritableSignal } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
 import { environment } from 'src/environments/environment';
 import { TokenService } from 'src/shared/services/token.service';
 import { MessageState, MessageStateI, MessageStateW } from '../state/message.state';
 import { UserService } from '../services/user.service';
-import { UserState } from '../state/user.state';
+import { ContactRef, UserState } from '../state/user.state';
 import { NotificationService } from 'src/shared/services/notification.service';
 import { UpdateStatus } from 'src/shared/utils/interface';
 
@@ -15,7 +15,7 @@ export class MessageSocketService {
   private readonly env = environment;
   private readonly messageState = inject(MessageState);
   private readonly userState = inject(UserState);
-  private readonly userContacts = signal(this.userState.user()?.contacts);
+  private readonly userContacts : WritableSignal<ContactRef[] | undefined> = signal(this.userState.user()?.contacts);
   private readonly tokenService = inject(TokenService);
   private readonly userService = inject(UserService);
   private readonly notificationService = inject(NotificationService);
@@ -64,8 +64,8 @@ export class MessageSocketService {
         crntStatus: 'delivered',
         prevStatus: 'sent'
       });
-      const contact = this.userContacts()?.find((contact:any) => contact?._id === data?.senderID);
-      this.notificationService.setBasicNotification(contact?.name +' sent you a message.',data?.content);
+      const contact = this.userContacts()?.find((contact:any) => contact?.user?._id === data?.senderID);
+      this.notificationService.setBasicNotification(contact?.user?.name +' sent you a message.',data?.content);
     });
   }
 
@@ -103,7 +103,7 @@ export class MessageSocketService {
         this.messageState.messageState.update((state:any) => {
           return state?.map((room:any) => {
             if(room?.roomID === data?.roomID){
-              const messages = room?.messages.map((msg:any) => {
+              const messages = room?.messages?.map((msg:any) => {
                 var condition = (msg.status == data?.prevStatus);
                 // not necessory
                 if(data?.userID == this.userState.getUser?._id && msg.senderID != this.userState.getUser?._id && condition){
@@ -133,7 +133,7 @@ export class MessageSocketService {
         this.messageState.messageState.update((state:any) => {
           return state?.map((room:any) => {
             if(room?.roomID === data?.roomID){
-              const messages = room?.messages.map((msg:any) => {
+              const messages = room?.messages?.map((msg:any) => {
                 var condition = (msg.status == data?.prevStatus);
                 var thisMessage = data?.messageID.find((id: string) => msg?.messageID === id);
                 if(thisMessage && condition){
@@ -171,7 +171,7 @@ export class MessageSocketService {
    getMessages(){
     this.socket.emit('get-messages',async (data: any) => {
       const rooms =  data?.map((room: any): MessageStateW=>{
-        const message = room?.messages[0];
+        let message!:any;
         this.socket.emit('message-status',{
           roomID: room.roomID,
           userID: this.userState.getUser?._id,
@@ -179,6 +179,11 @@ export class MessageSocketService {
           crntStatus: 'delivered',
           prevStatus: 'sent'
         });
+        message = room?.messages[0];
+        if(typeof(room?.messages) == 'string'){
+          message = JSON.parse(room?.messages);
+        }
+
         return {
          roomID: room.roomID,
          messages: message ? message : [],

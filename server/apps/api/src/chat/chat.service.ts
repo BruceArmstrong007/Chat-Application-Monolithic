@@ -28,10 +28,14 @@ export class ChatService {
   }
 
   async activeUsers(userID: string): Promise<any> {
+    
     const contactIDs = await this.getContacts(userID);
     const contacts = [];
+    
     for (let i = 0; i < contactIDs.length; i++) {
+      
       const id = contactIDs[i].toString();
+      
       const socketID = await this.chatRepository.get(id);
       const res = {
         id,
@@ -120,7 +124,7 @@ export class ChatService {
 
   private async getContacts(userID: string): Promise<any[]> {
     const users = await this.chatRepository.getContacts(userID);
-    return users.flatMap((user) => user?._id);
+    return users.flatMap((contact) => contact?.user?._id);
   }
 
   private async getRoomIDs(userID: string): Promise<any[]> {

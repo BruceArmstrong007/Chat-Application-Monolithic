@@ -71,6 +71,14 @@ export class ContactService {
     )
   }
 
+
+  seenSection(section: string): Observable<any>{
+    return this.http.post(this.env.apiUrl+'/contact/seen-section',{reference:section}).pipe(
+      switchMap((res) => this.userService.profile()),
+      catchError(this.handleError)
+    )
+  }
+
   private handleError(Response: HttpErrorResponse){
     switch(Response?.error.statusCode){
       case 401:

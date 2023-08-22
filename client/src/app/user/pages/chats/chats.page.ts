@@ -2,7 +2,7 @@ import { Component, OnInit, Signal, computed, inject } from '@angular/core';
 import { NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule, ModalController } from '@ionic/angular';
-import { UserRef, UserState } from '../../state/user.state';
+import { ContactRef, UserState } from '../../state/user.state';
 import { ChatsCardComponent } from 'src/app/user/pages/chats/chats-card/chats-card.component';
 import { MessagesComponent } from 'src/shared/components/messages/messages.component';
 import { MessageSocketService } from '../../sockets/message-socket.service';
@@ -20,7 +20,7 @@ export class ChatsPage implements OnInit {
   private readonly userService = inject(UserService);
   private readonly messageSocketService = inject(MessageSocketService);
   private readonly modalCtrl: ModalController = inject(ModalController);
-  readonly contacts: Signal<UserRef | undefined> = computed(() => this.userState?.user()?.contacts);
+  readonly contacts: Signal<ContactRef[] | undefined> = computed(() => this.userState?.user()?.contacts);
 
   constructor() { }
 

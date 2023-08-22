@@ -12,3 +12,11 @@ export interface UpdateStatus {
   crntStatus: string,
 }
 
+
+
+
+export interface SectionStatus {
+  contacts: number,
+  sentInv: number,
+  receivedInv: number
+}
