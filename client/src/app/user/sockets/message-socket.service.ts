@@ -46,17 +46,27 @@ export class MessageSocketService {
       const roomID = this.userService.generateRoomIDs(data?.senderID,data?.receiverID);
       // Update received message in the Application State
       this.messageState.messageState.update((state:any) => {
-        return state?.map((room:any) => {
+        let isNew = true;
+        let newState = state?.map((room:any) => {
           if(room?.roomID === roomID){
             let messages =  room?.messages ? room.messages : []
             messages.push(data);
+            isNew = false;
             return {
               ...room,
               messages: messages
             }
           }
           return room;
-        })
+        });
+        if(isNew === true){
+          newState.push({
+            roomID: roomID,
+            messages: [data],
+            typing: null
+          })
+        }
+        return newState;
       })
       this.socket.emit('message-status',{
         roomID: roomID,
@@ -183,7 +193,6 @@ export class MessageSocketService {
         if(typeof(room?.messages) == 'string'){
           message = JSON.parse(room?.messages);
         }
-
         return {
          roomID: room.roomID,
          messages: message ? message : [],

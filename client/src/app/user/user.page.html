@@ -4,10 +4,12 @@
     <ion-tab-button tab="chats">
       <ion-icon aria-hidden="true" name="chatbubbles"></ion-icon>
       Messages
+      <ion-badge *ngIf="messageSectionCount() > 0">{{messageSectionCount()}}</ion-badge>
     </ion-tab-button>
     <ion-tab-button tab="friends">
       <ion-icon aria-hidden="true" name="person"></ion-icon>
       Friends
+      <ion-badge *ngIf="friendSectionCount() > 0">{{friendSectionCount()}}</ion-badge>
     </ion-tab-button>
     <ion-tab-button tab="search">
       <ion-icon aria-hidden="true" name="search"></ion-icon>

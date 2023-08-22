@@ -36,6 +36,15 @@
         ></app-message-card>
     </ng-template>
   </ion-list>
+
+  <div class="section" *ngIf="roomData()?.messages?.length === 0">
+    <div class="container">
+      <ion-item class="item">
+        <ion-icon aria-hidden="true" size="large" name="happy-outline"></ion-icon>
+        <ion-label> Start an epic conversation !</ion-label>
+      </ion-item>
+    </div>
+  </div>
 </ion-content>
 <ion-footer collapse="condense">
   <ion-toolbar>
