@@ -54,9 +54,6 @@ export class AuthService{
       catchError(this.handleError))
   }
 
-
-
-
   private handleError(Response: HttpErrorResponse){
     switch(Response?.error.statusCode){
       case 401:
