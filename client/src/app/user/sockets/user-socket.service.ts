@@ -6,6 +6,7 @@ import { Socket } from 'socket.io-client';
 import { UserState } from '../state/user.state';
 import { UserService } from '../services/user.service';
 import { NotificationService } from 'src/shared/services/notification.service';
+import { MessageSocketService } from './message-socket.service';
 @Injectable({
   providedIn: 'root'
 })
@@ -15,6 +16,7 @@ export class UserSocketService {
   private readonly notificationService = inject(NotificationService);
   private readonly userState = inject(UserState);
   private readonly tokenService = inject(TokenService);
+  private readonly messageSocket = inject(MessageSocketService);
   private readonly socket: Socket;
 
   constructor(){
@@ -61,7 +63,9 @@ export class UserSocketService {
     this.socket.on('notify-contact',(event:any) => {
       switch(event?.type){
         case 'contact':
-          this.contactNotifications(event?.data);
+          this.userService.profile().subscribe(()=>{
+           this.contactNotifications(event?.data);
+          });
           break;
         default:
       }
@@ -80,17 +84,20 @@ export class UserSocketService {
           this.notificationService.setBasicNotification('Contact Notification', data?.sender+' cancelled his invite to you.');
           break;
         case 'accept-invite':
+          this.messageSocket.disconnect();
+          this.messageSocket.connect();
           this.notificationService.setBasicNotification('Contact Notification', data?.sender+' accepted your invite.');
           break;
         case 'decline-invite':
           this.notificationService.setBasicNotification('Contact Notification', data?.sender+' declined your invite.');
           break;
         case 'remove-contact':
+          this.messageSocket.disconnect();
+          this.messageSocket.connect();
           this.notificationService.setBasicNotification('Contact Notification', data?.sender+' removed your from his contacts.');
           break;
         default:
       }
-      this.userService.profile().subscribe(()=>{});
     }
 
 

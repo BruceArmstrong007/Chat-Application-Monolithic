@@ -4,6 +4,7 @@ import { Observable, throwError, catchError, map, switchMap } from 'rxjs';
 import { environment } from "src/environments/environment";
 import { UserService } from "./user.service";
 import { ToastController } from "@ionic/angular";
+import { MessageSocketService } from "../sockets/message-socket.service";
 
 
 @Injectable({
@@ -14,6 +15,7 @@ export class ContactService {
   private readonly userService = inject(UserService);
   private readonly env = environment;
   private toastController: ToastController = inject(ToastController);
+  private readonly messageSocket = inject(MessageSocketService);
 
   sendInvite(username: string): Observable<any>{
     return this.http.post(this.env.apiUrl+'/contact/send-invite',{username:username}).pipe(
@@ -30,6 +32,8 @@ export class ContactService {
     return this.http.post(this.env.apiUrl+'/contact/remove-contact',{username:username}).pipe(
       switchMap((res) => this.userService.profile()),
       map((res)=> {
+        this.messageSocket.disconnect();
+        this.messageSocket.connect();
         this.toaster('Contact removed.');
         return res;
       }),
@@ -53,6 +57,8 @@ export class ContactService {
       switchMap((res) => this.userService.profile()),
       map((res)=> {
         this.toaster('Invite accepted.');
+        this.messageSocket.disconnect();
+        this.messageSocket.connect();
         return res;
       }),
       catchError(this.handleError)

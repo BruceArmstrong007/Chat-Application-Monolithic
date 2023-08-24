@@ -30,16 +30,29 @@ export class MessageSocketService {
       reconnectionDelay: 2000,
       reconnectionDelayMax: 5000,
       timeout: 10000,
-      autoConnect: true,
+      autoConnect: false,
       transports: ['websocket', 'polling'],
       query: {
         token:  this.tokenService.getToken
       }
     });
+    this.connect();
+
+
     this.listenForMessages();
     this.listenForTyping();
     this.listenForMessageUpdates();
   }
+
+  connect(){
+    this.socket.connect();
+  }
+
+  disconnect(){
+    this.socket.disconnect();
+  }
+
+
   // listening for messages send to user realtime
   listenForMessages(){
     this.socket.on('receive-message',async (data) => {
