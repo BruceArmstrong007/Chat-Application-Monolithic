@@ -13,31 +13,31 @@
     <ion-col size="4">
       <ng-container *ngIf="!user?.status">
         <ion-buttons class="ion-justify-content-end">
-          <ion-button color="tertiary" size="large" slot="icon-only" (click)="buttonClick.emit({username: user.username, type: 'invite'})">
+          <ion-button color="tertiary" size="large" slot="icon-only" (click)="buttonClick.emit({user: user, type: 'invite'})">
             <ion-icon name="person-add"></ion-icon>
           </ion-button>
         </ion-buttons>
       </ng-container>
       <ng-container *ngIf="user?.status === 'friends'">
         <ion-buttons class="ion-justify-content-end">
-          <ion-button color="danger" size="large" slot="icon-only" (click)="buttonClick.emit({username: user.username, type: 'remove'})">
+          <ion-button color="danger" size="large" slot="icon-only" (click)="buttonClick.emit({user: user, type: 'remove'})">
             <ion-icon name="person-remove"></ion-icon>
           </ion-button>
         </ion-buttons>
       </ng-container>
       <ng-container *ngIf="user?.status === 'sent'">
         <ion-buttons class="ion-justify-content-end">
-          <ion-button color="danger" size="large" slot="icon-only" (click)="buttonClick.emit({username: user.username, type: 'cancel'})">
+          <ion-button color="danger" size="large" slot="icon-only" (click)="buttonClick.emit({user: user, type: 'cancel'})">
             <ion-icon name="close-circle"></ion-icon>
           </ion-button>
         </ion-buttons>
       </ng-container>
       <ng-container *ngIf="user?.status === 'received'">
         <ion-buttons class="ion-justify-content-end">
-          <ion-button color="tertiary" size="large" slot="icon-only" (click)="buttonClick.emit({username: user.username, type: 'accept'})">
+          <ion-button color="tertiary" size="large" slot="icon-only" (click)="buttonClick.emit({user: user, type: 'accept'})">
             <ion-icon name="checkmark-circle"></ion-icon>
           </ion-button>
-          <ion-button color="danger" size="large" slot="icon-only" (click)="buttonClick.emit({username: user.username, type: 'decline'})">
+          <ion-button color="danger" size="large" slot="icon-only" (click)="buttonClick.emit({user: user, type: 'decline'})">
             <ion-icon name="remove-circle"></ion-icon>
           </ion-button>
         </ion-buttons>

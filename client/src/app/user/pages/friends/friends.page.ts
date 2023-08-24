@@ -60,22 +60,22 @@ export class FriendsPage implements OnInit {
   btnClick(event:any){
     switch(event.type){
       case 'remove':
-        this.removeUser(event?.username);
+        this.removeUser(event?.user);
         break;
       case 'cancel':
-        this.cancelInvite(event?.username);
+        this.cancelInvite(event?.user);
         break;
       case 'accept':
-        this.acceptInvite(event?.username);
+        this.acceptInvite(event?.user);
         break;
       case 'decline':
-        this.declineInvite(event?.username);
+        this.declineInvite(event?.user);
         break;
       default:
     }
   }
 
-  async removeUser(username: string){
+  async removeUser(user: any){
     const actionSheet = await this.actionSheetCtrl.create({
       header: 'Remove User',
       buttons: [
@@ -86,7 +86,7 @@ export class FriendsPage implements OnInit {
             action: 'remove-user',
           },
           handler:() =>  {
-            this.contactService.removeContact(username).subscribe((res) => {})
+            this.contactService.removeContact(user?._id, user?.username).subscribe((res) => {})
           }
         },
         {
@@ -101,7 +101,7 @@ export class FriendsPage implements OnInit {
     await actionSheet.present();
   }
 
-  async cancelInvite(username: string){
+  async cancelInvite(user: any){
     const actionSheet = await this.actionSheetCtrl.create({
       header: 'Cancel Invite',
       buttons: [
@@ -112,7 +112,7 @@ export class FriendsPage implements OnInit {
             action: 'cancel-invite',
           },
           handler:() =>  {
-            this.contactService.cancelInvite(username).subscribe((res) => {})
+            this.contactService.cancelInvite(user?.username).subscribe((res) => {})
           }
         },
         {
@@ -127,7 +127,7 @@ export class FriendsPage implements OnInit {
     await actionSheet.present();
   }
 
-  async acceptInvite(username: string){
+  async acceptInvite(user: any){
     const actionSheet = await this.actionSheetCtrl.create({
       header: 'Accept Invite',
       buttons: [
@@ -137,7 +137,7 @@ export class FriendsPage implements OnInit {
             action: 'accept-invite',
           },
           handler:() =>  {
-            this.contactService.acceptInvite(username).subscribe((res) => {})
+            this.contactService.acceptInvite(user?.username).subscribe((res) => {})
           }
         },
         {
@@ -152,7 +152,7 @@ export class FriendsPage implements OnInit {
     await actionSheet.present();
   }
 
-  async declineInvite(username: string){
+  async declineInvite(user: any){
     const actionSheet = await this.actionSheetCtrl.create({
       header: 'Decline Invite',
       buttons: [
@@ -163,7 +163,7 @@ export class FriendsPage implements OnInit {
             action: 'decline-invite',
           },
           handler:() =>  {
-            this.contactService.declineInvite(username).subscribe((res) => {})
+            this.contactService.declineInvite(user?.username).subscribe((res) => {})
           }
         },
         {

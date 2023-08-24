@@ -7,6 +7,7 @@ import { UserState } from '../state/user.state';
 import { UserService } from '../services/user.service';
 import { NotificationService } from 'src/shared/services/notification.service';
 import { MessageSocketService } from './message-socket.service';
+import { MessageState } from '../state/message.state';
 @Injectable({
   providedIn: 'root'
 })
@@ -17,6 +18,7 @@ export class UserSocketService {
   private readonly userState = inject(UserState);
   private readonly tokenService = inject(TokenService);
   private readonly messageSocket = inject(MessageSocketService);
+  private readonly messageState = inject(MessageState);
   private readonly socket: Socket;
 
   constructor(){
@@ -94,6 +96,10 @@ export class UserSocketService {
         case 'remove-contact':
           this.messageSocket.disconnect();
           this.messageSocket.connect();
+          this.messageState.messageState.update((state:any) => {
+            const nextState = state.filter((room: any) => room?.roomID !== this.userService.generateRoomIDs(data?.senderID, data?.receiverID))
+            return nextState;
+          })
           this.notificationService.setBasicNotification('Contact Notification', data?.sender+' removed your from his contacts.');
           break;
         default:

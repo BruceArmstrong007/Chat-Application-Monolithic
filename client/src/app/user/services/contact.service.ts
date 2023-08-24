@@ -5,6 +5,8 @@ import { environment } from "src/environments/environment";
 import { UserService } from "./user.service";
 import { ToastController } from "@ionic/angular";
 import { MessageSocketService } from "../sockets/message-socket.service";
+import { MessageState } from "../state/message.state";
+import { UserState } from '../state/user.state';
 
 
 @Injectable({
@@ -16,6 +18,8 @@ export class ContactService {
   private readonly env = environment;
   private toastController: ToastController = inject(ToastController);
   private readonly messageSocket = inject(MessageSocketService);
+  private readonly messageState = inject(MessageState);
+  private readonly userState = inject(UserState);
 
   sendInvite(username: string): Observable<any>{
     return this.http.post(this.env.apiUrl+'/contact/send-invite',{username:username}).pipe(
@@ -28,10 +32,14 @@ export class ContactService {
     )
   }
 
-  removeContact(username: string): Observable<any>{
+  removeContact(userID: string, username: string): Observable<any>{
     return this.http.post(this.env.apiUrl+'/contact/remove-contact',{username:username}).pipe(
       switchMap((res) => this.userService.profile()),
       map((res)=> {
+        this.messageState.messageState.update((state:any) => {
+          const nextState = state.filter((room: any) => room?.roomID !== this.userService.generateRoomIDs(userID, this.userState.getUser?._id))
+          return nextState;
+        })
         this.messageSocket.disconnect();
         this.messageSocket.connect();
         this.toaster('Contact removed.');
