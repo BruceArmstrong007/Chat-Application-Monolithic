@@ -163,6 +163,14 @@ export class ContactService {
       Fields.CONTACTS,
     );
 
+    // Delete from redis DB
+    const roomID = await this.chatRepository.generateRoomIDs(
+      sender?._id,
+      receiver?._id,
+    );
+    
+    await this.chatRepository.jsonDel(`rooms:${roomID}`);
+
     // Notify users
     await this.chatRepository.publish(
       'contact',

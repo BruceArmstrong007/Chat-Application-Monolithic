@@ -95,6 +95,17 @@ export class ChatRepository {
     }
   }
 
+  async jsonDel(key: string, option?: string){
+    try {
+      if (!option) {
+        option = '$';
+      }
+      await this.redisProvider.publisher.json.del(key, option);
+    } catch (err: any) {
+      console.log(err);
+    }
+  }
+
 
   async jsonArraySetOrAppend(key: string, value: any, option?: string) {
     try {
