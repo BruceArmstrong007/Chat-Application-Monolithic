@@ -7,8 +7,31 @@
 <ion-content [fullscreen]="true">
  <ion-list>
    <ion-item>
+    <ion-icon size="small" class="ion-padding" name="heart-half"></ion-icon>
     <ion-toggle [(ngModel)]="mode" (ionChange)="darkMode()">Dark Mode</ion-toggle>
    </ion-item>
+   <ion-accordion-group>
+    <ion-accordion value="profile">
+      <ion-item slot="header">
+        <ion-icon size="small" class="ion-padding" name="journal"></ion-icon>
+        <ion-label>Personal Details</ion-label>
+      </ion-item>
+      <ion-item slot="content" (click)="openProfile()">
+        <ion-icon size="small" class="ion-padding" name="person"></ion-icon>
+        <ion-label>Update your profile</ion-label>
+      </ion-item>
+    </ion-accordion>
+    <ion-accordion value="privacy">
+      <ion-item slot="header">
+        <ion-icon size="small" class="ion-padding" name="construct"></ion-icon>
+        <ion-label>Privacy & Security</ion-label>
+      </ion-item>
+      <ion-item slot="content" (click)="openResetPassword()">
+        <ion-icon size="small" class="ion-padding" name="keypad"></ion-icon>
+        <ion-label>Change your password</ion-label>
+      </ion-item>
+    </ion-accordion>
+  </ion-accordion-group>
    <ion-item>
     <div  class="logoutArea">
         <ion-buttons>

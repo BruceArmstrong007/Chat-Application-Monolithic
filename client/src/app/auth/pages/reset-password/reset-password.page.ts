@@ -1,9 +1,10 @@
 import { NgIf } from '@angular/common';
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, ModalController } from '@ionic/angular';
 import { ValidationService } from 'src/shared/services/validation.service';
 import { AuthService } from '../../services/auth.service';
+import { UserStateI } from 'src/app/user/state/user.state';
 
 @Component({
   selector: 'app-reset-password',
@@ -13,13 +14,15 @@ import { AuthService } from '../../services/auth.service';
   imports: [IonicModule, FormsModule, ReactiveFormsModule, NgIf]
 })
 export class ResetPasswordPage implements OnInit {
+  @Input({required: true}) user!: Partial<UserStateI>;
   private readonly passwordValidator = inject(ValidationService);
+  private readonly modalCtrl = inject(ModalController);
   private readonly authService = inject(AuthService);
   private readonly fb : FormBuilder = inject(FormBuilder);
   resetPasswordForm: FormGroup;
   constructor() {
     this.resetPasswordForm = this.fb.group({
-      username: ['',Validators.compose([Validators.required,Validators.maxLength(25)])],
+      username: [{value: '', disabled: true},Validators.compose([Validators.required,Validators.maxLength(25)])],
       password: ['',Validators.compose([Validators.required, Validators.minLength(8)])],
       confirmPassword: ['',Validators.compose([Validators.required, Validators.minLength(8)])]
     },{
@@ -28,18 +31,26 @@ export class ResetPasswordPage implements OnInit {
    }
 
   ngOnInit() {
+    this.resetPasswordForm.patchValue({
+      username: this.user?.username
+    });
   }
 
   resetPassword(){
     if(this.resetPasswordForm.invalid){
       return;
     }
-    this.authService.resetPassword(this.resetPasswordForm.value).subscribe((res)=> {
+    this.authService.resetPassword(this.resetPasswordForm.getRawValue()).subscribe(()=> {
+      this.cancel();
     })
   }
 
   get f(){
     return this.resetPasswordForm.controls;
+  }
+
+  cancel() {
+    return this.modalCtrl.dismiss(null, 'cancel');
   }
 
 }
