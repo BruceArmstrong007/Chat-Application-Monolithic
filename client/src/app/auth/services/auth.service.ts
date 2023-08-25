@@ -2,15 +2,17 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { User } from 'src/shared/utils/interface';
 import { environment } from '../../../environments/environment';
-import { Observable, catchError, throwError, map } from 'rxjs';
+import { Observable, catchError, throwError, map, tap } from 'rxjs';
 import { TokenService } from 'src/shared/services/token.service';
 import { Router } from '@angular/router';
+import { ToastController } from '@ionic/angular';
 
 @Injectable({
   providedIn:'root'
 })
 export class AuthService{
   private readonly http: HttpClient = inject(HttpClient);
+  private toastController: ToastController = inject(ToastController);
   private readonly router = inject(Router);
   private readonly tokenService = inject(TokenService);
   private readonly env = environment;
@@ -33,6 +35,9 @@ export class AuthService{
 
   resetPassword(data: User): Observable<any>{
     return this.http.post(this.env.apiUrl+'/auth/reset-password',data).pipe(
+      tap((res) => {
+        this.toaster('Password changed successfully.')
+      }),
       catchError(this.handleError))
   }
 
@@ -64,6 +69,17 @@ export class AuthService{
         break;
     }
     return throwError(() => Response);
+  }
+
+
+  async toaster(message:string){
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 2000,
+      position: 'bottom',
+    });
+
+    await toast.present();
   }
 
 }

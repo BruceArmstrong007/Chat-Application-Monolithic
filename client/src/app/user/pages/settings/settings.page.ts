@@ -37,7 +37,11 @@ export class SettingsPage {
     const modal = await this.modalCtrl.create({
       component: ProfileComponent,
       componentProps: {
-        user: this.userState.getUser
+        user: {
+          name: this.userState?.getUser?.name,
+          bio: this.userState?.getUser?.bio,
+          profileURL: this.userState?.getUser?.profileURL,
+        }
       },
     });
     modal.present();

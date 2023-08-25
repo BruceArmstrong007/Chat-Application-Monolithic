@@ -15,13 +15,6 @@ import { UserStateI } from 'src/app/user/state/user.state';
 export class ProfileComponent  implements OnInit {
   @Input({
     required:true,
-    transform: (user:any) => {
-      return {
-        name: user?.name,
-        bio: user?.bio,
-        profileURL: user?.profileURL,
-      }
-    }
   }) user!: Partial<UserStateI>;
   private readonly modalCtrl = inject(ModalController);
   private readonly fb : FormBuilder = inject(FormBuilder);
@@ -43,12 +36,11 @@ export class ProfileComponent  implements OnInit {
   }
 
   updateProfile(){
-    console.log(this.user, this.profileForm.value);
-
     if(this.profileForm.invalid || JSON.stringify(this.profileForm.value) == JSON.stringify(this.user)){
       return;
     }
-    this.userService.updateProfile(this.profileForm.value).subscribe((res)=> {
+    this.userService.updateProfile(this.profileForm.value).subscribe(()=> {
+      this.cancel();
     })
   }
 
