@@ -1,9 +1,10 @@
 import { NgIf } from '@angular/common';
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { ValidationService } from 'src/shared/services/validation.service';
 import { AuthService } from '../../services/auth.service';
+import { UserStateI } from 'src/app/user/state/user.state';
 
 @Component({
   selector: 'app-reset-password',
@@ -13,6 +14,7 @@ import { AuthService } from '../../services/auth.service';
   imports: [IonicModule, FormsModule, ReactiveFormsModule, NgIf]
 })
 export class ResetPasswordPage implements OnInit {
+  @Input() user!: Partial<UserStateI>;
   private readonly passwordValidator = inject(ValidationService);
   private readonly authService = inject(AuthService);
   private readonly fb : FormBuilder = inject(FormBuilder);
@@ -28,6 +30,9 @@ export class ResetPasswordPage implements OnInit {
    }
 
   ngOnInit() {
+    this.resetPasswordForm.patchValue({
+      username: this.user?.username
+    });
   }
 
   resetPassword(){

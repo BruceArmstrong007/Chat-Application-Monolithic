@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
-import { Observable, throwError, catchError, map } from 'rxjs';
+import { Observable, throwError, catchError, map, switchMap } from 'rxjs';
 import { environment } from "src/environments/environment";
 import { UserStateT, UserState } from "../state/user.state";
 
@@ -23,6 +23,14 @@ export class UserService {
       catchError(this.handleError)
     )
   }
+
+  updateProfile(data: any) : Observable<any>{
+    return this.http.put(this.env.apiUrl+'/user/update', data).pipe(
+      switchMap((res : any) => this.profile()),
+      catchError(this.handleError)
+    )
+  }
+
 
   search(key: string): Observable<any>{
     return this.http.post(this.env.apiUrl+'/user/search',{search:key}).pipe(
