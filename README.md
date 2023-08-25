@@ -10,6 +10,7 @@ Cross Platform Chat Application
   See delivered and seen messages, contact will know that you are typing and vise versa <br />
   Realtime contact updates (get notified when a user sent a invite) <br />
   Add/Update profile picture, name or even bio (in progress) <br />
+  Can reset password in settings, <br />
   
 
 # Prerequisite
