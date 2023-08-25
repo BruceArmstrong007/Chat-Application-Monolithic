@@ -8,8 +8,6 @@ export class RedisProvider {
 
 
   constructor(config: ConfigService) {
-    console.log(config.get('REDIS_USERNAME'));
-    
     this.publisher = createClient({
       url: config.get('REDIS_URI'),
     });
