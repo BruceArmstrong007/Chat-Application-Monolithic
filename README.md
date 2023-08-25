@@ -1,7 +1,15 @@
 # Chat-Application
 Cross Platform Chat Application
 
-Chat Application in Development 
+# Features
+  Register, Login and Authentication with session for a week, <br />
+  Dark & Light Mode, <br />
+  Realtime searching users, sending invites, accepting invites, remove contacts etc.., <br />
+  You will see your contact's online presence and vise versa, <br />
+  Realtime Chat with them, if you type, contact will know that you are typing, <br />
+  Realtime contact updates (get notified when a user sent a invite) <br />
+  Add/Update profile picture, name or even bio (in progress) <br />
+  
 
 # Prerequisite
   Docker/Docker-Desktop
@@ -9,7 +17,6 @@ Chat Application in Development
   MongoDB Compass - Optional
 
 # Procedure to run this repo locally
-
 1.) pull this repo  <br /> 
 2.) cd to client and npm i  <br />
 3.) cd to server and npm i  <br /> 
@@ -36,7 +43,7 @@ Chat Application in Development
   and redis is also H-scalable with redis clusters <br />
   mongodb also H-scalable with multiple instances <br />
   NestJS monolithic to microservices (if required) is also possible with message brokers or other methods <br />
-  
+
   
   
   
