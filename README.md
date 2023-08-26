@@ -17,10 +17,25 @@ Cross Platform Chat Application
 # Images
   App images are in the image directory, <br />
 
+# Buzz Words
+  Angular V16 <br/>
+  Ionic V7 <br/>
+  Docker <br/>
+  MongoDB <br/>
+  RedisDB - JSON <br/>
+  Redis - Pub/Sub <br/>
+  NestJS <br/>
+  Socket.IO - Websockets <br/>
+  REST - HTTP <br/>
+  JWT Auth - Access & Refresh Tokens <br/>
+  Signals <br/>
+  Monolithic - MVC
+
 # Prerequisite
   Docker/Docker-Desktop
   node & npm
   MongoDB Compass - Optional
+  Android Studio - Optional
 
 # Procedure to run this repo locally
 1.) pull this repo  <br /> 
@@ -38,8 +53,9 @@ Cross Platform Chat Application
 
 # Note
   Angularv16, IonicV7, NestJS(monolithic), redis pub/sub & redisdb, MongoDB, Docker, built with only signals ( No NGRX & RxJS so far ), Basic default UI and themes, Socket.io extensive implementation <br />
-  Make sure you use toggle device toolbar in your browser and set a android or ios device for better UI (Ionic)
-  Don't expect API & UI with error handling, loggers, testing and stuff (not there yet) , purely focusing on functionality
+  Make sure you use toggle device toolbar in your browser and set a android or ios device for better UI (Ionic) <br />
+  Don't expect API & UI with error handling, loggers, testing and stuff (not there yet) , purely focusing on functionality <br />
+  Default Profile Picture is a random 80 x 80 image from a website loaded at random, you can change it by adding your link for a image hosted online
 
 # What's special
   Learning the Techs mentioned in note, as well as building a chat application project with backend scalability in mind
