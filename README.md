@@ -12,7 +12,9 @@ Cross Platform Chat Application
   Realtime contact updates (get notified when a user sent a invite), <br />
   Add/Update profile picture, name or even bio (in progress), <br />
   Can reset password in settings. <br />
-  
+
+# Images
+  App images are in the image directory, <br />
 
 # Prerequisite
   Docker/Docker-Desktop
