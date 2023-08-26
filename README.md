@@ -6,7 +6,8 @@ Cross Platform Chat Application
   Dark & Light Mode, <br />
   Realtime searching users, sending invites, accepting invites, remove contacts etc.., <br />
   You will see your contact's online presence and vise versa, <br />
-  Realtime Chat with your contacts, <br />
+  Realtime Chat with your contacts, <br />/>
+  Know number of unread messages and notifications, <br />
   See delivered and seen messages, contact will know that you are typing and vise versa, <br />
   Realtime contact updates (get notified when a user sent a invite), <br />
   Add/Update profile picture, name or even bio (in progress), <br />
